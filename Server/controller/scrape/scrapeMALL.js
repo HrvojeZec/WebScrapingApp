@@ -1,11 +1,12 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-const Product = require("../../model/productModel");
+
 puppeteer.use(StealthPlugin());
 
 const mallScraping = async (url, res, req, next) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
+  const storeName = "Mall";
   const keyword = "apple iphone 15";
   let prevHeight = -1;
   let maxScrolls = 100;
@@ -142,6 +143,7 @@ const mallScraping = async (url, res, req, next) => {
         link: link,
         logo: mallLogoHTML,
         keyword: keyword,
+        storeName: storeName,
       };
     })
   );
@@ -152,13 +154,7 @@ const mallScraping = async (url, res, req, next) => {
   });
   await browser.close();
 
-  try {
-    await Product.create(data); // Stvaranje novih dokumenata u bazi podataka
-    console.log("Podaci uspješno spremljeni u MongoDB.");
-    return data;
-  } catch (error) {
-    console.error("Greška prilikom spremanja podataka u MongoDB:", error);
-  }
+  return data;
 };
 
 module.exports = {

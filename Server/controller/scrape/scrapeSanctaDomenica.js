@@ -1,11 +1,11 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-const Product = require("../../model/productModel");
+
 puppeteer.use(StealthPlugin());
 
-const scrapeProducts = async (page, keyword) => {
+const scrapeProducts = async (page, keyword, storeName) => {
   const products = await page.$$(".product-items .product-item");
-
+  console.log(products.length);
   const data = await Promise.all(
     products.map(async (product) => {
       const title = await page.$eval("a.product-item-link", (element) =>
@@ -36,16 +36,18 @@ const scrapeProducts = async (page, keyword) => {
         link: link,
         logo: logo,
         keyword: keyword,
+        storeName: storeName,
       };
     })
   );
-  console.log(data);
+
   return data;
 };
 
 const sanctaDomenicaScraping = async (url) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
+  const storeName = "SanctaDomenica";
   const keyword = "apple iphone 15";
   let data = [];
   await page.goto(url);
@@ -68,7 +70,7 @@ const sanctaDomenicaScraping = async (url) => {
     fullPage: true,
   });
 
-  await scrapeProducts(page, keyword);
+  data = data.concat(await scrapeProducts(page, keyword, storeName));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -82,20 +84,13 @@ const sanctaDomenicaScraping = async (url) => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      await scrapeProducts(page, keyword);
+      data = data.concat(await scrapeProducts(page, keyword, storeName));
     }
   }
-  data = data.concat(await scrapeProducts(page, keyword));
-  console.log(data);
+
   await browser.close();
 
-  try {
-    await Product.create(data);
-    console.log("Podaci uspješno spremljeni u MongoDB.");
-    return data;
-  } catch (error) {
-    console.error("Greška prilikom spremanja podataka u MongoDB:", error);
-  }
+  return data;
 };
 
 module.exports = {

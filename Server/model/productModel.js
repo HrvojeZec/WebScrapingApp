@@ -31,6 +31,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  storeName: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);

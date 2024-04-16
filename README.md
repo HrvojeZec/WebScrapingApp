@@ -52,6 +52,9 @@ class = category-products
 
 kod linkova moram staviti ovo https://www.mall.hr ovaj drugi dio imam /apple-iphone-14/apple-iphone-14-mobilni-telefon-256gb-blue-mpwp3yc-a
 
+//////////////////////////////////////////////////////////////////////////////////////////
+SANCTA DOMENICA
+
 1. input.amsearch-input
 2. enter
 3. cekaj da se ucitaju podatci
