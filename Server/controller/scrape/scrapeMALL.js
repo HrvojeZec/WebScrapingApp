@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const Url = require("../../constants/url");
 
 puppeteer.use(StealthPlugin());
 
-const mallScraping = async (url, res, req, next) => {
+const mallScraping = async (res, req, next) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const storeName = "Mall";
@@ -12,7 +13,7 @@ const mallScraping = async (url, res, req, next) => {
   let maxScrolls = 100;
   let scrollCount = 0;
 
-  await page.goto(url);
+  await page.goto(Url.MallUrl);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
   await page.screenshot({
     path: "./images/PrviDioStranice.png",
@@ -35,7 +36,7 @@ const mallScraping = async (url, res, req, next) => {
     return null; // Vrati null ako ne uspije pronaći SVG element
   });
 
-  await page.type("input#site-search-input", keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
+  await page.type("input#site-search-inpu", keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
   await new Promise((resolve) => setTimeout(resolve, 1000)); // cekaj 1 s
   await Promise.all([
     page.waitForNavigation(),

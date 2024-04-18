@@ -1,11 +1,12 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const Url = require("../../constants/url");
 
 puppeteer.use(StealthPlugin());
 
 const scrapeProducts = async (page, keyword, storeName) => {
   const products = await page.$$(".product-items .product-item");
-  console.log(products.length);
+
   const data = await Promise.all(
     products.map(async (product) => {
       const title = await page.$eval("a.product-item-link", (element) =>
@@ -44,13 +45,13 @@ const scrapeProducts = async (page, keyword, storeName) => {
   return data;
 };
 
-const sanctaDomenicaScraping = async (url) => {
+const sanctaDomenicaScraping = async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const storeName = "SanctaDomenica";
   const keyword = "apple iphone 15";
   let data = [];
-  await page.goto(url);
+  await page.goto(Url.SanctaDomenica);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
   await page.screenshot({
     path: "./images/Santadomenica.png",
@@ -75,7 +76,7 @@ const sanctaDomenicaScraping = async (url) => {
 
   while (!lastPageRreached) {
     const nextButtonPagination = await page.$(".action.next");
-    console.log(nextButtonPagination);
+
     if (!nextButtonPagination) {
       lastPageRreached = true;
     } else {

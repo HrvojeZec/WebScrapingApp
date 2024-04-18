@@ -8,22 +8,24 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const [mallData, sanctaDomenicaData] = await Promise.all([
-      mallScraping("https://www.mall.hr/"),
-      sanctaDomenicaScraping("https://www.sancta-domenica.hr/"),
-    ]);
-    const mallProductsCount = mallData.length;
-    const sanctaDomenicaProductsCount = sanctaDomenicaData.length;
+    const mallDataPromise = mallScraping();
+    const sanctaDomenicaDataPromise = sanctaDomenicaScraping();
+    const promises = [mallDataPromise, sanctaDomenicaDataPromise];
+    const scrapingFunctions = [mallScraping, sanctaDomenicaScraping];
 
-    console.log("Broj proizvoda iz trgovine Mall:", mallProductsCount);
-    console.log(
-      "Broj proizvoda iz trgovine Sancta Domenica:",
-      sanctaDomenicaProductsCount
-    );
+    const results = await Promise.allSettled(promises);
 
-    const combinedData = [...mallData, ...sanctaDomenicaData];
+    results.forEach(async (result, index) => {
+      if (result.status === "rejected") {
+        const functionName =
+          scrapingFunctions[index].name || `Function${index + 1}`;
+        console.error(`Promise ${functionName} rejected with ${result.reason}`);
+      } else {
+        const combinedData = result.value;
+        await Product.create(combinedData);
+      }
+    });
 
-    await Product.create(combinedData);
     res.json({ success: true, message: "Podaci uspješno spremljeni u bazu." });
   } catch (error) {
     console.log(error);
