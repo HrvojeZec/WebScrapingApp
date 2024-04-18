@@ -23,16 +23,14 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-  logo: {
-    type: String,
-    required: true,
-  },
+
   keyword: {
     type: String,
     required: true,
   },
-  storeName: {
-    type: String,
+  storeId: {
+    type: Schema.Types.ObjectId,
+    ref: "Store",
     required: true,
   },
 });

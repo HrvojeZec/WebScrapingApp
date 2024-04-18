@@ -1,10 +1,10 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const Url = require("../../constants/url");
-
+const Store = require("../../model/storesModel");
 puppeteer.use(StealthPlugin());
 
-const scrapeProducts = async (page, keyword, storeName) => {
+const scrapeProducts = async (page, keyword, storeId) => {
   const products = await page.$$(".product-items .product-item");
 
   const data = await Promise.all(
@@ -26,18 +26,15 @@ const scrapeProducts = async (page, keyword, storeName) => {
         ".product-item-photo-wrapper img[src]",
         (element) => element.getAttribute("src")
       );
-      const logo = await page.$eval("a.logo img[src]", (element) =>
-        element.getAttribute("src")
-      );
+
       return {
         title: title,
         description: description,
         price: price,
         images: image,
         link: link,
-        logo: logo,
+        storeId: storeId,
         keyword: keyword,
-        storeName: storeName,
       };
     })
   );
@@ -48,7 +45,11 @@ const scrapeProducts = async (page, keyword, storeName) => {
 const sanctaDomenicaScraping = async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
-  const storeName = "SanctaDomenica";
+  const storeName = "Sancta Domenica";
+  const store = await Store.findOne({ storeName: storeName });
+  console.log(store);
+  const storeId = store._id;
+  console.log(storeId);
   const keyword = "apple iphone 15";
   let data = [];
   await page.goto(Url.SanctaDomenica);
@@ -71,7 +72,7 @@ const sanctaDomenicaScraping = async () => {
     fullPage: true,
   });
 
-  data = data.concat(await scrapeProducts(page, keyword, storeName));
+  data = data.concat(await scrapeProducts(page, keyword, storeId));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -85,7 +86,7 @@ const sanctaDomenicaScraping = async () => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(await scrapeProducts(page, keyword, storeName));
+      data = data.concat(await scrapeProducts(page, keyword, storeId));
     }
   }
 
