@@ -47,9 +47,7 @@ const sanctaDomenicaScraping = async () => {
   const page = await browser.newPage();
   const storeName = "Sancta Domenica";
   const store = await Store.findOne({ storeName: storeName });
-  console.log(store);
   const storeId = store._id;
-  console.log(storeId);
   const keyword = "apple iphone 15";
   let data = [];
   await page.goto(Url.SanctaDomenica);

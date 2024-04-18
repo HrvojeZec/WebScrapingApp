@@ -5,9 +5,14 @@ const {
 } = require("../controller/scrape/scrapeSanctaDomenica");
 const Product = require("../model/productModel");
 const router = express.Router();
+let scapingInProgress = false;
 
 router.get("/", async (req, res, next) => {
+  if (scapingInProgress) {
+    return res.status(400).json({ message: "Postupak je već u tijeku" });
+  }
   try {
+    scapingInProgress = true;
     const mallDataPromise = mallScraping();
     const sanctaDomenicaDataPromise = sanctaDomenicaScraping();
     const promises = [mallDataPromise, sanctaDomenicaDataPromise];
@@ -29,6 +34,8 @@ router.get("/", async (req, res, next) => {
     res.json({ success: true, message: "Podaci uspješno spremljeni u bazu." });
   } catch (error) {
     console.log(error);
+  } finally {
+    scapingInProgress = false;
   }
 });
 

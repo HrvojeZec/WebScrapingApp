@@ -11,7 +11,6 @@ const mallScraping = async (res, req, next) => {
   const keyword = "apple iphone 15";
   const store = await Store.findOne({ storeName: "Mall" });
   const storeId = store._id;
-  console.log(storeId);
   let prevHeight = -1;
   let maxScrolls = 100;
   let scrollCount = 0;
