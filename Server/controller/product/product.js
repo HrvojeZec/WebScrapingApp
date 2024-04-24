@@ -50,4 +50,17 @@ const productController = async () => {
   });
 };
 
-module.exports = { productController };
+const findProuctsByKeyword = async (keyword) => {
+  try {
+    const existingProducts = await Product.find();
+    const result = existingProducts.filter((product) => {
+      return product.keyword === keyword;
+    });
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+module.exports = { productController, findProuctsByKeyword };
