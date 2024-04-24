@@ -216,3 +216,12 @@ document.querySelector(".button--loading")
 }
 
 products
+////////////////////////////////////////////////////////////////
+
+1. prvo dohvati sve proizvode iz baze
+2. idi kroz nove dohvacene proizvode usporedi ih sa postojecim (usporedi sa imenom)
+3. kada se imena potrefe, usporedi im cijene ako se razlikuju staru cijenu zamjeni novom
+4. update taj proizvod
+
+5. idi kroz nove proizvode i usporedi da li postoji proizvod koji nije u bazi
+   tj. ako postoji onaj proizvod koji nije jednak imenima iz nase baze ubaci ih u bazu (samo njih)
