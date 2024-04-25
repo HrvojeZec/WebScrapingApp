@@ -121,6 +121,9 @@ const mallScraping = async (res, req, next) => {
         (imgs) =>
           Array.isArray(imgs) ? imgs.map((img) => img.getAttribute("src")) : []
       );
+      const productId = await product.evaluate((element) =>
+        element.getAttribute("data-scroll-id")
+      );
 
       const uniqueImages = [...new Set(imgs)]; //micemo sve duplikate
       return {
@@ -129,6 +132,7 @@ const mallScraping = async (res, req, next) => {
         price: price,
         images: uniqueImages,
         link: link,
+        productId: productId,
         storeId: storeId,
         keyword: keyword,
       };

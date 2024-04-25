@@ -9,22 +9,27 @@ const scrapeProducts = async (page, keyword, storeId) => {
 
   const data = await Promise.all(
     products.map(async (product) => {
-      const title = await page.$eval("a.product-item-link", (element) =>
+      const title = await product.$eval("a.product-item-link", (element) =>
         element.innerText.trim()
       );
-      const description = await page.$eval(
+      const description = await product.$eval(
         ".product-item-description",
         (element) => element.innerText.trim()
       );
-      const price = await page.$eval(".product-item-description", (element) =>
-        element.innerText.trim()
+      const price = await product.$eval(
+        ".product-item-description",
+        (element) => element.innerText.trim()
       );
-      const link = await page.$eval(".product-item-name a[href]", (element) =>
-        element.getAttribute("href")
+      const link = await product.$eval(
+        ".product-item-name a[href]",
+        (element) => element.getAttribute("href")
       );
-      const image = await page.$eval(
+      const image = await product.$eval(
         ".product-item-photo-wrapper img[src]",
         (element) => element.getAttribute("src")
+      );
+      const productId = await product.evaluate((element) =>
+        element.querySelector(".price-box").getAttribute("data-product-id")
       );
 
       return {
@@ -33,6 +38,7 @@ const scrapeProducts = async (page, keyword, storeId) => {
         price: price,
         images: image,
         link: link,
+        productId: productId,
         storeId: storeId,
         keyword: keyword,
       };

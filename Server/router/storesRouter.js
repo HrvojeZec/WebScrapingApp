@@ -2,7 +2,7 @@ const express = require("express");
 const Stores = require("../model/storesModel");
 const router = express.Router();
 const StoresData = require("../boostrap/setup");
-const { findProuctsByKeyword } = require("../controller/product/product");
+const { findProductsByKeyword } = require("../controller/product/product");
 router.get("/", async (req, res, next) => {
   try {
     console.log(StoresData);
@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
 router.get("/products", async (req, res, next) => {
   const { keyword } = req.body;
   try {
-    const response = await findProuctsByKeyword(keyword);
+    const response = await findProductsByKeyword(keyword);
 
     return res.json(response);
   } catch (error) {}

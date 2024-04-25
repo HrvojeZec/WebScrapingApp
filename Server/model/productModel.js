@@ -33,6 +33,10 @@ const productSchema = new Schema({
     ref: "Store",
     required: true,
   },
+  productId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);

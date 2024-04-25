@@ -1,11 +1,12 @@
 const { mallScraping } = require("../scrape/scrapeMALL");
 const { sanctaDomenicaScraping } = require("../scrape/scrapeSanctaDomenica");
 const Product = require("../../model/productModel");
+const Store = require("../../model/productModel");
 
-const updateProtuctsPrice = async (existingProducts, newProducts) => {
+const updateProductsPrice = async (existingProducts, newProducts) => {
   for (const newProduct of newProducts) {
     const existingProdcut = existingProducts.find(
-      (product) => product.name === newProduct.name
+      (product) => product.productId === newProduct.productId
     );
     if (existingProdcut && existingProdcut.price !== newProduct.price) {
       await Product.updateOne(
@@ -19,7 +20,9 @@ const updateProtuctsPrice = async (existingProducts, newProducts) => {
 const addNewProducts = async (newProducts, existingProducts) => {
   const filteredProducts = newProducts.filter(
     (newProduct) =>
-      !existingProducts.some((product) => product.name === newProduct.name)
+      !existingProducts.some(
+        (product) => product.productId === newProduct.productId
+      )
   );
   await Product.create(filteredProducts);
 };
@@ -43,19 +46,29 @@ const productController = async () => {
       if (existingProducts.length === 0) {
         await Product.create(newProducts);
       } else {
-        updateProtuctsPrice(existingProducts, newProducts);
+        updateProductsPrice(existingProducts, newProducts);
         addNewProducts(newProducts, existingProducts);
       }
     }
   });
 };
 
-const findProuctsByKeyword = async (keyword) => {
+const findProductsByKeyword = async (keyword) => {
   try {
-    const existingProducts = await Product.find();
-    const result = existingProducts.filter((product) => {
-      return product.keyword === keyword;
-    });
+    const existingProducts = await Product.find({ keyword: keyword });
+    let result = [];
+
+    for (const product of existingProducts) {
+      const store = await Store.findById(product.storeId);
+      if (store) {
+        const productWithStoreAttributes = {
+          ...product,
+          storeName: store.storeName,
+          logo: store.logo,
+        };
+        result.push(productWithStoreAttributes);
+      }
+    }
     return result;
   } catch (error) {
     console.error(error);
@@ -63,4 +76,4 @@ const findProuctsByKeyword = async (keyword) => {
   }
 };
 
-module.exports = { productController, findProuctsByKeyword };
+module.exports = { productController, findProductsByKeyword };
