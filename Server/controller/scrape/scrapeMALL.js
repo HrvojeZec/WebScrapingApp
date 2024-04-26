@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const Url = require("../../constants/url");
 const Store = require("../../model/storesModel");
+const productModel = require("../../model/productModel");
 
 puppeteer.use(StealthPlugin());
 

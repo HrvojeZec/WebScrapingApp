@@ -4,8 +4,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const scrapeRoute = require("./router/scrapeRouter");
-const storeRouter = require("./router/storesRouter");
+const scrapeRoute = require("./router/scrape/scrape-router");
+const storeRouter = require("./router/store/stores-router");
+const productRouter = require("./router/product/product-router");
 
 const app = express();
 const port = process.env.PORT;
@@ -21,6 +22,7 @@ app.use(express.json());
 
 app.use("/api/scrape", scrapeRoute);
 app.use("/api/storeData", storeRouter);
+app.use("/api/products", productRouter);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
