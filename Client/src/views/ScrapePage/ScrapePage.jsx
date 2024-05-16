@@ -1,13 +1,13 @@
 import React from "react";
 import Scrape from "./Scrape";
 import Layout from "../../components/layout/Layout";
+import { DataProvider } from "../../stores/DataProvider";
 export function ScrapePage() {
   return (
-    <div>
-      {/*  data provider */}
-      <Layout>
-        <Scrape />
-      </Layout>
-    </div>
+    <DataProvider>
+      {/*       <Layout> */}
+      <Scrape />
+      {/*    </Layout> */}
+    </DataProvider>
   );
 }
