@@ -6,7 +6,7 @@ const productModel = require("../../model/productModel");
 
 puppeteer.use(StealthPlugin());
 
-const scrapeProducts = async (page, keyword, storeId) => {
+const scrapeProducts = async (page, keyword, storeId, oldPrice) => {
   const products = await page.$$(".product-items .product-item");
 
   const data = await Promise.all(
@@ -18,9 +18,8 @@ const scrapeProducts = async (page, keyword, storeId) => {
         ".product-item-description",
         (element) => element.innerText.trim()
       );
-      const price = await product.$eval(
-        ".product-item-description",
-        (element) => element.innerText.trim()
+      const price = await product.$eval(".price", (element) =>
+        element.innerText.trim()
       );
       const link = await product.$eval(
         ".product-item-name a[href]",
@@ -43,6 +42,7 @@ const scrapeProducts = async (page, keyword, storeId) => {
         productId: productId,
         storeId: storeId,
         keyword: keyword,
+        oldPrice: oldPrice,
       };
     })
   );
@@ -57,6 +57,7 @@ const sanctaDomenicaScraping = async () => {
   const store = await Store.findOne({ storeName: storeName });
   const storeId = store._id;
   const keyword = "apple iphone 15";
+  const oldPrice = null;
   let data = [];
   await page.goto(Url.SanctaDomenica);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
@@ -78,7 +79,7 @@ const sanctaDomenicaScraping = async () => {
     fullPage: true,
   });
 
-  data = data.concat(await scrapeProducts(page, keyword, storeId));
+  data = data.concat(await scrapeProducts(page, keyword, storeId, oldPrice));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -92,7 +93,9 @@ const sanctaDomenicaScraping = async () => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(await scrapeProducts(page, keyword, storeId));
+      data = data.concat(
+        await scrapeProducts(page, keyword, storeId, oldPrice)
+      );
     }
   }
 

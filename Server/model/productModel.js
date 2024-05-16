@@ -16,6 +16,10 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    oldPrice: {
+      type: String,
+      required: false,
+    },
     images: {
       type: [String],
       required: true,

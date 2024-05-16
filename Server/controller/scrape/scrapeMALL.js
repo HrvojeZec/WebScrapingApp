@@ -12,6 +12,7 @@ const mallScraping = async (res, req, next) => {
   const keyword = "apple iphone 15";
   const store = await Store.findOne({ storeName: "Mall" });
   const storeId = store._id;
+  const oldPrice = null;
   let prevHeight = -1;
   let maxScrolls = 100;
   let scrollCount = 0;
@@ -117,16 +118,15 @@ const mallScraping = async (res, req, next) => {
       const link = await product.$eval(".pb-price a[href]", (element) =>
         element.getAttribute("href")
       );
-      const imgs = await product.$$eval(
-        ".gallery-list__wrap img[src]",
-        (imgs) =>
-          Array.isArray(imgs) ? imgs.map((img) => img.getAttribute("src")) : []
+      const imgs = await product.$$eval(".hooper-slide img[src]", (imgs) =>
+        Array.isArray(imgs) ? imgs.map((img) => img.getAttribute("src")) : []
       );
       const productId = await product.evaluate((element) =>
         element.getAttribute("data-scroll-id")
       );
 
       const uniqueImages = [...new Set(imgs)]; //micemo sve duplikate
+
       return {
         title: title,
         description: description,
@@ -136,6 +136,7 @@ const mallScraping = async (res, req, next) => {
         productId: productId,
         storeId: storeId,
         keyword: keyword,
+        oldPrice: oldPrice,
       };
     })
   );

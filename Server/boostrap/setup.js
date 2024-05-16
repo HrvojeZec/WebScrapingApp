@@ -4,7 +4,10 @@ const mallLogo = fs.readFileSync(
   path.resolve(__dirname, "../assets/logo.svg"),
   "utf8"
 );
-
+const brandLogo = fs.readFileSync(
+  path.resolve(__dirname, "../assets/brand-logo.svg"),
+  "utf8"
+);
 const StoresData = [
   {
     storeName: "Mall",
@@ -16,4 +19,11 @@ const StoresData = [
   },
 ];
 
-module.exports = StoresData;
+const BrandData = [
+  {
+    brandName: "SmartShop",
+    logo: brandLogo,
+  },
+];
+
+module.exports = { StoresData, BrandData };

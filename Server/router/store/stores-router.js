@@ -1,7 +1,7 @@
 const express = require("express");
 const Stores = require("../../model/storesModel");
 const router = express.Router();
-const StoresData = require("../../boostrap/setup");
+const { StoresData } = require("../../boostrap/setup");
 
 router.get("/", async (req, res, next) => {
   try {

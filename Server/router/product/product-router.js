@@ -1,7 +1,7 @@
 const express = require("express");
-const { findProductsByKeyword } = require("../product/product-service");
+const findProductsByKeyword = require("../product/product-service");
 const router = express.Router();
-
+//dohvaca proizvode po keywordu
 router.get("/", async (req, res, next) => {
   const { keyword } = req.body;
   try {
