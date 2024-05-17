@@ -2,12 +2,8 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { ScrapePage } from "./views/ScrapePage/ScrapePage";
 import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
 
-import {
-  MantineProvider,
-  DirectionProvider,
-  localStorageColorSchemeManager,
-} from "@mantine/core";
 function App() {
   return (
     <MantineProvider>

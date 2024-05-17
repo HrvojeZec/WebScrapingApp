@@ -37,7 +37,7 @@ export function BrandProvider({ children }) {
     error,
     loading,
   };
-  console.log("Provider value:", value);
+  console.log("Brand value:", value);
   return (
     <BrandContext.Provider value={value}>{children}</BrandContext.Provider>
   );
