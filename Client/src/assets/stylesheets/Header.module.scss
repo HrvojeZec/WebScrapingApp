@@ -1,0 +1,53 @@
+@use "./variables.module.scss" as *;
+
+.header {
+  max-width: 1950px;
+  max-height: 100px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #333333;
+  .header__wrapper {
+    max-width: 1000px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem;
+    .logo__wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      .logo__name {
+        .brand__smart {
+          color: #aaa;
+          font-family: $extra-bold-font-family;
+          font-size: 1.25rem;
+          font-weight: $font-weight-bold;
+        }
+      }
+      .brand__shop {
+        color: #ff7f50;
+        font-family: $base-font-family;
+        font-size: 1.25rem;
+        font-weight: $font-weight-extra-bold;
+      }
+    }
+    .header__button {
+      border: none;
+      background-color: #333333;
+      cursor: pointer;
+      p {
+        color: #aaa;
+        font-family: $base-font-family;
+        font-size: 1.25rem;
+        font-weight: $font-weight-regular;
+      }
+    }
+  }
+}

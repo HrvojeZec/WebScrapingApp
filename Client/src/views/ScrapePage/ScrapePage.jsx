@@ -5,9 +5,9 @@ import { DataProvider } from "../../stores/DataProvider";
 export function ScrapePage() {
   return (
     <DataProvider>
-      {/*       <Layout> */}
-      <Scrape />
-      {/*    </Layout> */}
+      <Layout>
+        <Scrape />
+      </Layout>
     </DataProvider>
   );
 }

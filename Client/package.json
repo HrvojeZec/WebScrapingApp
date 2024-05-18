@@ -12,9 +12,11 @@
   "dependencies": {
     "@mantine/core": "^7.9.1",
     "@mantine/hooks": "^7.9.1",
+    "@tabler/icons-react": "^3.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "tabler-icons-react": "^1.56.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
@@ -27,6 +29,7 @@
     "postcss": "^8.4.38",
     "postcss-preset-mantine": "^1.15.0",
     "postcss-simple-vars": "^7.0.1",
+    "sass": "^1.77.2",
     "vite": "^5.2.0"
   }
 }
