@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #333333;
+  background-color: $primary-header-color;
   .header__wrapper {
     max-width: 1000px;
     width: 100%;
@@ -23,19 +23,27 @@
       justify-content: center;
       align-items: center;
       gap: 0.5rem;
+      .logo {
+        color: $primary-logo-color;
+        transform: translateY(0);
+        animation: header-scroll-down 2s ease-in-out infinite;
+      }
       .logo__name {
+        display: flex;
+        align-items: center;
         .brand__smart {
-          color: #aaa;
+          color: $primary-header-text-color;
           font-family: $extra-bold-font-family;
           font-size: 1.25rem;
           font-weight: $font-weight-bold;
         }
-      }
-      .brand__shop {
-        color: #ff7f50;
-        font-family: $base-font-family;
-        font-size: 1.25rem;
-        font-weight: $font-weight-extra-bold;
+        .brand__shop {
+          color: $primary-logo-color;
+          font-family: $base-font-family;
+          font-size: 1.25rem;
+          font-weight: $font-weight-extra-bold;
+          margin-left: 0.2rem;
+        }
       }
     }
     .header__button {
@@ -43,11 +51,21 @@
       background-color: #333333;
       cursor: pointer;
       p {
-        color: #aaa;
+        color: $primary-header-text-color;
         font-family: $base-font-family;
         font-size: 1.25rem;
         font-weight: $font-weight-regular;
       }
     }
+  }
+}
+
+@keyframes header-scroll-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.5rem);
   }
 }

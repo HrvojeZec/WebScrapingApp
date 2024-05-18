@@ -2,9 +2,14 @@
 ** COLORS
 \*------------------------------------*/
 
+$primary-header-color: #333333;
+$primary-header-text-color: #aaa;
+$primary-logo-color: #ff7f50;
+
 /*------------------------------------*\
 ** FONT CONFIG
 \*------------------------------------*/
+
 @font-face {
   font-family: "Inter";
   src: url("../fonts/Inter-Regular.ttf") format("truetype");
@@ -30,6 +35,7 @@ $extra-bold-font-family: "Inter", sans-serif;
 /*------------------------------------*\
 ** FONT WEIGHTS
 \*------------------------------------*/
+
 $font-weight-regular: 400;
 $font-weight-bold: 700;
 $font-weight-extra-bold: 800;

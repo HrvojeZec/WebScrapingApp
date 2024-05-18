@@ -12,7 +12,12 @@ function Header() {
     <div className={classes.header}>
       <div className={classes.header__wrapper}>
         <div className={classes.logo__wrapper}>
-          <BrandShopee size={48} strokeWidth={2} color={"#ff7f50"} />
+          <BrandShopee
+            size={48}
+            strokeWidth={2}
+            color={"#ff7f50"}
+            className={classes.logo}
+          />
           <div className={classes.logo__name}>
             <p>
               <span className={classes.brand__smart}>{brandNameParts[0]}</span>
