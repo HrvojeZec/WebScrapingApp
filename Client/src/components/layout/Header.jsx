@@ -9,15 +9,10 @@ function Header() {
   const brandNameParts = brandName.split("Shop");
 
   return (
-    <div className={classes.header}>
+    <div className={classes.header} data-aos="fade-down">
       <div className={classes.header__wrapper}>
         <div className={classes.logo__wrapper}>
-          <BrandShopee
-            size={48}
-            strokeWidth={2}
-            color={"#ff7f50"}
-            className={classes.logo}
-          />
+          <BrandShopee size={48} strokeWidth={2} className={classes.logo} />
           <div className={classes.logo__name}>
             <p>
               <span className={classes.brand__smart}>{brandNameParts[0]}</span>

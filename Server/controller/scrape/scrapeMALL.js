@@ -125,7 +125,11 @@ const mallScraping = async (res, req, next) => {
         element.getAttribute("data-scroll-id")
       );
 
-      const uniqueImages = [...new Set(imgs)]; //micemo sve duplikate
+      const uniqueImages = [...new Set(imgs)].map((img) => {
+        return img.startsWith("https://www.mall.hr")
+          ? img
+          : `https://www.mall.hr${img}`;
+      });
 
       return {
         title: title,
