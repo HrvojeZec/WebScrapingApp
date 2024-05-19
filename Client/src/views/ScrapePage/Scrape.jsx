@@ -4,12 +4,15 @@ import { useProductsData } from "../../stores/GetAllProducts";
 import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { ProductCard } from "./ProductCard";
-
+import { Pagination, Text } from "@mantine/core";
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const [dataLength, setDataLength] = useState();
+  const [activePage, setActivePage] = useState(1);
+  const [productsPerPage] = useState(15);
   const { data: Products } = useProductsData();
   const images = Products.map((product) => {
     return product.images;
@@ -18,6 +21,11 @@ function Scrape() {
   const handleScrape = () => {
     console.log(keyword);
   };
+  const totalPages = Math.ceil(dataLength / productsPerPage);
+  const handlePageChange = (newPage) => {
+    setActivePage(newPage);
+  };
+
   const handleLoadFromDatabase = async (event) => {
     event.preventDefault();
     console.log(keyword);
@@ -36,7 +44,7 @@ function Scrape() {
       }
       setError(null);
       const res = await response.json();
-
+      setDataLength(res.length);
       setData(res);
     } catch (error) {
       console.log(error);
@@ -44,7 +52,7 @@ function Scrape() {
       setLoading(false);
     }
   };
-  console.log(data);
+  console.log(dataLength);
   const settings = {
     infinite: true,
     fade: true,
@@ -112,21 +120,39 @@ function Scrape() {
         </div>
       </div>
       {loading && <LoaderGlobal />}
+
+      {data && <div>{keyword}</div>}
       <div className={classes.card__wrapper}>
         {data &&
-          data.map((product, index) => (
-            <ProductCard
-              key={index}
-              productId={product._id}
-              name={product.title}
-              description={product.description}
-              price={product.price}
-              images={product.images}
-              logo={product.logo}
-              odlPrice={product.odlPrice}
-              link={product.link}
-            />
-          ))}
+          data
+            .slice(
+              (activePage - 1) * productsPerPage,
+              activePage * productsPerPage
+            )
+            .map((product, index) => (
+              <ProductCard
+                key={index}
+                productId={product._id}
+                name={product.title}
+                description={product.description}
+                price={product.price}
+                images={product.images}
+                logo={product.logo}
+                odlPrice={product.odlPrice}
+                link={product.link}
+                length={product.length}
+              />
+            ))}
+      </div>
+      <div className={classes.pagination__wrapper}>
+        {data && (
+          <Pagination
+            total={totalPages}
+            value={activePage}
+            onChange={handlePageChange}
+            mt="sm"
+          />
+        )}
       </div>
     </>
   );

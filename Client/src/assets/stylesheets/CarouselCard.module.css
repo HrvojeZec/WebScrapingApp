@@ -2,32 +2,34 @@
 .grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; /* Razmak između kartica */
+  gap: 16px;
 }
 
 .card {
-  flex: 1 1 calc(25% - 16px); /* 4 kartice po redu, oduzimajući razmak */
+  flex: 1 1 calc(25% - 16px);
   box-sizing: border-box;
-  max-width: calc(25% - 16px); /* Ograničavanje širine na 25% */
+  max-width: calc(25% - 16px);
+  min-height: 60vh;
+  height: 100%;
 }
 
 @media (max-width: 1200px) {
   .card {
-    flex: 1 1 calc(33.33% - 16px); /* 3 kartice po redu */
+    flex: 1 1 calc(33.33% - 16px);
     max-width: calc(33.33% - 16px);
   }
 }
 
 @media (max-width: 992px) {
   .card {
-    flex: 1 1 calc(50% - 16px); /* 2 kartice po redu */
+    flex: 1 1 calc(50% - 16px);
     max-width: calc(50% - 16px);
   }
 }
 
 @media (max-width: 768px) {
   .card {
-    flex: 1 1 100%; /* 1 kartica po redu */
+    flex: 1 1 100%;
     max-width: 100%;
   }
 }
