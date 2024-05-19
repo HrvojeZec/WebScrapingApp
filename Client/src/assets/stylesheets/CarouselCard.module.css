@@ -1,0 +1,59 @@
+/* CarouselCard.module.css */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Razmak između kartica */
+}
+
+.card {
+  flex: 1 1 calc(25% - 16px); /* 4 kartice po redu, oduzimajući razmak */
+  box-sizing: border-box;
+  max-width: calc(25% - 16px); /* Ograničavanje širine na 25% */
+}
+
+@media (max-width: 1200px) {
+  .card {
+    flex: 1 1 calc(33.33% - 16px); /* 3 kartice po redu */
+    max-width: calc(33.33% - 16px);
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    flex: 1 1 calc(50% - 16px); /* 2 kartice po redu */
+    max-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 100%; /* 1 kartica po redu */
+    max-width: 100%;
+  }
+}
+
+.carouselControls {
+  transition: opacity 150ms ease;
+  opacity: 0;
+}
+
+.carouselIndicator {
+  width: 4px;
+  height: 4px;
+  transition: width 250ms ease;
+}
+
+.carouselIndicator[data-active] {
+  width: 16px;
+}
+
+.price {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+}
+
+.carousel img {
+  object-fit: contain;
+  width: 100%;
+  height: 220px;
+  box-sizing: border-box;
+}

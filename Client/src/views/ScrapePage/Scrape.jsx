@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classes from "../../assets/stylesheets/scrape.module.scss";
 import { useProductsData } from "../../stores/GetAllProducts";
 import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
+import { ProductCard } from "./ProductCard";
+
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
@@ -34,6 +36,7 @@ function Scrape() {
       }
       setError(null);
       const res = await response.json();
+
       setData(res);
     } catch (error) {
       console.log(error);
@@ -41,7 +44,7 @@ function Scrape() {
       setLoading(false);
     }
   };
-  console.log("učitani proizvodi iz baze:", data);
+  console.log(data);
   const settings = {
     infinite: true,
     fade: true,
@@ -109,6 +112,22 @@ function Scrape() {
         </div>
       </div>
       {loading && <LoaderGlobal />}
+      <div className={classes.card__wrapper}>
+        {data &&
+          data.map((product, index) => (
+            <ProductCard
+              key={index}
+              productId={product._id}
+              name={product.title}
+              description={product.description}
+              price={product.price}
+              images={product.images}
+              logo={product.logo}
+              odlPrice={product.odlPrice}
+              link={product.link}
+            />
+          ))}
+      </div>
     </>
   );
 }

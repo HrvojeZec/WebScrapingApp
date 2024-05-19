@@ -5,7 +5,7 @@ import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import "@mantine/carousel/styles.css";
 import "aos/dist/aos.css";
 import Aos from "aos";
 

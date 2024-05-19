@@ -4,6 +4,7 @@ const Product = require("../../model/productModel");
 const findProductsByKeyword = async (keyword) => {
   try {
     const existingProducts = await Product.find({ keyword: keyword });
+
     let result = [];
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
@@ -16,6 +17,7 @@ const findProductsByKeyword = async (keyword) => {
         result.push(productWithStoreAttributes);
       }
     }
+
     return result;
   } catch (error) {
     console.error(error);
@@ -29,6 +31,7 @@ const findAllProducts = async () => {
     let result = [];
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
+
       if (store) {
         const productWithStoreAttributes = {
           ...product._doc,
