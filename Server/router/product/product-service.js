@@ -5,7 +5,6 @@ const findProductsByKeyword = async (keyword) => {
   try {
     const existingProducts = await Product.find({ keyword: keyword });
     let result = [];
-    console.log(existingProducts);
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
       if (store) {
@@ -17,7 +16,6 @@ const findProductsByKeyword = async (keyword) => {
         result.push(productWithStoreAttributes);
       }
     }
-
     return result;
   } catch (error) {
     console.error(error);
@@ -29,7 +27,6 @@ const findAllProducts = async () => {
   try {
     const existingProducts = await Product.find();
     let result = [];
-    console.log(existingProducts);
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
       if (store) {

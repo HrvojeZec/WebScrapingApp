@@ -6,10 +6,10 @@ const {
 const router = express.Router();
 //dohvaca proizvode po keywordu
 router.get("/keyword", async (req, res, next) => {
-  const { keyword } = req.body;
+  const keyword = req.query.keyword;
+  console.log(keyword);
   try {
     const response = await findProductsByKeyword(keyword);
-
     return res.json(response);
   } catch (error) {
     console.log(error);
