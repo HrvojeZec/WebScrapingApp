@@ -10,9 +10,16 @@ router.get("/keyword", async (req, res, next) => {
   console.log(keyword);
   try {
     const response = await findProductsByKeyword(keyword);
-    return res.json(response);
+    if (response.false) {
+      res.status(400).json(response);
+    } else {
+      res.json(response);
+    }
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Molimo unesite ključnu riječ za pretragu proizvoda.",
+    });
   }
 });
 

@@ -5,11 +5,11 @@ import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { ProductCard } from "./ProductCard";
 import { Pagination, Text } from "@mantine/core";
-import { ContactPage } from "./ContactPage";
+import { ContactPage } from "../ContactPage/ContactPage";
+import { errorNotification } from "../../components/shared/Notification/Notification";
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
-  const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [dataLength, setDataLength] = useState();
   const [activePage, setActivePage] = useState(1);
@@ -41,15 +41,16 @@ function Scrape() {
       );
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData);
+        const messageError = errorData.message;
+        console.log(errorData);
+        errorNotification({ message: messageError });
       }
-      setError(null);
+
       const res = await response.json();
       setDataLength(res.length);
       console.log(res);
       setData(res);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }

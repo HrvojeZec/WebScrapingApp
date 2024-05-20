@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import classes from "../../assets/stylesheets/contact.module.scss";
 import { useForm } from "@mantine/form";
+import { successNotification } from "../../components/shared/Notification/Notification";
+import { errorNotification } from "../../components/shared/Notification/Notification";
 export function ContactPage() {
-  const [error, setError] = useState();
-  const [successMessage, setSuccessMessage] = useState();
   const form = useForm({
     initialValues: {
       storeName: "",
@@ -21,19 +21,18 @@ export function ContactPage() {
       });
       if (!response.ok) {
         const resError = await response.json();
-        console.log(resError.message);
-        setError(resError.message);
-      } else {
-        setError(null);
-        const resSuccess = await response.json();
-        console.log(resSuccess.message);
-        setSuccessMessage(resSuccess.message);
+        const messageError = resError.message;
+        errorNotification({ message: messageError });
       }
+      const resSuccess = await response.json();
+      const messageSuccess = resSuccess.message;
+      console.log(messageSuccess);
+      successNotification({ message: messageSuccess });
     } catch (error) {}
   };
 
   return (
-    <div className={classes.contact}>
+    <div className={classes.contact} data-aos="fade-up">
       <div className={classes.contact__wrapper}>
         <h1>Kontaktirajte nas</h1>
         <p>

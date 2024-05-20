@@ -17,7 +17,7 @@ const AddStore = async ({ storeName }) => {
   } else {
     const result = await Stores.insertMany(store);
     if (result) {
-      return { success: true, message: "Podatci su uspješno dodani" };
+      return { success: true, message: "Trgovina je uspješno dodana" };
     } else {
       return {
         success: false,

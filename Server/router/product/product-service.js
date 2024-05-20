@@ -2,10 +2,10 @@ const Store = require("../../model/storesModel");
 const Product = require("../../model/productModel");
 
 const findProductsByKeyword = async (keyword) => {
-  try {
-    const existingProducts = await Product.find({ keyword: keyword });
+  const existingProducts = await Product.find({ keyword: keyword });
 
-    let result = [];
+  let result = [];
+  if (existingProducts.length > 0) {
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
       if (store) {
@@ -19,9 +19,12 @@ const findProductsByKeyword = async (keyword) => {
     }
 
     return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } else {
+    return {
+      success: false,
+      message:
+        "Nema pronađenih proizvoda koji odgovaraju unesenom ključnom riječi.",
+    };
   }
 };
 
