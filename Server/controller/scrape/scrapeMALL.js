@@ -12,7 +12,7 @@ const mallScraping = async (res, req, next) => {
   const keyword = "apple iphone 15";
   const store = await Store.findOne({ storeName: "Mall" });
   const storeId = store._id;
-  const oldPrice = null;
+
   let prevHeight = -1;
   let maxScrolls = 100;
   let scrollCount = 0;
@@ -130,13 +130,20 @@ const mallScraping = async (res, req, next) => {
           ? img
           : `https://www.mall.hr${img}`;
       });
-
+      let oldPrice;
+      try {
+        oldPrice = await product.$eval(".pb-price__price-old", (element) =>
+          element.innerText.trim()
+        );
+      } catch {
+        oldPrice = null;
+      }
       return {
         title: title,
         description: description,
         price: price,
         images: uniqueImages,
-        link: link,
+        link: `https://www.mall.hr${link}`,
         productId: productId,
         storeId: storeId,
         keyword: keyword,

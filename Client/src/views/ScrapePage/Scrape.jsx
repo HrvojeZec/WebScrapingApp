@@ -45,6 +45,7 @@ function Scrape() {
       setError(null);
       const res = await response.json();
       setDataLength(res.length);
+      console.log(res);
       setData(res);
     } catch (error) {
       console.log(error);
@@ -52,7 +53,7 @@ function Scrape() {
       setLoading(false);
     }
   };
-  console.log(dataLength);
+
   const settings = {
     infinite: true,
     fade: true,
@@ -138,7 +139,7 @@ function Scrape() {
                 price={product.price}
                 images={product.images}
                 logo={product.logo}
-                odlPrice={product.odlPrice}
+                oldPrice={product.oldPrice}
                 link={product.link}
                 length={product.length}
               />

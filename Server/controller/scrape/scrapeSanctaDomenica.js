@@ -6,7 +6,7 @@ const productModel = require("../../model/productModel");
 
 puppeteer.use(StealthPlugin());
 
-const scrapeProducts = async (page, keyword, storeId, oldPrice) => {
+const scrapeProducts = async (page, keyword, storeId) => {
   const products = await page.$$(".product-items .product-item");
 
   const data = await Promise.all(
@@ -18,9 +18,29 @@ const scrapeProducts = async (page, keyword, storeId, oldPrice) => {
         ".product-item-description",
         (element) => element.innerText.trim()
       );
-      const price = await product.$eval(".price", (element) =>
-        element.innerText.trim()
-      );
+      let price;
+      try {
+        price = await product.$eval(
+          ".special-price .price-wrapper .price",
+          (element) => element.innerText.trim()
+        );
+      } catch {
+        price = await product.$eval(".price-box .price", (element) =>
+          element.innerText.trim()
+        );
+      }
+
+      let oldPrice;
+      try {
+        oldPrice = await product.$eval(
+          ".old-price .price-wrapper .price",
+          (element) => element.innerText.trim()
+        );
+      } catch {
+        oldPrice = null;
+      }
+      console.log(oldPrice);
+      console.log(price);
       const link = await product.$eval(
         ".product-item-name a[href]",
         (element) => element.getAttribute("href")
@@ -57,7 +77,7 @@ const sanctaDomenicaScraping = async () => {
   const store = await Store.findOne({ storeName: storeName });
   const storeId = store._id;
   const keyword = "apple iphone 15";
-  const oldPrice = null;
+
   let data = [];
   await page.goto(Url.SanctaDomenica);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
@@ -79,7 +99,7 @@ const sanctaDomenicaScraping = async () => {
     fullPage: true,
   });
 
-  data = data.concat(await scrapeProducts(page, keyword, storeId, oldPrice));
+  data = data.concat(await scrapeProducts(page, keyword, storeId));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -93,9 +113,7 @@ const sanctaDomenicaScraping = async () => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(
-        await scrapeProducts(page, keyword, storeId, oldPrice)
-      );
+      data = data.concat(await scrapeProducts(page, keyword, storeId));
     }
   }
 

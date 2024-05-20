@@ -17,7 +17,7 @@ const updateProductsPrice = async (existingProducts, newProducts) => {
         {
           $set: {
             price: newProduct.price,
-            odlPrice: existingProduct.price,
+            oldPrice: existingProduct.price,
             new: true,
           },
         }

@@ -19,7 +19,7 @@ export function ProductCard({
       <Image src={image} />
     </Carousel.Slide>
   ));
-
+  console.log(oldPrice);
   return (
     <>
       {" "}
@@ -47,7 +47,14 @@ export function ProductCard({
         <Spoiler maxHeight={120} showLabel="Show more" hideLabel="Hide">
           {description}
         </Spoiler>
-
+        {logo.startsWith("<svg") ? (
+          <div
+            dangerouslySetInnerHTML={{ __html: logo }}
+            style={{ marginTop: "1.5rem" }}
+          />
+        ) : (
+          <img className={classes.storeLogo} src={logo} alt={`Logo ${name}`} />
+        )}
         <Group justify="space-between" mt="md">
           <div>
             <Text fz="xl" span fw={500} className={classes.price}>
@@ -59,7 +66,12 @@ export function ProductCard({
             </Text>
           </div>
 
-          <Button radius="md">Buy</Button>
+          <Button
+            onClick={(event) => (window.location.href = link)}
+            radius="md"
+          >
+            Buy
+          </Button>
         </Group>
       </Card>
     </>
