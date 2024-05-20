@@ -19,7 +19,7 @@ export function ProductCard({
       <Image src={image} />
     </Carousel.Slide>
   ));
-  console.log(oldPrice);
+
   return (
     <>
       {" "}

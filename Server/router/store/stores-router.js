@@ -2,6 +2,7 @@ const express = require("express");
 const Stores = require("../../model/storesModel");
 const router = express.Router();
 const { StoresData } = require("../../boostrap/setup");
+const AddStore = require("./stores-service");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -13,4 +14,23 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.post("/add", async (req, res, next) => {
+  const { storeName } = req.body;
+  try {
+    const response = await AddStore({ storeName: storeName });
+    if (response.success) {
+      res.status(200).json(response);
+    } else {
+      res.status(400).json(response);
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Došlo je do pogreške prilikom obrade zahtjeva",
+      });
+  }
+});
 module.exports = router;

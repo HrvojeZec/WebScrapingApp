@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { ProductCard } from "./ProductCard";
 import { Pagination, Text } from "@mantine/core";
+import { ContactPage } from "./ContactPage";
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
@@ -155,6 +156,8 @@ function Scrape() {
           />
         )}
       </div>
+
+      <ContactPage />
     </>
   );
 }

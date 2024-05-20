@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const storesSchema = new Schema({
   logo: {
     type: String,
-    required: true,
+    required: false,
   },
   storeName: {
     type: String,
