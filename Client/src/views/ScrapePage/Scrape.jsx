@@ -47,15 +47,15 @@ function Scrape() {
       }
 
       const res = await response.json();
-      setDataLength(res.length);
       console.log(res);
-      setData(res);
+      setDataLength(res.data.length);
+      setData(res.data);
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
-
+  console.log(data);
   const settings = {
     infinite: true,
     fade: true,
@@ -124,7 +124,13 @@ function Scrape() {
       </div>
       {loading && <LoaderGlobal />}
 
-      {data && <div>{keyword}</div>}
+      {data && (
+        <div className={classes.card__title}>
+          <div className={classes.card__title__wrapper}>
+            <h1>{keyword}</h1>
+          </div>
+        </div>
+      )}
       <div className={classes.card__wrapper}>
         {data &&
           data

@@ -10,10 +10,11 @@ router.get("/keyword", async (req, res, next) => {
   console.log(keyword);
   try {
     const response = await findProductsByKeyword(keyword);
-    if (response.false) {
-      res.status(400).json(response);
+    console.log(response);
+    if (response.success) {
+      res.status(200).json(response);
     } else {
-      res.json(response);
+      res.status(400).json(response);
     }
   } catch (error) {
     res.status(500).json({

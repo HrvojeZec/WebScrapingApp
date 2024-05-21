@@ -3,7 +3,7 @@ const Product = require("../../model/productModel");
 
 const findProductsByKeyword = async (keyword) => {
   const existingProducts = await Product.find({ keyword: keyword });
-
+  console.log(existingProducts.length);
   let result = [];
   if (existingProducts.length > 0) {
     for (const product of existingProducts) {
@@ -18,7 +18,10 @@ const findProductsByKeyword = async (keyword) => {
       }
     }
 
-    return result;
+    return {
+      success: true,
+      data: result,
+    };
   } else {
     return {
       success: false,
