@@ -7,10 +7,12 @@ import { ProductCard } from "./ProductCard";
 import { Pagination, Text } from "@mantine/core";
 import { ContactPage } from "../ContactPage/ContactPage";
 import { errorNotification } from "../../components/shared/Notification/Notification";
+import { loadingDataNotification } from "../../components/shared/Notification/Notification";
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
+  const [loadingNotification, setLoadingNotification] = useState(false);
   const [dataLength, setDataLength] = useState();
   const [activePage, setActivePage] = useState(1);
   const [productsPerPage] = useState(15);
@@ -19,12 +21,42 @@ function Scrape() {
     return product.images;
   });
   const mergeImages = images.reduce((acc, curr) => acc.concat(curr), []);
-  const handleScrape = () => {
-    console.log(keyword);
-  };
   const totalPages = Math.ceil(dataLength / productsPerPage);
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
+  };
+
+  const handleScrape = async (event) => {
+    console.log(keyword);
+    event.preventDefault();
+    if (keyword.length > 3) {
+      loadingDataNotification(true);
+    }
+    try {
+      const response = await fetch("http://localhost:5000/api/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          keyword: keyword,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log(errorData);
+        const messageError = errorData.message;
+        loadingDataNotification(false);
+        errorNotification({ message: messageError });
+      }
+
+      const successData = await response.json();
+      console.log(successData);
+      const data = successData.data;
+      console.log(data);
+      setData(data);
+    } catch (error) {
+    } finally {
+      loadingDataNotification(false);
+    }
   };
 
   const handleLoadFromDatabase = async (event) => {

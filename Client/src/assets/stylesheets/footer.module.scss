@@ -17,7 +17,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 1.5rem;
 
     .footer__content {
@@ -65,6 +65,12 @@
       justify-content: center;
       align-items: flex-start;
       gap: 0.5rem;
+      a:first-of-type {
+        color: black;
+        font-size: 1.125rem;
+        font-family: $base-font-family;
+        font-weight: $font-weight-bold;
+      }
       a {
         font-family: $base-font-family;
         font-weight: $font-weight-regular;
@@ -78,6 +84,18 @@
       justify-content: center;
       align-items: flex-start;
       gap: 0.5rem;
+      a:first-of-type {
+        color: black;
+        font-size: 1.125rem;
+        font-family: $base-font-family;
+        font-weight: $font-weight-bold;
+      }
+      a {
+        font-family: $base-font-family;
+        font-weight: $font-weight-regular;
+        color: $primary-header-text-color;
+        text-decoration: none;
+      }
       .medias__logo {
         display: flex;
         flex-direction: row;
@@ -106,6 +124,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       .footer__company {
         display: flex;
         justify-content: center;

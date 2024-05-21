@@ -31,13 +31,13 @@ function Footer() {
           <p>contact@smartshop.com</p>
         </div>
         <div className={classes.footer__company}>
-          <h1>Company</h1>
+          <a>Company</a>
           <a href="#">About</a>
           <a href="#">Blog</a>
           <a href="#">Contact</a>
         </div>
         <div className={classes.footer__medias}>
-          <h1>Follow us</h1>
+          <a>Follow us</a>
           <div className={classes.medias__logo}>
             <a href="#">
               {" "}

@@ -38,8 +38,7 @@ const scrapeProducts = async (page, keyword, storeId) => {
       } catch {
         oldPrice = null;
       }
-      console.log(oldPrice);
-      console.log(price);
+
       const link = await product.$eval(
         ".product-item-name a[href]",
         (element) => element.getAttribute("href")
@@ -69,13 +68,12 @@ const scrapeProducts = async (page, keyword, storeId) => {
   return data;
 };
 
-const sanctaDomenicaScraping = async () => {
+const sanctaDomenicaScraping = async (keyword) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const storeName = "Sancta Domenica";
   const store = await Store.findOne({ storeName: storeName });
   const storeId = store._id;
-  const keyword = "apple iphone 15";
 
   let data = [];
   await page.goto(Url.SanctaDomenica);
@@ -86,7 +84,7 @@ const sanctaDomenicaScraping = async () => {
   });
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  await page.type("input.amsearch-input", keyword, { delay: 100 });
+  await page.type("input.amsearch-input", keyword.keyword, { delay: 100 });
   await Promise.all([
     page.waitForNavigation(),
     await page.keyboard.press("Enter"),
@@ -98,7 +96,7 @@ const sanctaDomenicaScraping = async () => {
     fullPage: true,
   });
 
-  data = data.concat(await scrapeProducts(page, keyword, storeId));
+  data = data.concat(await scrapeProducts(page, keyword.keyword, storeId));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -112,7 +110,7 @@ const sanctaDomenicaScraping = async () => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(await scrapeProducts(page, keyword, storeId));
+      data = data.concat(await scrapeProducts(page, keyword.keyword, storeId));
     }
   }
 

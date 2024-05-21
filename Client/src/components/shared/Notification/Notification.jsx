@@ -1,7 +1,7 @@
 import React from "react";
 import { IconX, IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-
+import { rem } from "@mantine/core";
 export function successNotification({ message }) {
   notifications.show({
     title: "Success!",
@@ -23,26 +23,30 @@ export function errorNotification({ message }) {
     position: "top-right",
   });
 }
+let notificationId = null;
 
-export function loadingDataNotification() {
-  const id = notifications.show({
-    loading: true,
-    title: "Loading your data",
-    message: "Data will be loaded in 3 seconds, you cannot close this yet",
-    autoClose: false,
-    withCloseButton: false,
-  });
-
-  setTimeout(() => {
-    notifications.update({
-      id,
-      color: "teal",
-      title: "Data was loaded",
+export function loadingDataNotification(value) {
+  console.log(value);
+  if (value) {
+    notificationId = notifications.show({
+      loading: true,
+      title: "Učitavanje podataka",
       message:
-        "Notification will close in 2 seconds, you can close this notification now",
+        "Molimo pričekajte dok se podaci učitavaju, ne možete zatvoriti ovu obavijest",
+      autoClose: false,
+      withCloseButton: false,
+    });
+  } else if (notificationId) {
+    notifications.update({
+      id: notificationId,
+      color: "teal",
+      title: "Podaci su učitani",
+      message:
+        "Obavijest će se zatvoriti za 2 sekunde, sada možete zatvoriti ovu obavijest",
       icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
       loading: false,
       autoClose: 2000,
     });
-  }, 3000);
+    notificationId = null;
+  }
 }

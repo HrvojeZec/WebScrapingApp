@@ -3,9 +3,10 @@ const {
   sanctaDomenicaScraping,
 } = require("../../controller/scrape/scrapeSanctaDomenica");
 const Product = require("../../model/productModel");
+const Store = require("../../model/storesModel");
 
-const updateProductsPrice = async (existingProducts, newProducts) => {
-  for (const newProduct of newProducts) {
+const updateProductsPrice = async (existingProducts, allNewProducts) => {
+  for (const newProduct of allNewProducts) {
     const existingProduct = existingProducts.find(
       (product) =>
         product.productId === newProduct.productId &&
@@ -26,40 +27,90 @@ const updateProductsPrice = async (existingProducts, newProducts) => {
   }
 };
 
-const addNewProducts = async (newProducts, existingProducts) => {
-  const filteredProducts = newProducts.filter(
+const addNewProducts = async (allNewProducts, existingProducts) => {
+  const filteredProducts = allNewProducts.filter(
     (newProduct) =>
       !existingProducts.some(
         (product) => product.productId === newProduct.productId
       )
   );
-  await Product.create(filteredProducts);
+  if (filteredProducts.length > 0) {
+    await Product.insertMany(filteredProducts);
+  }
 };
 
-const scrapeService = async () => {
-  const mallDataPromise = mallScraping();
-  const sanctaDomenicaDataPromise = sanctaDomenicaScraping();
-  const promises = [mallDataPromise, sanctaDomenicaDataPromise];
-  const scrapingFunctions = [mallScraping, sanctaDomenicaScraping];
-  const results = await Promise.allSettled(promises);
+const scrapeService = async (keyword) => {
+  try {
+    const mallDataPromise = mallScraping(keyword);
+    const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword);
+    const promises = [mallDataPromise, sanctaDomenicaDataPromise];
+    const results = await Promise.allSettled(promises);
 
-  results.forEach(async (result, index) => {
-    if (result.status === "rejected") {
-      const functionName =
-        scrapingFunctions[index].name || `Function${index + 1}`;
-      console.error(`Promise ${functionName} rejected with ${result.reason}`);
-    } else {
-      const newProducts = result.value;
+    let message = [];
+    let success = true;
+    let allNewProducts = [];
+    const productsWithStoreAttributes = [];
+
+    for (const [index, result] of results.entries()) {
+      if (result.status === "rejected") {
+        const functionName = `Function${index + 1}`;
+
+        (success = false),
+          message.push(
+            `Promise ${functionName} rejected with ${result.reason}`
+          );
+      } else {
+        const newProducts = Array.isArray(result.value)
+          ? result.value
+          : result.value.data;
+        if (!Array.isArray(newProducts)) {
+          const functionName = `Function${index + 1}`;
+
+          (success = false),
+            message.push(`Invalid data format from ${functionName}`);
+
+          continue;
+        }
+
+        allNewProducts.push(...newProducts);
+      }
+    }
+
+    if (allNewProducts.length > 0) {
       const existingProducts = await Product.find();
       console.log(existingProducts.length);
       if (existingProducts.length === 0) {
-        await Product.create(newProducts);
+        await Product.insertMany(allNewProducts);
       } else {
-        updateProductsPrice(existingProducts, newProducts);
-        addNewProducts(newProducts, existingProducts);
+        await updateProductsPrice(existingProducts, allNewProducts);
+        await addNewProducts(allNewProducts, existingProducts);
       }
     }
-  });
+    for (const product of allNewProducts) {
+      const storeData = await Store.findById(product.storeId);
+
+      if (storeData) {
+        const productWithStoreAttributes = {
+          ...product,
+          storeName: storeData.storeName,
+          logo: storeData.logo,
+        };
+        productsWithStoreAttributes.push(productWithStoreAttributes);
+      }
+    }
+
+    return {
+      success,
+      data: productsWithStoreAttributes,
+      message,
+    };
+  } catch (error) {
+    console.error("Scraping service error:", error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
 };
 
 module.exports = scrapeService;

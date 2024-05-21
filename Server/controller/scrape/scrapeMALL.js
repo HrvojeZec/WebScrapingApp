@@ -5,10 +5,10 @@ const Store = require("../../model/storesModel");
 
 puppeteer.use(StealthPlugin());
 
-const mallScraping = async (res, req, next) => {
+const mallScraping = async (keyword) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
-  const keyword = "apple iphone 15";
+
   const store = await Store.findOne({ storeName: "Mall" });
   const storeId = store._id;
 
@@ -24,7 +24,7 @@ const mallScraping = async (res, req, next) => {
   });
   const btn = await page.waitForSelector("button#search-button"); // cekaj dok se ne pojavi button
 
-  await page.type("input#site-search-input", keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
+  await page.type("input#site-search-input", keyword.keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
   await new Promise((resolve) => setTimeout(resolve, 1000)); // cekaj 1 s
   await Promise.all([
     page.waitForNavigation(),
@@ -137,6 +137,8 @@ const mallScraping = async (res, req, next) => {
       } catch {
         oldPrice = null;
       }
+
+      console.log(description);
       return {
         title: title,
         description: description,
@@ -145,7 +147,7 @@ const mallScraping = async (res, req, next) => {
         link: `https://www.mall.hr${link}`,
         productId: productId,
         storeId: storeId,
-        keyword: keyword,
+        keyword: keyword.keyword,
         oldPrice: oldPrice,
       };
     })

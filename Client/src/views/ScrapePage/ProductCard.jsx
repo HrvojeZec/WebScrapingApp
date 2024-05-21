@@ -14,7 +14,8 @@ export function ProductCard({
   link,
   length,
 }) {
-  const slides = images.map((image) => (
+  const imageArray = Array.isArray(images) ? images : [images];
+  const slides = imageArray.map((image) => (
     <Carousel.Slide key={image}>
       <Image src={image} />
     </Carousel.Slide>
