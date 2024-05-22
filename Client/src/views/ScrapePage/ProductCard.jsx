@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import classes from "../../assets/stylesheets/CarouselCard.module.css";
-
+import dayjs from "dayjs";
 export function ProductCard({
-  productId,
   name,
   price,
   description,
@@ -12,8 +11,12 @@ export function ProductCard({
   oldPrice,
   logo,
   link,
-  length,
+  updatedAt,
 }) {
+  dayjs().format();
+  dayjs(`${updatedAt}`).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]");
+  const formatData = dayjs(`${updatedAt}`).format("DD/MM/YYYY");
+
   const imageArray = Array.isArray(images) ? images : [images];
   const slides = imageArray.map((image) => (
     <Carousel.Slide key={image}>
@@ -74,6 +77,11 @@ export function ProductCard({
             Buy
           </Button>
         </Group>
+        <div className={classes.updatedAtContainer}>
+          <Text span fw={500} className={classes.timeSet}>
+            Update at: {formatData}
+          </Text>
+        </div>
       </Card>
     </>
   );

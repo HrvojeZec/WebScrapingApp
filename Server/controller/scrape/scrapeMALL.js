@@ -138,7 +138,6 @@ const mallScraping = async (keyword) => {
         oldPrice = null;
       }
 
-      console.log(description);
       return {
         title: title,
         description: description,

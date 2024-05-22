@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import classes from "../../assets/stylesheets/scrape.module.scss";
 import { useProductsData } from "../../stores/GetAllProducts";
 import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { ProductCard } from "./ProductCard";
-import { Pagination, Text } from "@mantine/core";
+import {
+  Pagination,
+  HoverCard,
+  Text,
+  Group,
+  UnstyledButton,
+  Divider,
+  Flex,
+} from "@mantine/core";
 import { ContactPage } from "../ContactPage/ContactPage";
 import { errorNotification } from "../../components/shared/Notification/Notification";
 import { loadingDataNotification } from "../../components/shared/Notification/Notification";
+import { ArrowsSort } from "tabler-icons-react";
+
+const SortIcon = forwardRef((props, ref) => (
+  <div ref={ref} {...props}>
+    <ArrowsSort size={30} strokeWidth={1.5} color={"black"} />
+  </div>
+));
+
 function Scrape() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [loadingNotification, setLoadingNotification] = useState(false);
   const [dataLength, setDataLength] = useState();
   const [activePage, setActivePage] = useState(1);
+  const [showProductList, setShowProductList] = useState();
   const [productsPerPage] = useState(15);
   const { data: Products } = useProductsData();
   const images = Products.map((product) => {
@@ -87,7 +103,6 @@ function Scrape() {
       setLoading(false);
     }
   };
-  console.log(data);
   const settings = {
     infinite: true,
     fade: true,
@@ -99,6 +114,21 @@ function Scrape() {
     arrows: false,
     cssEase: "linear",
   };
+  const HandleSortLowToHigh = () => {
+    console.log("low to high");
+    const sortedProducts = data.sort((a, b) => {
+      const result = a.price - b.price;
+      return result;
+    });
+    console.log("sorted: ", sortedProducts);
+    setShowProductList([...sortedProducts]);
+  };
+  const HandleSortHighToLow = () => {
+    const reverseSortedProducts = data.sort((a, b) => b.price - a.price);
+    console.log("sorted: ", reverseSortedProducts);
+    setShowProductList([...reverseSortedProducts]);
+  };
+
   return (
     <>
       <div className={classes.scrape}>
@@ -154,6 +184,7 @@ function Scrape() {
           </div>
         </div>
       </div>
+
       {loading && <LoaderGlobal />}
 
       {data && (
@@ -161,6 +192,46 @@ function Scrape() {
           <div className={classes.card__title__wrapper}>
             <h1>{keyword}</h1>
           </div>
+          <Group>
+            <HoverCard
+              width={320}
+              shadow="md"
+              withArrow
+              openDelay={200}
+              closeDelay={10000}
+            >
+              <HoverCard.Target>
+                <SortIcon />
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Flex align="center" direction="column">
+                  <p
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    Sort
+                  </p>
+                </Flex>
+                <Divider my="md" />
+                <div className={classes.sort__button__wrapper}>
+                  <div>
+                    {" "}
+                    <UnstyledButton onClick={HandleSortLowToHigh}>
+                      Sort: low to high
+                    </UnstyledButton>
+                  </div>
+                  <Divider my="md" />
+                  <div>
+                    {" "}
+                    <UnstyledButton onClick={HandleSortHighToLow}>
+                      Sort: high to low
+                    </UnstyledButton>
+                  </div>
+                </div>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          </Group>
         </div>
       )}
       <div className={classes.card__wrapper}>
@@ -181,7 +252,7 @@ function Scrape() {
                 logo={product.logo}
                 oldPrice={product.oldPrice}
                 link={product.link}
-                length={product.length}
+                updatedAt={product.updatedAt}
               />
             ))}
       </div>
@@ -195,7 +266,6 @@ function Scrape() {
           />
         )}
       </div>
-
       <ContactPage />
     </>
   );
