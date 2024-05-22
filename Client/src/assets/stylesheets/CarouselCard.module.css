@@ -9,7 +9,7 @@
   flex: 1 1 calc(25% - 16px);
   box-sizing: border-box;
   max-width: calc(25% - 16px);
-  min-height: 68vh;
+  min-height: 75vh;
   height: 100%;
   display: flex;
   justify-content: space-between;

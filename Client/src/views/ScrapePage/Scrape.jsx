@@ -69,6 +69,7 @@ function Scrape() {
       const data = successData.data;
       console.log(data);
       setData(data);
+      setShowProductList(data);
     } catch (error) {
     } finally {
       loadingDataNotification(false);
@@ -98,6 +99,7 @@ function Scrape() {
       console.log(res);
       setDataLength(res.data.length);
       setData(res.data);
+      setShowProductList(res.data);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -116,19 +118,26 @@ function Scrape() {
   };
   const HandleSortLowToHigh = () => {
     console.log("low to high");
-    const sortedProducts = data.sort((a, b) => {
-      const result = a.price - b.price;
-      return result;
-    });
+    const sortedProducts = [...data].sort(
+      (a, b) =>
+        parseFloat(a.price.replace(" €", "").replace(".", "")) -
+        parseFloat(b.price.replace(" €", "").replace(".", ""))
+    );
     console.log("sorted: ", sortedProducts);
-    setShowProductList([...sortedProducts]);
-  };
-  const HandleSortHighToLow = () => {
-    const reverseSortedProducts = data.sort((a, b) => b.price - a.price);
-    console.log("sorted: ", reverseSortedProducts);
-    setShowProductList([...reverseSortedProducts]);
+    setShowProductList(sortedProducts);
   };
 
+  const HandleSortHighToLow = () => {
+    console.log("high to low");
+    const reverseSortedProducts = [...data].sort(
+      (a, b) =>
+        parseFloat(b.price.replace(" €", "").replace(".", "")) -
+        parseFloat(a.price.replace(" €", "").replace(".", ""))
+    );
+    console.log("sorted: ", reverseSortedProducts);
+    setShowProductList(reverseSortedProducts);
+  };
+  console.log(showProductList);
   return (
     <>
       <div className={classes.scrape}>
@@ -198,7 +207,7 @@ function Scrape() {
               shadow="md"
               withArrow
               openDelay={200}
-              closeDelay={10000}
+              closeDelay={4000}
             >
               <HoverCard.Target>
                 <SortIcon />
@@ -235,8 +244,8 @@ function Scrape() {
         </div>
       )}
       <div className={classes.card__wrapper}>
-        {data &&
-          data
+        {showProductList &&
+          showProductList
             .slice(
               (activePage - 1) * productsPerPage,
               activePage * productsPerPage
