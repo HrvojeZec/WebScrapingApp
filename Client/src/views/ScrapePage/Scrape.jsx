@@ -1,28 +1,17 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState } from "react";
 import classes from "../../assets/stylesheets/scrape.module.scss";
-import { useProductsData } from "../../stores/GetAllProducts";
-import Slider from "react-slick";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { ProductCard } from "./ProductCard";
-import {
-  Pagination,
-  HoverCard,
-  Text,
-  Group,
-  UnstyledButton,
-  Divider,
-  Flex,
-} from "@mantine/core";
+import { Pagination } from "@mantine/core";
 import { ContactPage } from "../ContactPage/ContactPage";
-import { errorNotification } from "../../components/shared/Notification/Notification";
-import { loadingDataNotification } from "../../components/shared/Notification/Notification";
-import { ArrowsSort } from "tabler-icons-react";
-
-const SortIcon = forwardRef((props, ref) => (
-  <div ref={ref} {...props}>
-    <ArrowsSort size={30} strokeWidth={1.5} color={"black"} />
-  </div>
-));
+import {
+  showErrorNotification,
+  showLoadingDataNotification,
+} from "../../components/shared/Notification/Notification";
+import { constants } from "../../config/constants";
+import { SliderComponent } from "./Slider";
+import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
+import { CardTitleWithSort } from "./CardTitleWithSort";
 
 function Scrape() {
   const [keyword, setKeyword] = useState("");
@@ -32,11 +21,7 @@ function Scrape() {
   const [activePage, setActivePage] = useState(1);
   const [showProductList, setShowProductList] = useState();
   const [productsPerPage] = useState(15);
-  const { data: Products } = useProductsData();
-  const images = Products.map((product) => {
-    return product.images;
-  });
-  const mergeImages = images.reduce((acc, curr) => acc.concat(curr), []);
+
   const totalPages = Math.ceil(dataLength / productsPerPage);
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
@@ -46,10 +31,10 @@ function Scrape() {
     console.log(keyword);
     event.preventDefault();
     if (keyword.length > 3) {
-      loadingDataNotification(true);
+      showLoadingDataNotification(true);
     }
     try {
-      const response = await fetch("http://localhost:5000/api/scrape", {
+      const response = await fetch(`${constants.apiUrl}/api/scrape`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -60,8 +45,8 @@ function Scrape() {
         const errorData = await response.json();
         console.log(errorData);
         const messageError = errorData.message;
-        loadingDataNotification(false);
-        errorNotification({ message: messageError });
+        showLoadingDataNotification(false);
+        showErrorNotification({ message: messageError });
       }
 
       const successData = await response.json();
@@ -72,7 +57,7 @@ function Scrape() {
       setShowProductList(data);
     } catch (error) {
     } finally {
-      loadingDataNotification(false);
+      showLoadingDataNotification(false);
     }
   };
 
@@ -82,7 +67,7 @@ function Scrape() {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/products/keyword?keyword=${keyword}`,
+        `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -92,7 +77,7 @@ function Scrape() {
         const errorData = await response.json();
         const messageError = errorData.message;
         console.log(errorData);
-        errorNotification({ message: messageError });
+        showErrorNotification({ message: messageError });
       }
 
       const res = await response.json();
@@ -105,18 +90,7 @@ function Scrape() {
       setLoading(false);
     }
   };
-  const settings = {
-    infinite: true,
-    fade: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 4000,
-    arrows: false,
-    cssEase: "linear",
-  };
-  const HandleSortLowToHigh = () => {
+  const handleSortLowToHigh = () => {
     console.log("low to high");
     const sortedProducts = [...data].sort(
       (a, b) =>
@@ -127,7 +101,7 @@ function Scrape() {
     setShowProductList(sortedProducts);
   };
 
-  const HandleSortHighToLow = () => {
+  const handleSortHighToLow = () => {
     console.log("high to low");
     const reverseSortedProducts = [...data].sort(
       (a, b) =>
@@ -137,18 +111,13 @@ function Scrape() {
     console.log("sorted: ", reverseSortedProducts);
     setShowProductList(reverseSortedProducts);
   };
-  console.log(showProductList);
   return (
     <>
       <div className={classes.scrape}>
         <div className={classes.scrape__wrapper}>
           <div className={classes.scrape__content} data-aos="fade-right">
             <div className={classes.content__upper}>
-              <h1>
-                Otkrijte najbolje ponude uz{" "}
-                <span className={classes.upper__Smart}>Smart</span>
-                <span className={classes.upper__Shop}>Shop</span>
-              </h1>
+              <SmartShopText />
               <p>
                 Moćna platforma za analizu proizvoda i rasta koja vam pomaže u
                 pretraživanju više trgovina, uključujući Mall i Sancta Domenica.
@@ -180,68 +149,18 @@ function Scrape() {
               </div>
             </div>
           </div>
-          <div className={classes.image__content} data-aos="fade-left">
-            <div className={classes.slider__container}>
-              <Slider {...settings}>
-                {mergeImages.map((image, index) => (
-                  <div key={index}>
-                    <img src={image} alt={`Slika ${index}`} />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </div>
+          <SliderComponent />
         </div>
       </div>
 
       {loading && <LoaderGlobal />}
 
       {data && (
-        <div className={classes.card__title}>
-          <div className={classes.card__title__wrapper}>
-            <h1>{keyword}</h1>
-          </div>
-          <Group>
-            <HoverCard
-              width={320}
-              shadow="md"
-              withArrow
-              openDelay={200}
-              closeDelay={4000}
-            >
-              <HoverCard.Target>
-                <SortIcon />
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <Flex align="center" direction="column">
-                  <p
-                    style={{
-                      margin: 0,
-                    }}
-                  >
-                    Sort
-                  </p>
-                </Flex>
-                <Divider my="md" />
-                <div className={classes.sort__button__wrapper}>
-                  <div>
-                    {" "}
-                    <UnstyledButton onClick={HandleSortLowToHigh}>
-                      Sort: low to high
-                    </UnstyledButton>
-                  </div>
-                  <Divider my="md" />
-                  <div>
-                    {" "}
-                    <UnstyledButton onClick={HandleSortHighToLow}>
-                      Sort: high to low
-                    </UnstyledButton>
-                  </div>
-                </div>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          </Group>
-        </div>
+        <CardTitleWithSort
+          handleSortLowToHigh={handleSortLowToHigh}
+          handleSortHighToLow={handleSortHighToLow}
+          keyword={keyword}
+        />
       )}
       <div className={classes.card__wrapper}>
         {showProductList &&

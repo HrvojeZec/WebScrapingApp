@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { constants } from "../config/constants";
 
 const BrandContext = createContext();
 
 export function useBrandData() {
   const context = useContext(BrandContext);
   if (context === undefined) {
-    console.log("useBrandData must be use with BrandProvider");
+    console.log("useBrandData must be used with BrandProvider");
   }
   return context;
 }
@@ -18,19 +19,11 @@ export function BrandProvider({ children }) {
   useEffect(() => {
     console.log("useEffect called");
     setLoading(true);
-    fetch("http://localhost:5000/api/brandData/getAll")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    fetch(`${constants.apiUrl}/api/brandData/getAll`)
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((error) => setError(true))
+      .finally(() => setLoading(false));
   }, []);
   const value = {
     data,

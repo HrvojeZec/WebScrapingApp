@@ -1,32 +1,17 @@
 import React from "react";
 import classes from "../../assets/stylesheets/footer.module.scss";
-import { useBrandData } from "../../stores/GetBrandData";
+import { SmartShop } from "../shared/BrandLogo/SmartShop";
 import {
-  BrandShopee,
   BrandFacebook,
   BrandTwitter,
   BrandInstagram,
 } from "tabler-icons-react";
 function Footer() {
-  const { data: brandData } = useBrandData();
-  const brandName = brandData[0].brandName;
-  const brandNameParts = brandName.split("Shop");
-
   return (
     <div className={classes.footer} data-aos="fade-up">
       <div className={classes.footer__wrapper}>
         <div className={classes.footer__content}>
-          <div className={classes.content__wrapper}>
-            <BrandShopee size={48} strokeWidth={2} className={classes.logo} />
-            <div className={classes.logo__name}>
-              <p>
-                <span className={classes.brand__smart}>
-                  {brandNameParts[0]}
-                </span>
-                <span className={classes.brand__shop}>Shop</span>
-              </p>
-            </div>
-          </div>
+          <SmartShop showLogo={true} />
           <p>123 Main St, Cityville</p>
           <p>contact@smartshop.com</p>
         </div>

@@ -14,7 +14,7 @@ import Aos from "aos";
 function App() {
   useEffect(() => {
     Aos.init({ duration: 1500 });
-  });
+  }, []);
   return (
     <MantineProvider>
       <Notifications position="top-right" zIndex={1000} />

@@ -2,7 +2,7 @@ import React from "react";
 import { IconX, IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { rem } from "@mantine/core";
-export function successNotification({ message }) {
+export function showSuccessNotification({ message }) {
   notifications.show({
     title: "Success!",
     message: message,
@@ -13,7 +13,7 @@ export function successNotification({ message }) {
   });
 }
 
-export function errorNotification({ message }) {
+export function showErrorNotification({ message }) {
   notifications.show({
     title: "Error!",
     message: message,
@@ -25,7 +25,7 @@ export function errorNotification({ message }) {
 }
 let notificationId = null;
 
-export function loadingDataNotification(value) {
+export function showLoadingDataNotification(value) {
   console.log(value);
   if (value) {
     notificationId = notifications.show({

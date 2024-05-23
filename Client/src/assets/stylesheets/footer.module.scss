@@ -2,7 +2,6 @@
 
 .footer {
   max-width: 1950px;
-
   max-height: 500px;
   width: 100%;
   height: 100%;
@@ -103,15 +102,6 @@
         justify-content: flex-start;
       }
     }
-  }
-}
-@keyframes header-scroll-down {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(0.5rem);
   }
 }
 

@@ -16,6 +16,7 @@ router.get("/", async (req, res, next) => {
 
 router.post("/add", async (req, res, next) => {
   const { storeName } = req.body;
+
   try {
     const response = await AddStore({ storeName: storeName });
     if (response.success) {
@@ -25,12 +26,10 @@ router.post("/add", async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Došlo je do pogreške prilikom obrade zahtjeva",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Došlo je do pogreške prilikom obrade zahtjeva",
+    });
   }
 });
 module.exports = router;

@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { constants } from "../config/constants";
 
 const ProductsContext = createContext();
 
 export function useProductsData() {
   const context = useContext(ProductsContext);
   if (context === undefined) {
-    console.log("useProductsData must be use with ProductsContext");
+    console.log("useProductsData must be used with ProductsContext");
   }
   return context;
 }
@@ -17,15 +18,11 @@ export function GetAllProductsProvider({ children }) {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/api/products")
-      .then((res) => {
-        return res.json();
-      })
+    fetch(`${constants.apiUrl}/api/products`)
+      .then((res) => res.json())
       .then((data) => setData(data))
       .catch((error) => setError(error))
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }, []);
 
   const value = {
