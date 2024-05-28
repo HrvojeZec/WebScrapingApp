@@ -11,18 +11,27 @@ export function useProductsData() {
   return context;
 }
 
-export function GetAllProductsProvider({ children }) {
+export function GetRandomProductsProvider({ children }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  useEffect(() => {
+  const fetchRandomProducts = async () => {
     setLoading(true);
-    fetch(`${constants.apiUrl}/api/products`)
+    await fetch(`${constants.apiUrl}/api/products/randomProducts`)
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchRandomProducts();
+    const interval = setInterval(() => {
+      fetchRandomProducts();
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const value = {
@@ -30,7 +39,7 @@ export function GetAllProductsProvider({ children }) {
     loading,
     error,
   };
-  console.log("AllProducts value:", value);
+  console.log("RandomProducts value:", value);
   return (
     <ProductsContext.Provider value={value}>
       {children}

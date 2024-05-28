@@ -1,35 +1,38 @@
 const express = require("express");
 const scrapeService = require("./scrape-service");
 const router = express.Router();
-let scapingInProgress = false;
-// pokrecemo scrapanje po trgovinama
-//scrapeService scrapea po trgovina, te ubacuje u nasu bazu samo one proizvode koji fale
-// te onim proizvodima kojima se cijena promjenila zamjeni za novu, pa pocetnu stavlja na staru cijenu
+let scrapingInProgress = false;
+
 router.post("/", async (req, res, next) => {
   const { keyword } = req.body;
-  console.log(keyword.length);
-  if (keyword.length === 0) {
+
+  if (!keyword || keyword.length === 0) {
     return res.status(400).json({ message: "Unesite traženi proizvod." });
   }
-  if (scapingInProgress) {
-    return res.status(400).json({ message: "Postupak je već u tijeku" });
+  if (scrapingInProgress) {
+    return res.status(400).json({ message: "Postupak je već u tijeku." });
   }
-  try {
-    scapingInProgress = true;
-    const response = await scrapeService({ keyword: keyword });
 
-    if (response.success) {
-      res.status(200).json(response);
-    } else {
-      res.status(400).json(response);
-    }
+  try {
+    scrapingInProgress = true;
+    const products = await scrapeService(keyword);
+    res.status(200).json({ success: true, products });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: `nešto je pošlo po krivu ${error}`,
-    });
+    if (error.products) {
+      res.status(207).json({
+        success: true,
+        products: error.products,
+        errors: error.errors,
+        message: "Neki izvori nisu uspješno scrapani.",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: `Nešto je pošlo po krivu: ${error.message}`,
+      });
+    }
   } finally {
-    scapingInProgress = false;
+    scrapingInProgress = false;
   }
 });
 

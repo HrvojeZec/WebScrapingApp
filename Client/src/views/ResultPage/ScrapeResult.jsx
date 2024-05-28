@@ -63,7 +63,7 @@ function ScrapeResult() {
         }
 
         const successData = await response.json();
-        const data = successData.data;
+        const data = successData;
 
         console.log(data);
         setData(data);

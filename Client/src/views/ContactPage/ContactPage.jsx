@@ -7,6 +7,7 @@ import {
 } from "../../components/shared/Notification/Notification";
 import { constants } from "../../config/constants";
 import { TextInput } from "@mantine/core";
+
 export function ContactPage() {
   const form = useForm({
     initialValues: {
@@ -27,17 +28,22 @@ export function ContactPage() {
           storeName: storeName,
         }),
       });
+
       if (!response.ok) {
         const resError = await response.json();
         const messageError = resError.message;
+        console.log(messageError);
         showErrorNotification({ message: messageError });
+        return;
       }
+
       const resSuccess = await response.json();
       const messageSuccess = resSuccess.message;
       console.log(messageSuccess);
       showSuccessNotification({ message: messageSuccess });
     } catch (error) {
-      showErrorNotification({ message: error });
+      console.error(error); // Log the actual error
+      showErrorNotification({ message: error.message }); // Display the error message
     }
   };
 

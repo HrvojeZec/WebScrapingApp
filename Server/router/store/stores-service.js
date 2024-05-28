@@ -1,28 +1,18 @@
 const Stores = require("../../model/storesModel");
 
 const addStore = async ({ storeName }) => {
-  const store = [
-    {
-      logo: null,
-      storeName: storeName,
-    },
-  ];
-
   const existingStoreName = await Stores.findOne({ storeName: storeName });
+
   if (existingStoreName) {
-    return {
-      success: false,
-      message: "trgovina je već dodana u bazu",
-    };
+    return { success: false, error: "STORE_ALREADY_EXISTS" };
   } else {
+    const store = [{ logo: null, storeName: storeName }];
     const result = await Stores.insertMany(store);
+
     if (result) {
-      return { success: true, message: "Trgovina je uspješno dodana" };
+      return { success: true };
     } else {
-      return {
-        success: false,
-        message: "Došlo je do pogreške prilikom dodavanja trgovine u bazu",
-      };
+      return { success: false, error: "INSERTION_FAILED" };
     }
   }
 };

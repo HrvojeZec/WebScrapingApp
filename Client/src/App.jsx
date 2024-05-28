@@ -21,7 +21,7 @@ function App() {
       <Notifications position="top-right" zIndex={1000} />
       <Routes>
         <Route exact path="/" element={<SearchPage />} />
-        <Route exact path="/resultPage" element={<ResultPage />} />
+        <Route path="/resultPage" element={<ResultPage />} />
       </Routes>
     </MantineProvider>
   );

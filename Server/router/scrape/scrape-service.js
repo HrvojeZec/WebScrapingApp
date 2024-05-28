@@ -40,77 +40,63 @@ const addNewProducts = async (allNewProducts, existingProducts) => {
 };
 
 const scrapeService = async (keyword) => {
-  try {
-    const mallDataPromise = mallScraping(keyword);
-    const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword);
-    const promises = [mallDataPromise, sanctaDomenicaDataPromise];
-    const results = await Promise.allSettled(promises);
+  const mallDataPromise = mallScraping(keyword);
+  const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword);
+  const promises = [mallDataPromise, sanctaDomenicaDataPromise];
+  const results = await Promise.allSettled(promises);
 
-    let message = [];
-    let success = true;
-    let allNewProducts = [];
-    const productsWithStoreAttributes = [];
+  let allNewProducts = [];
+  const errors = [];
 
-    for (const [index, result] of results.entries()) {
-      if (result.status === "rejected") {
-        const functionName = `Function${index + 1}`;
-
-        (success = false),
-          message.push(
-            `Promise ${functionName} rejected with ${result.reason}`
-          );
-      } else {
-        const newProducts = Array.isArray(result.value)
-          ? result.value
-          : result.value.data;
-        if (!Array.isArray(newProducts)) {
-          const functionName = `Function${index + 1}`;
-
-          (success = false),
-            message.push(`Invalid data format from ${functionName}`);
-
-          continue;
-        }
-
+  for (const [index, result] of results.entries()) {
+    if (result.status === "rejected") {
+      errors.push({
+        functionName: `Function${index + 1}`,
+        reason: result.reason,
+      });
+    } else {
+      const newProducts = Array.isArray(result.value)
+        ? result.value
+        : result.value.data;
+      if (Array.isArray(newProducts)) {
         allNewProducts.push(...newProducts);
-      }
-    }
-
-    if (allNewProducts.length > 0) {
-      const existingProducts = await Product.find();
-      console.log(existingProducts.length);
-      if (existingProducts.length === 0) {
-        await Product.insertMany(allNewProducts);
       } else {
-        await updateProductsPrice(existingProducts, allNewProducts);
-        await addNewProducts(allNewProducts, existingProducts);
+        errors.push({
+          functionName: `Function${index + 1}`,
+          reason: "Invalid data format",
+        });
       }
     }
-    for (const product of allNewProducts) {
-      const storeData = await Store.findById(product.storeId);
-
-      if (storeData) {
-        const productWithStoreAttributes = {
-          ...product,
-          storeName: storeData.storeName,
-          logo: storeData.logo,
-        };
-        productsWithStoreAttributes.push(productWithStoreAttributes);
-      }
-    }
-
-    return {
-      success,
-      data: productsWithStoreAttributes,
-      message,
-    };
-  } catch (error) {
-    console.error("Scraping service error:", error);
-    return {
-      success: false,
-      message: error.message,
-    };
   }
+
+  if (allNewProducts.length > 0) {
+    const existingProducts = await Product.find();
+    if (existingProducts.length === 0) {
+      await Product.insertMany(allNewProducts);
+    } else {
+      await updateProductsPrice(existingProducts, allNewProducts);
+      await addNewProducts(allNewProducts, existingProducts);
+    }
+  }
+
+  const productsWithStoreAttributes = [];
+  for (const product of allNewProducts) {
+    const storeData = await Store.findById(product.storeId);
+    if (storeData) {
+      const productWithStoreAttributes = {
+        ...product,
+        storeName: storeData.storeName,
+        logo: storeData.logo,
+      };
+      productsWithStoreAttributes.push(productWithStoreAttributes);
+    }
+  }
+
+  if (errors.length > 0) {
+    throw { products: productsWithStoreAttributes, errors };
+  }
+
+  return productsWithStoreAttributes;
 };
 
 module.exports = scrapeService;
