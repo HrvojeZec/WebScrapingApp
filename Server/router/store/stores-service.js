@@ -1,6 +1,6 @@
 const Stores = require("../../model/storesModel");
 
-const AddStore = async ({ storeName }) => {
+const addStore = async ({ storeName }) => {
   const store = [
     {
       logo: null,
@@ -27,4 +27,4 @@ const AddStore = async ({ storeName }) => {
   }
 };
 
-module.exports = AddStore;
+module.exports = addStore;

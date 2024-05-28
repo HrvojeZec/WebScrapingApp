@@ -17,7 +17,9 @@ const findProductsByKeyword = async (keyword) => {
         result.push(productWithStoreAttributes);
       }
     }
-
+    // Either you return data or empty data or throw an error
+    // Returning { success, data, message } is no good
+    // Service should not write messages for frontend, it's a job for router/controller
     return {
       success: true,
       data: result,

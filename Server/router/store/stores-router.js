@@ -2,7 +2,7 @@ const express = require("express");
 const Stores = require("../../model/storesModel");
 const router = express.Router();
 const { StoresData } = require("../../boostrap/setup");
-const AddStore = require("./stores-service");
+const addStore = require("./stores-service");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -18,7 +18,7 @@ router.post("/add", async (req, res, next) => {
   const { storeName } = req.body;
 
   try {
-    const response = await AddStore({ storeName: storeName });
+    const response = await addStore({ storeName: storeName });
     if (response.success) {
       res.status(200).json(response);
     } else {

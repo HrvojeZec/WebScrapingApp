@@ -78,10 +78,6 @@ const sanctaDomenicaScraping = async (keyword) => {
   let data = [];
   await page.goto(Url.SanctaDomenica);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
-  await page.screenshot({
-    path: "./images/Santadomenica.png",
-    fullPage: true,
-  });
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
   await page.type("input.amsearch-input", keyword.keyword, { delay: 100 });
@@ -91,10 +87,6 @@ const sanctaDomenicaScraping = async (keyword) => {
   ]);
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  await page.screenshot({
-    path: "./images/SantadomenicaKeyword.png",
-    fullPage: true,
-  });
 
   data = data.concat(await scrapeProducts(page, keyword.keyword, storeId));
   let lastPageRreached = false;

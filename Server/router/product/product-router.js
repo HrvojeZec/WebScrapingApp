@@ -7,6 +7,7 @@ const router = express.Router();
 //dohvaca proizvode po keywordu
 router.get("/keyword", async (req, res, next) => {
   const keyword = req.query.keyword;
+  //No validation if keyword is empty
   console.log(keyword);
   try {
     const response = await findProductsByKeyword(keyword);

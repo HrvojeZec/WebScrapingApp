@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classes from "../../assets/stylesheets/contact.module.scss";
 import { useForm } from "@mantine/form";
 import {

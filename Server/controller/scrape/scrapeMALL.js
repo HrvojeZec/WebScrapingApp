@@ -18,10 +18,7 @@ const mallScraping = async (keyword) => {
 
   await page.goto(Url.MallUrl);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
-  await page.screenshot({
-    path: "./images/PrviDioStranice.png",
-    fullPage: true,
-  });
+
   const btn = await page.waitForSelector("button#search-button"); // cekaj dok se ne pojavi button
 
   await page.type("input#site-search-input", keyword.keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
@@ -94,11 +91,6 @@ const mallScraping = async (keyword) => {
     scrollCount += 1;
   }
 
-  await page.screenshot({
-    path: "images/scroll.png",
-    fullPage: true,
-  });
-
   // dohvacanje podataka
   const products = await page.$$(".category-products .pbcr");
 
@@ -152,10 +144,6 @@ const mallScraping = async (keyword) => {
     })
   );
 
-  await page.screenshot({
-    path: "images/DrugiDioStranice.png",
-    fullPage: true,
-  });
   await browser.close();
 
   return data;
