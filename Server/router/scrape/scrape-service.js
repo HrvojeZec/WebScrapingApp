@@ -39,7 +39,7 @@ const addNewProducts = async (allNewProducts, existingProducts) => {
   }
 };
 
-const scrapeService = async (keyword) => {
+const executeService = async (keyword) => {
   const mallDataPromise = mallScraping(keyword);
   const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword);
   const promises = [mallDataPromise, sanctaDomenicaDataPromise];
@@ -99,4 +99,4 @@ const scrapeService = async (keyword) => {
   return productsWithStoreAttributes;
 };
 
-module.exports = scrapeService;
+module.exports = executeService;

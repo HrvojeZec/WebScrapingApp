@@ -31,13 +31,19 @@ function ScrapeResult() {
 
   //TO DO: UVESTI KEYWORD PROVIDER DA SE NE POJAVLJUJE ISTI FETCH DVA PUTA NA DVIJE RAZLICITE STRANE
   //TO DO: OVDJE DOHVACAMO DATA,ERROR,LOADER OD PROVIDERA
+  let url = "";
+  if (operation === "scrape") {
+    url = `${constants.apiUrl}/api/scrape`;
+  } else if (operation === "load") {
+    url = `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`;
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         let response;
         if (operation === "scrape") {
-          response = await fetch(`${constants.apiUrl}/api/scrape`, {
+          response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ keyword }),

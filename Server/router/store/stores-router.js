@@ -10,12 +10,10 @@ router.get("/", async (req, res, next) => {
     res.json({ success: true, message: "Podaci uspješno spremljeni u bazu." });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Došlo je do pogreške prilikom spremanja podataka u bazu.",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Došlo je do pogreške prilikom spremanja podataka u bazu.",
+    });
   }
 });
 
@@ -38,13 +36,10 @@ router.post("/add", async (req, res, next) => {
             .json({ success: false, message: "Trgovina je već dodana u bazu" });
           break;
         case "INSERTION_FAILED":
-          res
-            .status(500)
-            .json({
-              success: false,
-              message:
-                "Došlo je do pogreške prilikom dodavanja trgovine u bazu",
-            });
+          res.status(500).json({
+            success: false,
+            message: "Došlo je do pogreške prilikom dodavanja trgovine u bazu",
+          });
           break;
         default:
           res.status(500).json({ success: false, message: "Nepoznata greška" });
@@ -53,12 +48,10 @@ router.post("/add", async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Došlo je do pogreške prilikom obrade zahtjeva",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Došlo je do pogreške prilikom obrade zahtjeva",
+    });
   }
 });
 

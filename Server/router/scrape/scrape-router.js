@@ -1,5 +1,5 @@
 const express = require("express");
-const scrapeService = require("./scrape-service");
+const executeService = require("./scrape-service");
 const router = express.Router();
 let scrapingInProgress = false;
 
@@ -15,7 +15,7 @@ router.post("/", async (req, res, next) => {
 
   try {
     scrapingInProgress = true;
-    const products = await scrapeService(keyword);
+    const products = await executeService(keyword);
     res.status(200).json({ success: true, products });
   } catch (error) {
     if (error.products) {

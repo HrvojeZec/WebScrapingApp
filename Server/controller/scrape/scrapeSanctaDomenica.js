@@ -80,7 +80,7 @@ const sanctaDomenicaScraping = async (keyword) => {
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  await page.type("input.amsearch-input", keyword.keyword, { delay: 100 });
+  await page.type("input.amsearch-input", keyword, { delay: 100 });
   await Promise.all([
     page.waitForNavigation(),
     await page.keyboard.press("Enter"),
@@ -88,7 +88,7 @@ const sanctaDomenicaScraping = async (keyword) => {
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  data = data.concat(await scrapeProducts(page, keyword.keyword, storeId));
+  data = data.concat(await scrapeProducts(page, keyword, storeId));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -102,7 +102,7 @@ const sanctaDomenicaScraping = async (keyword) => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(await scrapeProducts(page, keyword.keyword, storeId));
+      data = data.concat(await scrapeProducts(page, keyword, storeId));
     }
   }
 
