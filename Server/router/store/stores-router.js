@@ -19,8 +19,11 @@ router.get("/", async (req, res, next) => {
 
 router.post("/add", async (req, res, next) => {
   const { storeName } = req.body;
-  console.log(storeName);
-
+  if (storeName === "") {
+    return res
+      .status(404)
+      .json({ success: true, message: "Ime trgovine je obavezno!" });
+  }
   try {
     const response = await addStore({ storeName });
 

@@ -18,10 +18,6 @@ export function ContactPage() {
     initialValues: {
       storeName: "",
     },
-    validate: {
-      storeName: (value) =>
-        value.length < 2 ? "Ime trgovine je obavezno!" : null,
-    },
   });
 
   const handleSubmit = async ({ storeName }) => {
