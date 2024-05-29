@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "../../assets/stylesheets/contact.module.scss";
 import { useForm } from "@mantine/form";
-import {
-  showSuccessNotification,
-  showErrorNotification,
-} from "../../components/shared/Notification/Notification";
+import { showSuccessNotification } from "../../components/shared/Notification/Notification";
 import { constants } from "../../config/constants";
-import { TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  TextInput,
+  useMantineTheme,
+  rem,
+} from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
 
 export function ContactPage() {
+  const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
       storeName: "",
@@ -32,23 +37,23 @@ export function ContactPage() {
       if (!response.ok) {
         const resError = await response.json();
         const messageError = resError.message;
-        console.log(messageError);
-        showErrorNotification({ message: messageError });
+        form.setFieldError("storeName", messageError);
         return;
       }
-
       const resSuccess = await response.json();
       const messageSuccess = resSuccess.message;
-      console.log(messageSuccess);
       showSuccessNotification({ message: messageSuccess });
     } catch (error) {
-      console.error(error); // Log the actual error
-      showErrorNotification({ message: error.message }); // Display the error message
+      form.setFieldError("storeName", error.message);
     }
   };
 
+  const handleActionIconSubmit = () => {
+    handleSubmit(form.values);
+  };
+
   return (
-    <div className={classes.contact} /* data-aos="fade-up" */>
+    <div className={classes.contact} data-aos="fade-up">
       <div className={classes.contact__wrapper}>
         <h1>Kontaktirajte nas</h1>
         <p>
@@ -63,8 +68,23 @@ export function ContactPage() {
             {...form.getInputProps("storeName")}
             placeholder="Unesite ime trgovine..."
             error={form.errors.storeName}
+            size="lg"
+            radius="lg"
+            rightSection={
+              <ActionIcon
+                size={32}
+                radius="xl"
+                color={theme.primaryColor}
+                variant="filled"
+                onClick={handleActionIconSubmit}
+              >
+                <IconArrowRight
+                  style={{ width: rem(18), height: rem(18) }}
+                  stroke={1.5}
+                />
+              </ActionIcon>
+            }
           />
-          <button type="submit">Pošalji</button>
         </form>
       </div>
     </div>

@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "../../assets/stylesheets/search.module.scss";
 import { ContactPage } from "../ContactPage/ContactPage";
-import {
-  showErrorNotification,
-  showLoadingDataNotification,
-} from "../../components/shared/Notification/Notification";
+import { showLoadingDataNotification } from "../../components/shared/Notification/Notification";
 import { SliderComponent } from "./Slider";
 import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
 import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
+import { Button, TextInput, Tooltip } from "@mantine/core";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
+  const [error, setError] = useState();
+  const [disabledButton, setDisabledButton] = useState(true);
   //TO DO: DODATI OVDJE KEYWORD PROVIDER ZA SET DATA,ERROR,LOADER
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setDisabledButton(keyword.length < 1);
+  }, [keyword]);
   const handleScrape = async (event) => {
     try {
       showLoadingDataNotification(true);
@@ -28,7 +31,8 @@ function Search() {
       if (!response.ok) {
         const errorData = await response.json();
         const messageError = errorData.message;
-        showErrorNotification({ message: messageError });
+        setError(messageError);
+        /*    showErrorNotification({ message: messageError }); */
       } else {
         navigate(`/resultPage?keyword=${keyword}`);
         //navigate("/resultPage");
@@ -54,16 +58,19 @@ function Search() {
       if (!response.ok) {
         const errorData = await response.json();
         const messageError = errorData.message;
-        showErrorNotification({ message: messageError });
+        setError(messageError);
+        /*  showErrorNotification({ message: messageError }); */
       } else {
         navigate(`/resultPage?keyword=${keyword}&operation=load`);
         //navigate("/resultPage");
         //  navigate(`/resultPage?data=${JSON.stringify(successData.data)}`);
       }
     } catch (error) {
-      showErrorNotification({
+      /*   showErrorNotification({
         message: "An error occurred while loading data from the database.",
-      });
+      }); */
+      const message = "An error occurred while loading data from the database.";
+      setError(message);
     } finally {
       showLoadingDataNotification(false);
     }
@@ -82,28 +89,44 @@ function Search() {
               </p>
             </div>
             <div className={classes.content__input}>
-              <input
-                className={classes.input}
+              <TextInput
                 type="text"
                 placeholder="Unesite proizvod koji tražite..."
                 value={keyword}
+                error={error}
+                size="lg"
+                radius="lg"
                 onChange={(e) => setKeyword(e.target.value)}
               />
               <div className={classes.button__wrapper}>
-                <button
-                  className={classes.button__scrape}
-                  type="button"
-                  onClick={handleScrape}
-                >
-                  Pokreni scrapanje
-                </button>
-                <button
-                  className={classes.button__LoadFromDatabase}
-                  type="button"
-                  onClick={handleLoadFromDatabase}
-                >
-                  Učitaj proizvode
-                </button>
+                <Tooltip label="Unesite traženi proizvod">
+                  <Button
+                    type="button"
+                    disabled={disabledButton}
+                    size="md"
+                    onClick={handleScrape}
+                    variant="gradient"
+                    gradient={{
+                      from: "#ff7f50",
+                      to: "rgba(184, 0, 0, 1)",
+                      deg: 107,
+                    }}
+                  >
+                    Pokreni scrapanje
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Unesite traženi proizvod">
+                  <Button
+                    type="button"
+                    disabled={disabledButton}
+                    size="md"
+                    onClick={handleLoadFromDatabase}
+                    variant="gradient"
+                    gradient={{ from: "cyan", to: "blue", deg: 225 }}
+                  >
+                    Učitaj proizvode
+                  </Button>
+                </Tooltip>
               </div>
             </div>
           </div>
