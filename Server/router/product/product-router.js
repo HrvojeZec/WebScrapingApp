@@ -3,6 +3,7 @@ const {
   findProductsByKeyword,
   findAllProducts,
   findRandomProducts,
+  findAllKeywords,
 } = require("../product/product-service");
 
 const router = express.Router();
@@ -56,6 +57,18 @@ router.get("/randomProducts", async (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: "Došlo je do pogreške prilikom dohvata nasumičnih proizvoda.",
+    });
+  }
+});
+
+router.get("/allKeywords", async (req, res, next) => {
+  try {
+    const response = await findAllKeywords();
+    console.log(response);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Došlo je do greške prilikom dohvaćanja keyowrds-a.",
     });
   }
 });

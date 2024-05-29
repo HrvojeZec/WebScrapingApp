@@ -6,6 +6,7 @@ import {
   useProductsData,
   GetRandomProductsProvider,
 } from "./GetRandomProducts";
+import { GetAllKeywordsProvider, useKeywordsData } from "./GetAllKeywords";
 import {
   KeywordDataProvider,
   useKeywordProductDataContext,
@@ -13,12 +14,14 @@ import {
 
 const DataProviderInner = ({ children }) => {
   const { loading: brandLoading, error: brandError } = useBrandData();
+  const { loading: keywordsLoading, error: keywordsError } = useKeywordsData();
   const { loading: productsLoading, error: productsError } = useProductsData();
+
   /*   const {} = useKeywordProductDataContext(); */
-  if (brandLoading || productsLoading) {
+  if (brandLoading || productsLoading || keywordsLoading) {
     return <LoaderGlobal />;
   }
-  if (brandError || productsError) {
+  if (brandError || productsError || keywordsError) {
     return <NotFoundTitle />;
   }
   return children;
@@ -27,11 +30,13 @@ const DataProviderInner = ({ children }) => {
 export function DataProvider({ children }) {
   return (
     <BrandProvider>
-      <GetRandomProductsProvider>
-        {/*       <KeywordDataProvider> */}
-        <DataProviderInner>{children}</DataProviderInner>
-        {/*         </KeywordDataProvider> */}
-      </GetRandomProductsProvider>
+      <GetAllKeywordsProvider>
+        <GetRandomProductsProvider>
+          {/*       <KeywordDataProvider> */}
+          <DataProviderInner>{children}</DataProviderInner>
+          {/*         </KeywordDataProvider> */}
+        </GetRandomProductsProvider>
+      </GetAllKeywordsProvider>
     </BrandProvider>
   );
 }

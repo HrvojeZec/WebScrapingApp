@@ -42,4 +42,14 @@ const findRandomProducts = async () => {
   return result;
 };
 
-module.exports = { findProductsByKeyword, findAllProducts, findRandomProducts };
+const findAllKeywords = async () => {
+  const result = await Product.distinct("keyword");
+  console.log(result);
+  return result;
+};
+module.exports = {
+  findAllKeywords,
+  findProductsByKeyword,
+  findAllProducts,
+  findRandomProducts,
+};

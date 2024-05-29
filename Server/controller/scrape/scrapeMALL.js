@@ -166,9 +166,6 @@ const mallScraping = async (keyword) => {
   return data;
 };
 
-//TO DO dohvati alert-box alert-box--warning class , ako ona postoji  izbaci iz trazenja (await browser.close())
-// vrati prazan string []
-
 module.exports = {
   mallScraping,
 };

@@ -48,8 +48,6 @@ const executeService = async (keyword) => {
   let allNewProducts = [];
   const errors = [];
 
-  //TO DO provjeri da li ima prazan string [] ako je onda znaci da se nije pronasao
-  // niti jedan proizvod iz te trgovine po tom rijeci
   //mall promises:  Promise { [] }
   // sancta promises:  Promise { [] }
   /*   console.log("mall promises: ", mallDataPromise);

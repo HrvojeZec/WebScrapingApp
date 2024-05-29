@@ -6,12 +6,14 @@ import { SliderComponent } from "./Slider";
 import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
 import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
-import { Button, TextInput, Tooltip } from "@mantine/core";
+import { Autocomplete, Button, TextInput, Tooltip } from "@mantine/core";
+import { useKeywordsData } from "../../stores/GetAllKeywords";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
   const [error, setError] = useState();
   const [disabledButton, setDisabledButton] = useState(true);
+  const { data: keywordsData } = useKeywordsData();
   //TO DO: DODATI OVDJE KEYWORD PROVIDER ZA SET DATA,ERROR,LOADER
   const navigate = useNavigate();
 
@@ -90,14 +92,17 @@ function Search() {
               </p>
             </div>
             <div className={classes.content__input}>
-              <TextInput
+              <Autocomplete
                 type="text"
                 placeholder="Unesite proizvod koji tražite..."
                 value={keyword}
                 error={error}
                 size="lg"
                 radius="lg"
-                onChange={(e) => setKeyword(e.target.value)}
+                data={keywordsData}
+                withScrollArea={false}
+                styles={{ dropdown: { maxHeight: 200, overflowY: "auto" } }}
+                onChange={(newKeyword) => setKeyword(newKeyword)}
               />
               <div className={classes.button__wrapper}>
                 <Tooltip label="Unesite traženi proizvod">
