@@ -30,6 +30,7 @@ function Search() {
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         const messageError = errorData.message;
         setError(messageError);
         /*    showErrorNotification({ message: messageError }); */

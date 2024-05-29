@@ -77,7 +77,6 @@ const sanctaDomenicaScraping = async (keyword) => {
 
   let data = [];
   await page.goto(Url.SanctaDomenica);
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
   await page.type("input.amsearch-input", keyword, { delay: 100 });

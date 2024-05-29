@@ -5,8 +5,17 @@ const Store = require("../../model/storesModel");
 
 puppeteer.use(StealthPlugin());
 
+const checkForNoResults = async (page) => {
+  const noResults = await page.$(".alert-box");
+
+  if (noResults) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const mallScraping = async (keyword) => {
-  console.log("mall", keyword);
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
@@ -31,6 +40,13 @@ const mallScraping = async (keyword) => {
   ]);
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  //provjeravamo da li postoji proizvod po keyword,
+  //ako ne postoji baca nas na stranicu sa divom sa class-om alert-box alert-box--warning
+  if (await checkForNoResults(page)) {
+    await browser.close();
+    return [];
+  }
 
   // Main scroll loop
   const scrollHeight = await page.evaluate(() => document.body.scrollHeight);
@@ -149,6 +165,9 @@ const mallScraping = async (keyword) => {
 
   return data;
 };
+
+//TO DO dohvati alert-box alert-box--warning class , ako ona postoji  izbaci iz trazenja (await browser.close())
+// vrati prazan string []
 
 module.exports = {
   mallScraping,

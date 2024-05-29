@@ -16,9 +16,14 @@ router.post("/", async (req, res, next) => {
   try {
     scrapingInProgress = true;
     const products = await executeService(keyword);
+
     res.status(200).json({ success: true, products });
   } catch (error) {
-    if (error.products) {
+    if (error.status === 404) {
+      return res.status(404).json({
+        message: "Nema proizvoda za danu ključnu riječ u obje trgovine.",
+      });
+    } else if (error.products) {
       res.status(207).json({
         success: true,
         products: error.products,
