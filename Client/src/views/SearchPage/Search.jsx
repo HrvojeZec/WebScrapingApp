@@ -20,7 +20,7 @@ function Search() {
   useEffect(() => {
     setDisabledButton(keyword.length < 1);
   }, [keyword]);
-  const handleScrape = async (event) => {
+  const handleScrape = async () => {
     try {
       showLoadingDataNotification(true);
       const response = await fetch(`${constants.apiUrl}/api/scrape`, {
@@ -42,12 +42,15 @@ function Search() {
         navigate(`/resultPage?scrapeId=${scrapeId}&operation=scrape`);
       }
     } catch (error) {
+      const message =
+        "Došlo je do pogreške prilikom učitavanja podataka iz baze podataka.";
+      setError(message);
     } finally {
       showLoadingDataNotification(false);
     }
   };
 
-  const handleLoadFromDatabase = async (event) => {
+  const handleLoadFromDatabase = async () => {
     try {
       showLoadingDataNotification(true);
       const response = await fetch(
@@ -65,7 +68,8 @@ function Search() {
         navigate(`/resultPage?keyword=${keyword}&operation=load`);
       }
     } catch (error) {
-      const message = "An error occurred while loading data from the database.";
+      const message =
+        "Došlo je do pogreške prilikom učitavanja podataka iz baze podataka.";
       setError(message);
     } finally {
       showLoadingDataNotification(false);

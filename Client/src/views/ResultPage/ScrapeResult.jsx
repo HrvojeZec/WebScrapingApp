@@ -18,23 +18,21 @@ function ScrapeResult() {
   const [activePage, setActivePage] = useState(1);
   const [productsPerPage] = useState(15);
   const [dataLength, setDataLength] = useState(0);
+
   const totalPages = Math.ceil(dataLength / productsPerPage);
 
-  // Extract keyword and operation from URL
   const searchParams = new URLSearchParams(location.search);
   const keyword = searchParams.get("keyword") || "";
   const operation = searchParams.get("operation") || "";
   const scrapeId = searchParams.get("scrapeId") || "";
-  console.log(operation);
+
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
   };
 
   let url = "";
   if (operation === "scrape") {
-    console.log(scrapeId);
     url = `${constants.apiUrl}/api/products/scrapeId?scrapeId=${scrapeId}`;
-    console.log(url);
   } else if (operation === "load") {
     url = `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`;
   }
@@ -54,20 +52,15 @@ function ScrapeResult() {
             headers: { "Content-Type": "application/json" },
           });
         }
-
         if (!response.ok) {
           const errorData = await response.json();
-          console.log(errorData);
           const messageError = errorData.message;
           showLoadingDataNotification(false);
           showErrorNotification({ message: messageError });
           setLoading(false);
           return;
         }
-
         const data = await response.json();
-
-        console.log(data);
         setData(data);
         setShowProductList(data);
         setDataLength(data.length);
@@ -77,30 +70,28 @@ function ScrapeResult() {
         setLoading(false);
       }
     };
-
     if (keyword || scrapeId) {
       fetchData();
     }
   }, [keyword, operation, scrapeId]);
+
   const handleSortLowToHigh = () => {
-    console.log("low to high");
     const sortedProducts = [...data].sort(
       (a, b) =>
         parseFloat(a.price.replace(" €", "").replace(".", "")) -
         parseFloat(b.price.replace(" €", "").replace(".", ""))
     );
-    console.log("sorted: ", sortedProducts);
+
     setShowProductList(sortedProducts);
   };
 
   const handleSortHighToLow = () => {
-    console.log("high to low");
     const reverseSortedProducts = [...data].sort(
       (a, b) =>
         parseFloat(b.price.replace(" €", "").replace(".", "")) -
         parseFloat(a.price.replace(" €", "").replace(".", ""))
     );
-    console.log("sorted: ", reverseSortedProducts);
+
     setShowProductList(reverseSortedProducts);
   };
   return (
