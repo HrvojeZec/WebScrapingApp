@@ -15,7 +15,7 @@ const checkForNoResults = async (page) => {
   }
 };
 
-const mallScraping = async (keyword) => {
+const mallScraping = async (keyword, scrapeId) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
@@ -157,6 +157,7 @@ const mallScraping = async (keyword) => {
         storeId: storeId,
         keyword: keyword,
         oldPrice: oldPrice,
+        scrapeId: scrapeId,
       };
     })
   );

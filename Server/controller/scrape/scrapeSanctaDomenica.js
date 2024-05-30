@@ -5,7 +5,7 @@ const Store = require("../../model/storesModel");
 
 puppeteer.use(StealthPlugin());
 
-const scrapeProducts = async (page, keyword, storeId) => {
+const scrapeProducts = async (page, keyword, storeId, scrapeId) => {
   const products = await page.$$(".product-items .product-item");
 
   const data = await Promise.all(
@@ -61,6 +61,7 @@ const scrapeProducts = async (page, keyword, storeId) => {
         storeId: storeId,
         keyword: keyword,
         oldPrice: oldPrice,
+        scrapeId: scrapeId,
       };
     })
   );
@@ -68,7 +69,7 @@ const scrapeProducts = async (page, keyword, storeId) => {
   return data;
 };
 
-const sanctaDomenicaScraping = async (keyword) => {
+const sanctaDomenicaScraping = async (keyword, scrapeId) => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const storeName = "Sancta Domenica";
@@ -87,7 +88,7 @@ const sanctaDomenicaScraping = async (keyword) => {
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  data = data.concat(await scrapeProducts(page, keyword, storeId));
+  data = data.concat(await scrapeProducts(page, keyword, storeId, scrapeId));
   let lastPageRreached = false;
 
   while (!lastPageRreached) {
@@ -101,7 +102,9 @@ const sanctaDomenicaScraping = async (keyword) => {
       });
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      data = data.concat(await scrapeProducts(page, keyword, storeId));
+      data = data.concat(
+        await scrapeProducts(page, keyword, storeId, scrapeId)
+      );
     }
   }
 

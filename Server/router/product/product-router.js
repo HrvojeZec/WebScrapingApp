@@ -4,6 +4,7 @@ const {
   findAllProducts,
   findRandomProducts,
   findAllKeywords,
+  findProductsByScrapeId,
 } = require("../product/product-service");
 
 const router = express.Router();
@@ -64,7 +65,7 @@ router.get("/randomProducts", async (req, res, next) => {
 router.get("/allKeywords", async (req, res, next) => {
   try {
     const response = await findAllKeywords();
-    console.log(response);
+
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({
@@ -73,4 +74,24 @@ router.get("/allKeywords", async (req, res, next) => {
   }
 });
 
+//dohvacanje proizvoda po scrapeIdu ako su finished
+router.get("/scrapeId", async (req, res, next) => {
+  const scrapeId = req.query.scrapeId;
+
+  try {
+    const response = await findProductsByScrapeId(scrapeId);
+    if (response.length === 0) {
+      return res.status(404).json({
+        success: true,
+        message: "Nema proizvoda s danim scrape ID-om.",
+      });
+    }
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Došlo je do pogreške prilikom pretrage proizvoda.",
+    });
+  }
+});
 module.exports = router;

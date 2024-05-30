@@ -6,7 +6,7 @@ import { SliderComponent } from "./Slider";
 import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
 import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
-import { Autocomplete, Button, TextInput, Tooltip } from "@mantine/core";
+import { Autocomplete, Button, Tooltip } from "@mantine/core";
 import { useKeywordsData } from "../../stores/GetAllKeywords";
 
 function Search() {
@@ -35,14 +35,13 @@ function Search() {
         console.log(errorData);
         const messageError = errorData.message;
         setError(messageError);
-        /*    showErrorNotification({ message: messageError }); */
       } else {
-        navigate(`/resultPage?keyword=${keyword}`);
-        //navigate("/resultPage");
-        //  navigate(`/resultPage?data=${JSON.stringify(successData.data)}`);
+        const successData = await response.json();
+        console.log(successData.products[0].scrapeId);
+        const scrapeId = successData.products[0].scrapeId;
+        navigate(`/resultPage?scrapeId=${scrapeId}&operation=scrape`);
       }
     } catch (error) {
-      navigate(`/resultPage?keyword=${keyword}&operation=scrape`);
     } finally {
       showLoadingDataNotification(false);
     }
@@ -62,16 +61,10 @@ function Search() {
         const errorData = await response.json();
         const messageError = errorData.message;
         setError(messageError);
-        /*  showErrorNotification({ message: messageError }); */
       } else {
         navigate(`/resultPage?keyword=${keyword}&operation=load`);
-        //navigate("/resultPage");
-        //  navigate(`/resultPage?data=${JSON.stringify(successData.data)}`);
       }
     } catch (error) {
-      /*   showErrorNotification({
-        message: "An error occurred while loading data from the database.",
-      }); */
       const message = "An error occurred while loading data from the database.";
       setError(message);
     } finally {

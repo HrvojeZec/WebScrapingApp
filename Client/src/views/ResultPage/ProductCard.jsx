@@ -28,7 +28,7 @@ export function ProductCard({
     <>
       {" "}
       <Card className={classes.card} radius="md" withBorder padding="xl">
-        <Card.Section>
+        <Card.Section style={{ padding: "0.5rem" }}>
           <Carousel
             withIndicators
             loop

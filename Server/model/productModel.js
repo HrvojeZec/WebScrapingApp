@@ -38,6 +38,11 @@ const productSchema = new Schema(
       ref: "Store",
       required: true,
     },
+    scrapeId: {
+      type: Schema.Types.ObjectId,
+      ref: "Scrape",
+      required: true,
+    },
     productId: {
       type: String,
       required: true,

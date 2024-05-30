@@ -4,8 +4,13 @@ const {
 } = require("../../controller/scrape/scrapeSanctaDomenica");
 const Product = require("../../model/productModel");
 const Store = require("../../model/storesModel");
+const Scrape = require("../../model/scrapeModel");
 
-const updateProductsPrice = async (existingProducts, allNewProducts) => {
+const updateProductsPrice = async (
+  existingProducts,
+  allNewProducts,
+  scrapeId
+) => {
   for (const newProduct of allNewProducts) {
     const existingProduct = existingProducts.find(
       (product) =>
@@ -19,6 +24,7 @@ const updateProductsPrice = async (existingProducts, allNewProducts) => {
           $set: {
             price: newProduct.price,
             oldPrice: existingProduct.price,
+            scrapeId: scrapeId,
             new: true,
           },
         }
@@ -34,26 +40,29 @@ const addNewProducts = async (allNewProducts, existingProducts) => {
         (product) => product.productId === newProduct.productId
       )
   );
+
   if (filteredProducts.length > 0) {
     await Product.insertMany(filteredProducts);
   }
 };
 
 const executeService = async (keyword) => {
-  const mallDataPromise = mallScraping(keyword);
-  const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword);
+  const newScrapingJob = new Scrape({
+    status: "started",
+    startTime: new Date(),
+    keyword: keyword,
+  });
+  await newScrapingJob.save();
+  const scrapeId = newScrapingJob._id;
+
+  const mallDataPromise = mallScraping(keyword, scrapeId);
+  const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword, scrapeId);
   const promises = [mallDataPromise, sanctaDomenicaDataPromise];
   const results = await Promise.allSettled(promises);
 
   let allNewProducts = [];
   const errors = [];
 
-  //mall promises:  Promise { [] }
-  // sancta promises:  Promise { [] }
-  /*   console.log("mall promises: ", mallDataPromise);
-  console.log("sancta promises: ", sanctaDomenicaDataPromise); */
-
-  // .every return boolean
   const isArrayEmpty = results.every(
     (result) => result.status === "fulfilled" && result.value.length === 0
   );
@@ -87,7 +96,7 @@ const executeService = async (keyword) => {
     if (existingProducts.length === 0) {
       await Product.insertMany(allNewProducts);
     } else {
-      await updateProductsPrice(existingProducts, allNewProducts);
+      await updateProductsPrice(existingProducts, allNewProducts, scrapeId);
       await addNewProducts(allNewProducts, existingProducts);
     }
   }
@@ -104,6 +113,9 @@ const executeService = async (keyword) => {
       productsWithStoreAttributes.push(productWithStoreAttributes);
     }
   }
+  newScrapingJob.status = "finished";
+  newScrapingJob.endTime = new Date();
+  await newScrapingJob.save();
 
   if (errors.length > 0) {
     throw { products: productsWithStoreAttributes, errors };

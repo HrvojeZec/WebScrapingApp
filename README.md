@@ -225,3 +225,82 @@ products
 
 5. idi kroz nove proizvode i usporedi da li postoji proizvod koji nije u bazi
    tj. ako postoji onaj proizvod koji nije jednak imenima iz nase baze ubaci ih u bazu (samo njih)
+
+///////////////////////////////////////////////////////////////////////////////
+Scrape
+///////////////////////////////////////////////////////////////////////////////
+
+const ScrapingJob = require("../../model/scrapingJobModel"); // Uvezite ScrapingJob model
+
+// Funkcija za stvaranje novog zapisa ScrapingJob-a
+const createScrapingJob = async () => {
+try {
+const newScrapingJob = new ScrapingJob({
+status: "started",
+startTime: new Date(),
+});
+await newScrapingJob.save();
+return newScrapingJob.\_id; // Vraćamo ID novog zapisa ScrapingJob-a
+} catch (error) {
+throw new Error("Error creating new ScrapingJob");
+}
+};
+
+const executeService = async (keyword) => {
+try {
+// Pozivamo funkciju za stvaranje novog ScrapingJob zapisa
+const scrapingJobId = await createScrapingJob();
+
+    // Nastavljamo s ostatkom vaše logike za skeniranje...
+
+    // Ovdje se može nastaviti izvršavanje ostatka vaše funkcije executeService
+
+} catch (error) {
+throw error; // Uhvatite i obradite greške prema potrebi
+}
+};
+
+module.exports = executeService;
+
+//////////////////////////////////////////////////////////////////////////////////////
+Scrape
+//////////////////////////////////////////////////////////////////////////////////////
+
+const ScrapingJob = require("../../model/scrapingJobModel"); // Uvezite ScrapingJob model
+
+// Funkcija za ažuriranje završenog stanja ScrapingJob-a
+const updateScrapingJobStatus = async (scrapingJobId) => {
+try {
+await ScrapingJob.findByIdAndUpdate(
+scrapingJobId,
+{ status: "finished", endTime: new Date() },
+{ new: true }
+);
+} catch (error) {
+throw new Error("Error updating ScrapingJob status");
+}
+};
+
+const executeService = async (keyword) => {
+let scrapingJobId;
+try {
+// Pozivamo funkciju za stvaranje novog ScrapingJob zapisa
+scrapingJobId = await createScrapingJob();
+
+    // Nastavljamo s ostatkom vaše logike za skeniranje...
+
+    // Nakon što je skeniranje završeno, pozovemo funkciju za ažuriranje stanja ScrapingJob-a
+    await updateScrapingJobStatus(scrapingJobId);
+
+    // Ovdje se može nastaviti izvršavanje ostatka vaše funkcije executeService
+
+} catch (error) {
+// Ako dođe do greške, ažurirajte status ScrapingJob-a na "finished" s greškom
+if (scrapingJobId) {
+await updateScrapingJobStatus(scrapingJobId);
+}
+throw error; // Uhvatite i obradite greške prema potrebi
+}
+};
+
+module.exports = executeService;

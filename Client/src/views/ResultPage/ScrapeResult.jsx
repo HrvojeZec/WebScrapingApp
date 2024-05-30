@@ -24,16 +24,17 @@ function ScrapeResult() {
   const searchParams = new URLSearchParams(location.search);
   const keyword = searchParams.get("keyword") || "";
   const operation = searchParams.get("operation") || "";
-
+  const scrapeId = searchParams.get("scrapeId") || "";
+  console.log(operation);
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
   };
 
-  //TO DO: UVESTI KEYWORD PROVIDER DA SE NE POJAVLJUJE ISTI FETCH DVA PUTA NA DVIJE RAZLICITE STRANE
-  //TO DO: OVDJE DOHVACAMO DATA,ERROR,LOADER OD PROVIDERA
   let url = "";
   if (operation === "scrape") {
-    url = `${constants.apiUrl}/api/scrape`;
+    console.log(scrapeId);
+    url = `${constants.apiUrl}/api/products/scrapeId?scrapeId=${scrapeId}`;
+    console.log(url);
   } else if (operation === "load") {
     url = `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`;
   }
@@ -44,18 +45,14 @@ function ScrapeResult() {
         let response;
         if (operation === "scrape") {
           response = await fetch(url, {
-            method: "POST",
+            method: "GET",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ keyword }),
           });
         } else if (operation === "load") {
-          response = await fetch(
-            `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`,
-            {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          response = await fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         if (!response.ok) {
@@ -68,8 +65,7 @@ function ScrapeResult() {
           return;
         }
 
-        const successData = await response.json();
-        const data = successData;
+        const data = await response.json();
 
         console.log(data);
         setData(data);
@@ -82,10 +78,10 @@ function ScrapeResult() {
       }
     };
 
-    if (keyword) {
+    if (keyword || scrapeId) {
       fetchData();
     }
-  }, [keyword, operation]);
+  }, [keyword, operation, scrapeId]);
   const handleSortLowToHigh = () => {
     console.log("low to high");
     const sortedProducts = [...data].sort(
