@@ -44,9 +44,10 @@ function ScrapeResult() {
 
   let url = "";
   url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}`;
-
   useEffect(() => {
     const fetchData = async () => {
+      console.log(url);
+      console.log(params.keyword);
       try {
         setLoading(true);
         const response = await fetch(url, {
@@ -64,6 +65,7 @@ function ScrapeResult() {
         }
         const data = await response.json();
         setData(data);
+        console.log(data);
         setShowProductList(data);
         setDataLength(data.length);
       } catch (error) {
@@ -75,7 +77,7 @@ function ScrapeResult() {
     if (params.keyword) {
       fetchData();
     }
-  }, [params.keyword]);
+  }, []);
 
   const handleSortLowToHigh = () => {
     const sortedProducts = [...data].sort(

@@ -55,8 +55,11 @@ const executeService = async (keyword) => {
   await newScrapingJob.save();
   const scrapeId = newScrapingJob._id;
 
-  const mallDataPromise = mallScraping(keyword, scrapeId);
-  const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword, scrapeId);
+  const mallDataPromise = await mallScraping(keyword, scrapeId);
+  const sanctaDomenicaDataPromise = await sanctaDomenicaScraping(
+    keyword,
+    scrapeId
+  );
   const promises = [mallDataPromise, sanctaDomenicaDataPromise];
   const results = await Promise.allSettled(promises);
 

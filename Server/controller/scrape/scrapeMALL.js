@@ -117,9 +117,19 @@ const mallScraping = async (keyword, scrapeId) => {
         ".pb-brief__title-wrap .pb-brief__title",
         (element) => element.innerText.trim()
       );
-      const description = await product.$eval(".pb-brief__brief p", (element) =>
-        element.innerText.trim()
-      );
+
+      const description = await product.evaluate((element) => {
+        const brief = element.querySelector(".pb-brief__brief");
+        if (!brief) return "";
+
+        const p = brief.querySelector("p");
+        if (p) return p.innerText.trim();
+
+        const span = brief.querySelector("span");
+        if (span) return span.innerText.trim();
+
+        return brief.innerText.trim();
+      });
       const price = await product.$eval(".pb-price__price span", (element) =>
         element.innerText.trim()
       );
@@ -163,7 +173,7 @@ const mallScraping = async (keyword, scrapeId) => {
   );
 
   await browser.close();
-
+  console.log(data);
   return data;
 };
 
