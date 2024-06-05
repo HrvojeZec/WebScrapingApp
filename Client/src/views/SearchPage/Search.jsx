@@ -14,12 +14,19 @@ function Search() {
   const [error, setError] = useState();
   const [disabledButton, setDisabledButton] = useState(true);
   const { data: keywordsData } = useKeywordsData();
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    setDisabledButton(keyword.length < 1);
+    let errorMessage = "";
+    if (keyword.length > 20) {
+      errorMessage = "Previše slova, smanjite do 20.";
+    } else if (/,/.test(keyword)) {
+      errorMessage = "Napišite samo jedan proizvod bez nabrajanja.";
+    }
+    setError(errorMessage);
+    setDisabledButton(keyword.length < 1 || errorMessage !== "");
   }, [keyword]);
+
   const handleScrape = async () => {
     try {
       showLoadingDataNotification(true);
@@ -68,6 +75,7 @@ function Search() {
               </p>
             </div>
             <div className={classes.content__input}>
+              <form action=""></form>
               <Autocomplete
                 type="text"
                 placeholder="Unesite proizvod koji tražite..."

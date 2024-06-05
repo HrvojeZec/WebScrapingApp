@@ -37,9 +37,7 @@ router.post("/", async (req, res, next) => {
       });
     }
   } finally {
-    if (!res.headersSent) {
-      scrapingInProgress = false;
-    }
+    scrapingInProgress = false;
   }
 });
 
