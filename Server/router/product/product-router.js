@@ -23,7 +23,7 @@ router.get("/keyword", async (req, res, next) => {
     const products = await findProductsByKeyword(keyword);
     if (products.length === 0) {
       return res.status(404).json({
-        success: true,
+        data: products,
         message: "Nema proizvoda s danom ključnom riječi.",
       });
     }
@@ -80,6 +80,7 @@ router.get("/scrapeId", async (req, res, next) => {
 
   try {
     const response = await findProductsByScrapeId(scrapeId);
+    console.log(response);
     if (response.length === 0) {
       return res.status(404).json({
         success: true,
@@ -94,4 +95,5 @@ router.get("/scrapeId", async (req, res, next) => {
     });
   }
 });
+
 module.exports = router;

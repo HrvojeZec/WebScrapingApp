@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CardTitleWithSort } from "./CardTitleWithSort";
 import { ProductCard } from "./ProductCard";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
@@ -10,50 +10,52 @@ import {
   showErrorNotification,
   showLoadingDataNotification,
 } from "../../components/shared/Notification/Notification";
-function ScrapeResult() {
+import { Title, Text, Button, Container, Group } from "@mantine/core";
+import { Link } from "react-router-dom";
+function useCurrentURL() {
   const location = useLocation();
+  const params = useParams();
+
+  return {
+    pathname: location.pathname,
+    search: location.search,
+    params,
+  };
+}
+function ScrapeResult() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [showProductList, setShowProductList] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [productsPerPage] = useState(15);
   const [dataLength, setDataLength] = useState(0);
+  const { pathname, search, params } = useCurrentURL();
+
+  console.log(
+    `Current path is ${pathname} with search ${search} and params`,
+    params
+  );
 
   const totalPages = Math.ceil(dataLength / productsPerPage);
-
-  const searchParams = new URLSearchParams(location.search);
-  const keyword = searchParams.get("keyword") || "";
-  const operation = searchParams.get("operation") || "";
-  const scrapeId = searchParams.get("scrapeId") || "";
 
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
   };
 
   let url = "";
-  if (operation === "scrape") {
-    url = `${constants.apiUrl}/api/products/scrapeId?scrapeId=${scrapeId}`;
-  } else if (operation === "load") {
-    url = `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`;
-  }
+  url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}`;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        let response;
-        if (operation === "scrape") {
-          response = await fetch(url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          });
-        } else if (operation === "load") {
-          response = await fetch(url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          });
-        }
+        const response = await fetch(url, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         if (!response.ok) {
           const errorData = await response.json();
+          setData(errorData.data);
           const messageError = errorData.message;
           showLoadingDataNotification(false);
           showErrorNotification({ message: messageError });
@@ -70,10 +72,10 @@ function ScrapeResult() {
         setLoading(false);
       }
     };
-    if (keyword || scrapeId) {
+    if (params.keyword) {
       fetchData();
     }
-  }, [keyword, operation, scrapeId]);
+  }, [params.keyword]);
 
   const handleSortLowToHigh = () => {
     const sortedProducts = [...data].sort(
@@ -94,14 +96,38 @@ function ScrapeResult() {
 
     setShowProductList(reverseSortedProducts);
   };
+
   return (
     <div className={classes.scrapeResult}>
       {loading && <LoaderGlobal />}
+      {data.length === 0 && (
+        <Container className={classes.root}>
+          <div className={classes.label}>Nema pronađenih proizvoda</div>
+          <Title className={classes.title}>Ups! Nismo pronašli ništa.</Title>
+          <Text
+            c="dimmed"
+            size="lg"
+            ta="center"
+            className={classes.description}
+          >
+            Nažalost, nismo pronašli nijedan proizvod sa zadanom ključnom
+            riječi. Možda pokušajte s drugom ključnom riječi.
+          </Text>
+          <Group justify="center">
+            <Link to="/">
+              <Button variant="subtle" size="md" to="/">
+                Vrati me na početnu stranicu
+              </Button>
+            </Link>
+          </Group>
+        </Container>
+      )}
+
       {data.length > 0 && (
         <CardTitleWithSort
           handleSortLowToHigh={handleSortLowToHigh}
           handleSortHighToLow={handleSortHighToLow}
-          keyword={keyword}
+          keyword={params.keyword}
         />
       )}
       <div className={classes.card__wrapper}>

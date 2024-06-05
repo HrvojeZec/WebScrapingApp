@@ -50,6 +50,7 @@ const findAllKeywords = async () => {
 
 const findProductsByScrapeId = async (scrapeId) => {
   const existingProducts = await Product.find({ scrapeId });
+  console.log(existingProducts);
   let result = [];
   if (existingProducts.length > 0) {
     for (const product of existingProducts) {

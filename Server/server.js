@@ -7,7 +7,6 @@ require("dotenv").config();
 const scrapeRoute = require("./router/scrape/scrape-router");
 const storeRouter = require("./router/store/stores-router");
 const productRouter = require("./router/product/product-router");
-const brandRouter = require("./router/brand/brand-router");
 
 const app = express();
 const port = process.env.PORT;
@@ -23,7 +22,7 @@ app.use(express.json());
 
 app.use("/api/scrape", scrapeRoute);
 app.use("/api/storeData", storeRouter);
-app.use("/api/brandData", brandRouter);
+
 app.use("/api/products", productRouter);
 
 app.listen(port, () => {

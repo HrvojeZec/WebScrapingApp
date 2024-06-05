@@ -15,9 +15,9 @@ router.post("/", async (req, res, next) => {
 
   try {
     scrapingInProgress = true;
-    const products = await executeService(keyword);
 
-    res.status(200).json({ success: true, products });
+    const products = await executeService(keyword);
+    res.status(200).json({ status: "finished", products });
   } catch (error) {
     if (error.status === 404) {
       return res.status(404).json({
@@ -37,7 +37,9 @@ router.post("/", async (req, res, next) => {
       });
     }
   } finally {
-    scrapingInProgress = false;
+    if (!res.headersSent) {
+      scrapingInProgress = false;
+    }
   }
 });
 

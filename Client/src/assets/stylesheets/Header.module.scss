@@ -10,6 +10,7 @@
   justify-content: center;
   background-color: $primary-header-color;
   margin: 0 auto;
+  overflow: hidden;
   /* STICKY HEADER */
   /* position: sticky;
   z-index: 5;
@@ -23,17 +24,8 @@
     flex-direction: row;
     align-items: center;
     padding: 0.5rem;
-
-    .header__button {
-      border: none;
-      background-color: #333333;
-      cursor: pointer;
-      p {
-        color: $primary-header-text-color;
-        font-family: $base-font-family;
-        font-size: 1.25rem;
-        font-weight: $font-weight-regular;
-      }
+    .header__link {
+      text-decoration: none;
     }
   }
 }

@@ -14,14 +14,14 @@ import { ResultPage } from "./views/ResultPage/ResultPage";
 
 function App() {
   useEffect(() => {
-    Aos.init({ duration: 1500 });
+    Aos.init({ duration: 500, once: true });
   }, []);
   return (
     <MantineProvider>
       <Notifications position="top-right" zIndex={1000} />
       <Routes>
         <Route exact path="/" element={<SearchPage />} />
-        <Route path="/resultPage" element={<ResultPage />} />
+        <Route path="/rezultati/:keyword" element={<ResultPage />} />
       </Routes>
     </MantineProvider>
   );

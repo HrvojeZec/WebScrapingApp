@@ -7,11 +7,8 @@ function Header() {
   return (
     <div className={classes.header} data-aos="fade-down">
       <div className={classes.header__wrapper}>
-        <SmartShop showLogo={true} />
-        <Link to="/">
-          <button className={classes.header__button}>
-            <p>Home</p>
-          </button>
+        <Link to="/" className={classes.header__link}>
+          <SmartShop showLogo={true} />
         </Link>
       </div>
     </div>

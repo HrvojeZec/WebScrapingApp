@@ -28,6 +28,14 @@ export function ProductCard({
     <>
       {" "}
       <Card className={classes.card} radius="md" withBorder padding="xl">
+        {logo.startsWith("<svg") ? (
+          <div
+            dangerouslySetInnerHTML={{ __html: logo }}
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          />
+        ) : (
+          <img className={classes.storeLogo} src={logo} alt={`Logo ${name}`} />
+        )}
         <Card.Section style={{ padding: "0.5rem" }}>
           <Carousel
             withIndicators
@@ -51,14 +59,7 @@ export function ProductCard({
         <Spoiler maxHeight={120} showLabel="Show more" hideLabel="Hide">
           {description}
         </Spoiler>
-        {logo.startsWith("<svg") ? (
-          <div
-            dangerouslySetInnerHTML={{ __html: logo }}
-            style={{ marginTop: "1.5rem" }}
-          />
-        ) : (
-          <img className={classes.storeLogo} src={logo} alt={`Logo ${name}`} />
-        )}
+
         <Group justify="space-between" mt="md">
           <div>
             <Text fz="xl" span fw={500} className={classes.price}>
@@ -74,12 +75,12 @@ export function ProductCard({
             onClick={(event) => (window.location.href = link)}
             radius="md"
           >
-            Buy
+            Kupi
           </Button>
         </Group>
         <div className={classes.updatedAtContainer}>
           <Text span fw={500} className={classes.timeSet}>
-            Update at: {formatData}
+            Ažurirano u: {formatData}
           </Text>
         </div>
       </Card>

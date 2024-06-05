@@ -14,7 +14,7 @@ function Search() {
   const [error, setError] = useState();
   const [disabledButton, setDisabledButton] = useState(true);
   const { data: keywordsData } = useKeywordsData();
-  //TO DO: DODATI OVDJE KEYWORD PROVIDER ZA SET DATA,ERROR,LOADER
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,9 +37,10 @@ function Search() {
         setError(messageError);
       } else {
         const successData = await response.json();
-        console.log(successData.products[0].scrapeId);
-        const scrapeId = successData.products[0].scrapeId;
-        navigate(`/resultPage?scrapeId=${scrapeId}&operation=scrape`);
+
+        console.log(successData);
+
+        navigate("rezultati/" + encodeURIComponent(keyword));
       }
     } catch (error) {
       const message =
@@ -51,29 +52,7 @@ function Search() {
   };
 
   const handleLoadFromDatabase = async () => {
-    try {
-      showLoadingDataNotification(true);
-      const response = await fetch(
-        `${constants.apiUrl}/api/products/keyword?keyword=${keyword}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        const messageError = errorData.message;
-        setError(messageError);
-      } else {
-        navigate(`/resultPage?keyword=${keyword}&operation=load`);
-      }
-    } catch (error) {
-      const message =
-        "Došlo je do pogreške prilikom učitavanja podataka iz baze podataka.";
-      setError(message);
-    } finally {
-      showLoadingDataNotification(false);
-    }
+    navigate("/rezultati/" + encodeURIComponent(keyword));
   };
 
   return (
