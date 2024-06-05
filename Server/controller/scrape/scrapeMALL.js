@@ -173,7 +173,7 @@ const mallScraping = async (keyword, scrapeId) => {
   );
 
   await browser.close();
-  console.log(data);
+
   return data;
 };
 
