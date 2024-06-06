@@ -9,8 +9,8 @@ export function SmartShop({ showLogo }) {
       )}
       <div className={classes.logo__name}>
         <p>
-          <span className={classes.brand__smart}>Smart</span>
-          <span className={classes.brand__shop}>Shop</span>
+          <span className={classes.brand__smart}>Store</span>
+          <span className={classes.brand__shop}>Seeker</span>
         </p>
       </div>
     </div>
@@ -21,8 +21,8 @@ export function SmartShopText() {
   return (
     <h1>
       Otkrijte najbolje ponude uz{" "}
-      <span className={classes.upper__Smart}>Smart</span>
-      <span className={classes.upper__Shop}>Shop</span>
+      <span className={classes.upper__Smart}>Store</span>
+      <span className={classes.upper__Shop}>Seeker</span>
     </h1>
   );
 }
