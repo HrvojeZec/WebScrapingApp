@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import classes from "../../assets/stylesheets/contact.module.scss";
 import { useForm } from "@mantine/form";
 import { showSuccessNotification } from "../../components/shared/Notification/Notification";
 import { constants } from "../../config/constants";
-import {
-  ActionIcon,
-  Button,
-  TextInput,
-  useMantineTheme,
-  rem,
-} from "@mantine/core";
+import { ActionIcon, TextInput, useMantineTheme, rem } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 export function ContactPage() {
   const theme = useMantineTheme();
+
   const form = useForm({
     initialValues: {
       storeName: "",
@@ -21,6 +16,13 @@ export function ContactPage() {
   });
 
   const handleSubmit = async ({ storeName }) => {
+    if (storeName.length < 2 || storeName.length > 10) {
+      form.setFieldError("storeName", "Ime trgovine mora biti 2-10 znakova.");
+      return;
+    } else if (/[^A-Za-z0-9\s]/.test(storeName)) {
+      form.setFieldError("storeName", "Koristite samo alfanumeričke znakove.");
+      return;
+    }
     try {
       const response = await fetch(`${constants.apiUrl}/api/storeData/add`, {
         method: "POST",
