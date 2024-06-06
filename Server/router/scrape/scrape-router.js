@@ -17,6 +17,7 @@ router.post("/", async (req, res, next) => {
     scrapingInProgress = true;
 
     const products = await executeService(keyword);
+
     res.status(200).json({ status: "finished", products });
   } catch (error) {
     if (error.status === 404) {

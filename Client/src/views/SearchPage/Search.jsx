@@ -22,6 +22,8 @@ function Search() {
       errorMessage = "Previše slova, smanjite do 20.";
     } else if (/,/.test(keyword)) {
       errorMessage = "Napišite samo jedan proizvod bez nabrajanja.";
+    } else if (/[^A-Za-z0-9\s]/.test(keyword)) {
+      errorMessage = "Koristite samo alfanumeričke znakove.";
     }
     setError(errorMessage);
     setDisabledButton(keyword.length < 1 || errorMessage !== "");
