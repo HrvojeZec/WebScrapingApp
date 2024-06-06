@@ -12,6 +12,7 @@ import {
 } from "../../components/shared/Notification/Notification";
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import { Link } from "react-router-dom";
+
 function useCurrentURL() {
   const location = useLocation();
   const params = useParams();
@@ -22,6 +23,7 @@ function useCurrentURL() {
     params,
   };
 }
+
 function ScrapeResult() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -42,8 +44,8 @@ function ScrapeResult() {
     setActivePage(newPage);
   };
 
-  let url = "";
-  url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}`;
+  let url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}`;
+
   useEffect(() => {
     const fetchData = async () => {
       console.log(url);
@@ -56,7 +58,8 @@ function ScrapeResult() {
         });
         if (!response.ok) {
           const errorData = await response.json();
-          setData(errorData.data);
+          console.log(errorData);
+          setData([]);
           const messageError = errorData.message;
           showLoadingDataNotification(false);
           showErrorNotification({ message: messageError });
@@ -69,15 +72,18 @@ function ScrapeResult() {
         setShowProductList(data);
         setDataLength(data.length);
       } catch (error) {
+        setData([]);
+        showErrorNotification({ message: "Došlo je do greške." });
       } finally {
         showLoadingDataNotification(false);
         setLoading(false);
       }
     };
+
     if (params.keyword) {
       fetchData();
     }
-  }, []);
+  }, [params.keyword, url]);
 
   const handleSortLowToHigh = () => {
     const sortedProducts = [...data].sort(
@@ -102,7 +108,7 @@ function ScrapeResult() {
   return (
     <div className={classes.scrapeResult}>
       {loading && <LoaderGlobal />}
-      {data.length === 0 && (
+      {data.length === 0 && !loading && (
         <Container className={classes.root}>
           <div className={classes.label}>Nema pronađenih proizvoda</div>
           <Title className={classes.title}>Ups! Nismo pronašli ništa.</Title>
@@ -126,44 +132,43 @@ function ScrapeResult() {
       )}
 
       {data.length > 0 && (
-        <CardTitleWithSort
-          handleSortLowToHigh={handleSortLowToHigh}
-          handleSortHighToLow={handleSortHighToLow}
-          keyword={params.keyword}
-        />
-      )}
-      <div className={classes.card__wrapper}>
-        {showProductList.length > 0 &&
-          showProductList
-            .slice(
-              (activePage - 1) * productsPerPage,
-              activePage * productsPerPage
-            )
-            .map((product, index) => (
-              <ProductCard
-                key={index}
-                productId={product._id}
-                name={product.title}
-                description={product.description}
-                price={product.price}
-                images={product.images}
-                logo={product.logo}
-                oldPrice={product.oldPrice}
-                link={product.link}
-                updatedAt={product.updatedAt}
-              />
-            ))}
-      </div>
-      <div className={classes.pagination__wrapper}>
-        {data.length > 0 && (
-          <Pagination
-            total={totalPages}
-            value={activePage}
-            onChange={handlePageChange}
-            mt="sm"
+        <>
+          <CardTitleWithSort
+            handleSortLowToHigh={handleSortLowToHigh}
+            handleSortHighToLow={handleSortHighToLow}
+            keyword={params.keyword}
           />
-        )}
-      </div>
+          <div className={classes.card__wrapper}>
+            {showProductList
+              .slice(
+                (activePage - 1) * productsPerPage,
+                activePage * productsPerPage
+              )
+              .map((product, index) => (
+                <ProductCard
+                  key={index}
+                  productId={product._id}
+                  name={product.title}
+                  description={product.description}
+                  price={product.price}
+                  images={product.images}
+                  logo={product.logo}
+                  oldPrice={product.oldPrice}
+                  link={product.link}
+                  updatedAt={product.updatedAt}
+                />
+              ))}
+          </div>
+          <div className={classes.pagination__wrapper}>
+            <Pagination
+              total={totalPages}
+              value={activePage}
+              onChange={handlePageChange}
+              mt="sm"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

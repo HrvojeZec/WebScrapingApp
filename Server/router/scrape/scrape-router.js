@@ -1,16 +1,18 @@
 const express = require("express");
 const executeService = require("./scrape-service");
+const CustomError = require("../../Utils/CustomError");
 const router = express.Router();
 let scrapingInProgress = false;
 
 router.post("/", async (req, res, next) => {
   const { keyword } = req.body;
-
-  if (!keyword || keyword.length === 0) {
-    return res.status(400).json({ message: "Unesite traženi proizvod." });
-  }
+  //i dalje imam problem kod ovoga, kada pokrenem scrapanje i refresha stranicu i pokrenem ponovo
+  //ovaj dio će se izvršiti i onda mi neće poslati  res.status(200).json({ status: "finished", products });
+  // jer je već poslao response
   if (scrapingInProgress) {
-    return res.status(400).json({ message: "Postupak je već u tijeku." });
+    const err = new CustomError("Postupak je već u tijeku.", 400);
+    next(err);
+    /*  return res.status(400).json({ message: "Postupak je već u tijeku." }); */
   }
 
   try {
@@ -21,21 +23,36 @@ router.post("/", async (req, res, next) => {
     res.status(200).json({ status: "finished", products });
   } catch (error) {
     if (error.status === 404) {
-      return res.status(404).json({
+      const err = new CustomError(
+        "Nema proizvoda za danu ključnu riječ u obje trgovine.",
+        error.status
+      );
+      next(err);
+      /*  return res.status(404).json({
         message: "Nema proizvoda za danu ključnu riječ u obje trgovine.",
-      });
+      }); */
     } else if (error.products) {
-      res.status(207).json({
+      const err = new CustomError(
+        ` Neki izvori nisu uspješno scrapani.${error.products}`,
+        207
+      );
+      next(err);
+      /*   res.status(207).json({
         success: true,
         products: error.products,
         errors: error.errors,
         message: "Neki izvori nisu uspješno scrapani.",
-      });
+      }); */
     } else {
-      res.status(500).json({
+      const err = new CustomError(
+        `Nešto je pošlo po krivu: ${error.message}`,
+        500
+      );
+      next(err);
+      /* res.status(500).json({
         success: false,
         message: `Nešto je pošlo po krivu: ${error.message}`,
-      });
+      }); */
     }
   } finally {
     scrapingInProgress = false;
