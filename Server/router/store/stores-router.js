@@ -9,19 +9,6 @@ const {
 } = require("../../middleware/CustomError");
 const Stores = require("../../model/storesModel");
 
-router.get("/", async (req, res, next) => {
-  try {
-    console.log(StoresData);
-    await Stores.create(StoresData);
-    res.json({ success: true, message: "Podaci uspješno spremljeni u bazu." });
-  } catch (error) {
-    const err = new CustomInternalServerError(
-      "Došlo je do pogreške prilikom spremanja podataka u bazu."
-    );
-    next(err);
-  }
-});
-
 router.post("/add", async (req, res, next) => {
   const { storeName } = req.body;
   if (storeName === "") {

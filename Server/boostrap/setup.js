@@ -1,13 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 const mallLogo = fs.readFileSync(
-  path.resolve(__dirname, "../assets/logo.svg"),
+  path.resolve(__dirname, "../assets/mallLogo.svg"),
   "utf8"
 );
-const brandLogo = fs.readFileSync(
-  path.resolve(__dirname, "../assets/brand-logo.svg"),
+const SanctaDomenicaLogo = fs.readFileSync(
+  path.resolve(__dirname, "../assets/sanctaDomenicaLogo.svg"),
   "utf8"
 );
+
 const StoresData = [
   {
     storeName: "Mall",
@@ -15,15 +16,8 @@ const StoresData = [
   },
   {
     storeName: "Sancta Domenica",
-    logo: "https://cdn.sancta-domenica.hr/static/version1713185553/frontend/SanctaDomenica/theme/hr_HR//images/logo.svg",
+    logo: SanctaDomenicaLogo,
   },
 ];
 
-const BrandData = [
-  {
-    brandName: "SmartShop",
-    logo: brandLogo,
-  },
-];
-
-module.exports = { StoresData, BrandData };
+module.exports = { StoresData };

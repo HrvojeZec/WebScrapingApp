@@ -8,6 +8,7 @@ const scrapeRoute = require("./router/scrape/scrape-router");
 const storeRouter = require("./router/store/stores-router");
 const productRouter = require("./router/product/product-router");
 const globalErrorhandler = require("./controller/error/errorController");
+const { createStoreData } = require("./router/store/stores-service");
 
 const app = express();
 const port = process.env.PORT;
@@ -36,6 +37,7 @@ mongoose
   )
   .then(() => {
     console.log("Database is connected");
+    createStoreData();
   })
   .catch((err) => {
     console.log(err);
