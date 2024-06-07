@@ -53,6 +53,18 @@
           height: auto;
           object-fit: contain;
         }
+        .productTitle {
+          max-width: 300px;
+          max-height: 300px;
+          width: 100%;
+          height: 100%;
+
+          p {
+            font-family: $base-font-family;
+            font-weight: $font-weight-bold;
+            color: $primary-header-color;
+          }
+        }
       }
     }
 

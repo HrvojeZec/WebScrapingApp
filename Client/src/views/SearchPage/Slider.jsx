@@ -10,7 +10,12 @@ export function SliderComponent() {
   useEffect(() => {
     if (products?.length > 0) {
       const images = products
-        .map((product) => product.images)
+        .map((product) =>
+          product.images.map((image) => ({
+            src: image,
+            keyword: product.title,
+          }))
+        )
         .reduce((acc, curr) => acc.concat(curr), []);
       setRandomImages(getRandomImages(images, 10));
     }
@@ -39,7 +44,10 @@ export function SliderComponent() {
         <Slider {...settings}>
           {randomImages.map((image, index) => (
             <div key={index}>
-              <img src={image} alt={`Slika ${index}`} />
+              <img src={image.src} alt={`Slika ${index}`} />
+              <div className={classes.productTitle}>
+                <p>{image.keyword}</p>
+              </div>
             </div>
           ))}
         </Slider>
