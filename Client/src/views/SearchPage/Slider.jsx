@@ -4,18 +4,17 @@ import classes from "../../assets/stylesheets/search.module.scss";
 import { useProductsData } from "../../stores/GetRandomProducts";
 
 export function SliderComponent() {
-  const { data: Products } = useProductsData();
+  const { data: products } = useProductsData();
   const [randomImages, setRandomImages] = useState([]);
 
   useEffect(() => {
-    if (Products && Products.length > 0) {
-      const images = Products.map((product) => product.images).reduce(
-        (acc, curr) => acc.concat(curr),
-        []
-      );
+    if (products?.length > 0) {
+      const images = products
+        .map((product) => product.images)
+        .reduce((acc, curr) => acc.concat(curr), []);
       setRandomImages(getRandomImages(images, 10));
     }
-  }, [Products]);
+  }, [products]);
 
   function getRandomImages(images, count) {
     const shuffled = images.sort(() => 0.5 - Math.random());

@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const { StoresData } = require("../../boostrap/setup");
 const addStore = require("./stores-service");
-const CustomError = require("../../Utils/CustomError");
+const {
+  CustomBadRequest,
+  CustomInternalServerError,
+  CustomNotFound,
+} = require("../../middleware/CustomError");
 const Stores = require("../../model/storesModel");
 
 router.get("/", async (req, res, next) => {
@@ -11,26 +15,18 @@ router.get("/", async (req, res, next) => {
     await Stores.create(StoresData);
     res.json({ success: true, message: "Podaci uspješno spremljeni u bazu." });
   } catch (error) {
-    const err = new CustomError(
-      "Došlo je do pogreške prilikom spremanja podataka u bazu.",
-      500
+    const err = new CustomInternalServerError(
+      "Došlo je do pogreške prilikom spremanja podataka u bazu."
     );
     next(err);
-    /* res.status(500).json({
-      success: false,
-      message: "Došlo je do pogreške prilikom spremanja podataka u bazu.",
-    }); */
   }
 });
 
 router.post("/add", async (req, res, next) => {
   const { storeName } = req.body;
   if (storeName === "") {
-    const err = new CustomError("Ime trgovine je obavezno!", 404);
+    const err = new CustomNotFound("Ime trgovine je obavezno!");
     next(err);
-    /*  return res
-      .status(404)
-      .json({ success: true, message: "Ime trgovine je obavezno!" }); */
   }
   try {
     const response = await addStore({ storeName });
@@ -40,35 +36,27 @@ router.post("/add", async (req, res, next) => {
         .status(200)
         .json({ success: true, message: "Trgovina je uspješno dodana" });
     } else {
-      let errMessage = "Nepoznata greška";
-      let statusCode = 500;
-
+      let err;
       switch (response.error) {
         case "STORE_ALREADY_EXISTS":
-          errMessage = "Trgovina je već dodana u bazu";
-          statusCode = 400;
+          err = CustomBadRequest("Trgovina je već dodana u bazu");
           break;
         case "INSERTION_FAILED":
-          errMessage =
-            "Došlo je do pogreške prilikom dodavanja trgovine u bazu";
-          statusCode = 500;
+          err = CustomInternalServerError(
+            "Došlo je do pogreške prilikom dodavanja trgovine u bazu"
+          );
           break;
         default:
           break;
       }
 
-      return next(new CustomError(errMessage, statusCode));
+      return next(err);
     }
   } catch (error) {
-    const err = new CustomError(
-      "Došlo je do pogreške prilikom obrade zahtjeva",
-      500
+    const err = new CustomInternalServerError(
+      "Došlo je do pogreške prilikom obrade zahtjeva"
     );
     next(err);
-    /* res.status(500).json({
-      success: false,
-      message: "Došlo je do pogreške prilikom obrade zahtjeva",
-    }); */
   }
 });
 

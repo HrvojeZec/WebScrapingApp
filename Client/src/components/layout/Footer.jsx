@@ -12,8 +12,8 @@ function Footer() {
       <div className={classes.footer__wrapper}>
         <div className={classes.footer__content}>
           <SmartShop showLogo={true} />
-          <p>123 Main St, Cityville</p>
-          <p>contact@smartshop.com</p>
+          <p>123 Glavna ulica, Grad</p>
+          <p>kontakt@pametandućan.com</p>
         </div>
         <div className={classes.footer__company}>
           <a>Company</a>

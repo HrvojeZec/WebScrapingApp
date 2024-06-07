@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { constants } from "../config/constants";
 
-const KeywordsContext = createContext();
+const KeywordsContext = createContext(undefined);
 
 export function useKeywordsData() {
   const context = useContext(KeywordsContext);

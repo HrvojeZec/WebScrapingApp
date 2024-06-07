@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { constants } from "../config/constants";
 
-const ProductsContext = createContext();
+const ProductsContext = createContext(undefined);
 
 export function useProductsData() {
   const context = useContext(ProductsContext);
