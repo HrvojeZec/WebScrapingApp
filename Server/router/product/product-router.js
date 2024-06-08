@@ -5,6 +5,7 @@ const {
   findRandomProducts,
   findAllKeywords,
   findProductsByScrapeId,
+  paginationHandler,
 } = require("../product/product-service");
 const {
   CustomBadRequest,
@@ -15,7 +16,8 @@ const router = express.Router();
 
 // Get products by keyword
 router.get("/keyword", async (req, res, next) => {
-  const keyword = req.query.keyword;
+  const { keyword, page, pageSize } = req.query;
+
   if (!keyword || keyword.trim().length === 0) {
     const err = new CustomBadRequest(
       "Molimo unesite ključnu riječ za pretragu proizvoda."
@@ -24,12 +26,23 @@ router.get("/keyword", async (req, res, next) => {
   }
 
   try {
-    const products = await findProductsByKeyword(keyword);
+    const paginationData = await paginationHandler(keyword, page, pageSize);
+
+    const products = await findProductsByKeyword(
+      keyword,
+      paginationData.skip,
+      paginationData.limit
+    );
     if (products.length === 0) {
       const err = new CustomNotFound("Nema proizvoda s danom ključnom riječi.");
       return next(err);
     }
-    return res.status(200).json(products);
+
+    return res.status(200).json({
+      products,
+      totalPages: paginationData.totalPages,
+      currentPage: page,
+    });
   } catch (error) {
     const err = new CustomInternalServerError(
       "Došlo je do pogreške prilikom pretrage proizvoda."

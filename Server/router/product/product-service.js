@@ -2,9 +2,24 @@ const Store = require("../../model/storesModel");
 const Product = require("../../model/productModel");
 const Scrape = require("../../model/scrapeModel");
 
-const findProductsByKeyword = async (keyword) => {
+const paginationHandler = async (keyword, page, pageSize) => {
   const existingProducts = await Product.find({ keyword });
+  const dataLength = existingProducts.length;
+
+  const totalPages = Math.ceil(dataLength / pageSize);
+  const skip = (page - 1) * pageSize;
+  const limit = pageSize;
+
+  return { totalPages, skip, limit };
+};
+
+const findProductsByKeyword = async (keyword, skip, limit) => {
+  const existingProducts = await Product.find({ keyword })
+    .skip(skip)
+    .limit(limit);
+
   let result = [];
+
   if (existingProducts.length > 0) {
     for (const product of existingProducts) {
       const store = await Store.findById(product.storeId);
@@ -73,4 +88,5 @@ module.exports = {
   findAllProducts,
   findRandomProducts,
   findProductsByScrapeId,
+  paginationHandler,
 };

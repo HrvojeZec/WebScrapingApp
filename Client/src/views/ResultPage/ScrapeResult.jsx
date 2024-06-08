@@ -16,40 +16,40 @@ import { Link } from "react-router-dom";
 function useCurrentURL() {
   const location = useLocation();
   const params = useParams();
+  const searchParams = new URLSearchParams(location.search);
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
   return {
     pathname: location.pathname,
     search: location.search,
     params,
+    page,
   };
 }
 
 function ScrapeResult() {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    products: [],
+    totalPages: 1,
+    currentPage: 1,
+  });
   const [showProductList, setShowProductList] = useState([]);
-  const [activePage, setActivePage] = useState(1);
   const [productsPerPage] = useState(15);
-  const [dataLength, setDataLength] = useState(0);
-  const { pathname, search, params } = useCurrentURL();
-
+  const { pathname, search, params, page } = useCurrentURL();
+  const navigate = useNavigate();
   console.log(
-    `Current path is ${pathname} with search ${search} and params`,
-    params
+    `Current path is ${pathname} with search ${search} and params ${params} on ${page}`
   );
 
-  const totalPages = Math.ceil(dataLength / productsPerPage);
-
   const handlePageChange = (newPage) => {
-    setActivePage(newPage);
+    navigate(`${pathname}?keyword=${params.keyword}&page=${newPage}`);
   };
 
-  let url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}`;
+  let url = `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}`;
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(url);
-      console.log(params.keyword);
       try {
         setLoading(true);
         const response = await fetch(url, {
@@ -59,7 +59,7 @@ function ScrapeResult() {
         if (!response.ok) {
           const errorData = await response.json();
           console.log(errorData);
-          setData([]);
+          setData({ products: [], totalPages: 1, currentPage: 1 });
           const messageError = errorData.message;
           showLoadingDataNotification(false);
           showErrorNotification({ message: messageError });
@@ -69,10 +69,9 @@ function ScrapeResult() {
         const data = await response.json();
         setData(data);
         console.log(data);
-        setShowProductList(data);
-        setDataLength(data.length);
+        setShowProductList(data.products);
       } catch (error) {
-        setData([]);
+        setData({ products: [], totalPages: 1, currentPage: 1 });
         showErrorNotification({ message: "Došlo je do greške." });
       } finally {
         showLoadingDataNotification(false);
@@ -83,10 +82,10 @@ function ScrapeResult() {
     if (params.keyword) {
       fetchData();
     }
-  }, [params.keyword, url]);
+  }, [params.keyword, productsPerPage, page]);
 
   const handleSortLowToHigh = () => {
-    const sortedProducts = [...data].sort(
+    const sortedProducts = [...data.products].sort(
       (a, b) =>
         parseFloat(a.price.replace(" €", "").replace(".", "")) -
         parseFloat(b.price.replace(" €", "").replace(".", ""))
@@ -96,7 +95,7 @@ function ScrapeResult() {
   };
 
   const handleSortHighToLow = () => {
-    const reverseSortedProducts = [...data].sort(
+    const reverseSortedProducts = [...data.products].sort(
       (a, b) =>
         parseFloat(b.price.replace(" €", "").replace(".", "")) -
         parseFloat(a.price.replace(" €", "").replace(".", ""))
@@ -108,7 +107,7 @@ function ScrapeResult() {
   return (
     <div className={classes.scrapeResult}>
       {loading && <LoaderGlobal />}
-      {data.length === 0 && !loading && (
+      {data.products.length === 0 && !loading && (
         <Container className={classes.root}>
           <div className={classes.label}>Nema pronađenih proizvoda</div>
           <Title className={classes.title}>Ups! Nismo pronašli ništa.</Title>
@@ -131,7 +130,7 @@ function ScrapeResult() {
         </Container>
       )}
 
-      {data.length > 0 && (
+      {data.products.length > 0 && (
         <>
           <CardTitleWithSort
             handleSortLowToHigh={handleSortLowToHigh}
@@ -139,30 +138,25 @@ function ScrapeResult() {
             keyword={params.keyword}
           />
           <div className={classes.card__wrapper}>
-            {showProductList
-              .slice(
-                (activePage - 1) * productsPerPage,
-                activePage * productsPerPage
-              )
-              .map((product, index) => (
-                <ProductCard
-                  key={index}
-                  productId={product._id}
-                  name={product.title}
-                  description={product.description}
-                  price={product.price}
-                  images={product.images}
-                  logo={product.logo}
-                  oldPrice={product.oldPrice}
-                  link={product.link}
-                  updatedAt={product.updatedAt}
-                />
-              ))}
+            {showProductList.map((product, index) => (
+              <ProductCard
+                key={index}
+                productId={product._id}
+                name={product.title}
+                description={product.description}
+                price={product.price}
+                images={product.images}
+                logo={product.logo}
+                oldPrice={product.oldPrice}
+                link={product.link}
+                updatedAt={product.updatedAt}
+              />
+            ))}
           </div>
           <div className={classes.pagination__wrapper}>
             <Pagination
-              total={totalPages}
-              value={activePage}
+              total={data.totalPages}
+              value={page}
               onChange={handlePageChange}
               mt="sm"
             />
