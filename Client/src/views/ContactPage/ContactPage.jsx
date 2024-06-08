@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "../../assets/stylesheets/contact.module.scss";
+import classes from "../../components/Contact/Contact.module.scss";
 import { useForm } from "@mantine/form";
 import { showSuccessNotification } from "../../components/shared/Notification/Notification";
 import { constants } from "../../config/constants";

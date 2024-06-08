@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
-import classes from "../../assets/stylesheets/CarouselCard.module.css";
+import classes from "../../components/CarouselCard/CarouselCard.module.css";
 import dayjs from "dayjs";
 export function ProductCard({
   name,

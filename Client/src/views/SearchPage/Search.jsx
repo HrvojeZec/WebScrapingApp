@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import classes from "../../assets/stylesheets/search.module.scss";
+import classes from "../../components/Search/Search.module.scss";
 import { ContactPage } from "../ContactPage/ContactPage";
 import { showLoadingDataNotification } from "../../components/shared/Notification/Notification";
 import { SliderComponent } from "./Slider";

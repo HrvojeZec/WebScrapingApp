@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import classes from "../../assets/stylesheets/search.module.scss";
+import classes from "../../components/Search/Search.module.scss";
 import { useProductsData } from "../../stores/GetRandomProducts";
 
 export function SliderComponent() {

@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { ArrowsSort } from "tabler-icons-react";
-import classes from "../../assets/stylesheets/cardTitleWithSort.module.scss";
+import classes from "../../components/CardTitleWithSort/CardTitleWithSort.module.scss";
 import { HoverCard, Group, Flex, UnstyledButton, Divider } from "@mantine/core";
 const SortIcon = forwardRef((props, ref) => (
   <div ref={ref} {...props}>

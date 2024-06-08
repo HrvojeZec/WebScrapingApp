@@ -5,7 +5,7 @@ import { ProductCard } from "./ProductCard";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { constants } from "../../config/constants";
 import { Pagination } from "@mantine/core";
-import classes from "../../assets/stylesheets/scrape.module.scss";
+import classes from "../../components/Scrape/Scrape.module.scss";
 import {
   showErrorNotification,
   showLoadingDataNotification,

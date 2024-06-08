@@ -1,6 +1,6 @@
 import React from "react";
 import { BrandShopee } from "tabler-icons-react";
-import classes from "../../../assets/stylesheets/brandLogo.module.scss";
+import classes from "../../../components/Brand/Brand.module.scss";
 export function SmartShop({ showLogo }) {
   return (
     <div className={classes.logo__wrapper}>
