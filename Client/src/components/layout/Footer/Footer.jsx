@@ -1,6 +1,6 @@
 import React from "react";
-import classes from "../../assets/stylesheets/footer.module.scss";
-import { SmartShop } from "../shared/BrandLogo/SmartShop";
+import classes from "./Footer.module.scss";
+import { SmartShop } from "../../shared/BrandLogo/SmartShop";
 import {
   BrandFacebook,
   BrandTwitter,
