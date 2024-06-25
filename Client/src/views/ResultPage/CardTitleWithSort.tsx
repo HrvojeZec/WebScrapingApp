@@ -1,8 +1,15 @@
-import React, { forwardRef } from "react";
+import  { forwardRef } from "react";
 import { ArrowsSort } from "tabler-icons-react";
 import classes from "../../components/CardTitleWithSort/CardTitleWithSort.module.scss";
 import { HoverCard, Group, Flex, UnstyledButton, Divider } from "@mantine/core";
-const SortIcon = forwardRef((props, ref) => (
+
+interface CardTitleWithSortProps {
+  keyword?: string;
+  handleSortHighToLow: () => void;
+  handleSortLowToHigh: () => void;
+}
+
+const SortIcon = forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref} {...props}>
     <ArrowsSort size={30} strokeWidth={1.5} color={"black"} />
   </div>
@@ -11,7 +18,7 @@ export function CardTitleWithSort({
   keyword,
   handleSortHighToLow,
   handleSortLowToHigh,
-}) {
+}: CardTitleWithSortProps) {
   return (
     <div className={classes.card__title}>
       <div className={classes.card__title__wrapper}>

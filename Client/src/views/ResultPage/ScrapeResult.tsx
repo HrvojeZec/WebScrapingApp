@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CardTitleWithSort } from "./CardTitleWithSort";
 import { ProductCard } from "./ProductCard";
@@ -12,6 +12,13 @@ import {
 } from "../../components/shared/Notification/Notification";
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import { Link } from "react-router-dom";
+import { Product } from "../../lib/ProductTypes";
+
+interface DataType {
+  products: Product[],
+  totalPages: number,
+  currentPage: number,
+}
 
 function useCurrentURL() {
   const location = useLocation();
@@ -29,12 +36,12 @@ function useCurrentURL() {
 
 function ScrapeResult() {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({
+  const [data, setData] = useState<DataType>({
     products: [],
     totalPages: 1,
     currentPage: 1,
-  });
-  const [showProductList, setShowProductList] = useState([]);
+  })
+  const [showProductList, setShowProductList] = useState<Product[]>([]);
   const [productsPerPage] = useState(15);
   const { pathname, search, params, page } = useCurrentURL();
   const navigate = useNavigate();
@@ -42,7 +49,7 @@ function ScrapeResult() {
     `Current path is ${pathname} with search ${search} and params ${params} on ${page}`
   );
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     navigate(`${pathname}?keyword=${params.keyword}&page=${newPage}`);
   };
 
@@ -66,7 +73,7 @@ function ScrapeResult() {
           setLoading(false);
           return;
         }
-        const data = await response.json();
+        const data: DataType = await response.json();
         setData(data);
         console.log(data);
         setShowProductList(data.products);
@@ -122,7 +129,7 @@ function ScrapeResult() {
           </Text>
           <Group justify="center">
             <Link to="/">
-              <Button variant="subtle" size="md" to="/">
+              <Button variant="subtle" size="md" >
                 Vrati me na početnu stranicu
               </Button>
             </Link>
@@ -141,8 +148,8 @@ function ScrapeResult() {
             {showProductList.map((product, index) => (
               <ProductCard
                 key={index}
-                productId={product._id}
-                name={product.title}
+                productId={product.productId} 
+                title={product.title}
                 description={product.description}
                 price={product.price}
                 images={product.images}

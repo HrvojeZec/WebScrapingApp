@@ -1,20 +1,33 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { constants } from "../config/constants";
+import { Product } from "../lib/ProductTypes";
 
-const ProductsContext = createContext(undefined);
+interface Props {
+  children:React.ReactNode;
+}
 
-export function useProductsData() {
+
+interface ProductContextType{
+  data: Product[] | null,
+  loading: boolean,
+  error: string | null,
+}
+
+const ProductsContext = createContext<ProductContextType | undefined>(undefined);
+
+export function useProductsData(): ProductContextType {
   const context = useContext(ProductsContext);
   if (context === undefined) {
-    console.log("useProductsData must be used with ProductsContext");
+    throw new Error("useProductsData must be used within a ProductsContextProvider");
   }
   return context;
 }
 
-export function GetRandomProductsProvider({ children }) {
-  const [error, setError] = useState(null);
+
+export function GetRandomProductsProvider({children} :Props) {
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Product[] | null>(null);
 
   const fetchRandomProducts = async () => {
     setLoading(true);
@@ -34,7 +47,7 @@ export function GetRandomProductsProvider({ children }) {
     return () => clearInterval(interval);
   }, []);
 
-  const value = {
+  const value :ProductContextType= {
     data,
     loading,
     error,

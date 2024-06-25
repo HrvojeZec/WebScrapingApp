@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { SearchPage } from "./views/SearchPage/SearchPage";
 import "@mantine/core/styles.css";
@@ -20,7 +20,7 @@ function App() {
     <MantineProvider>
       <Notifications position="top-right" zIndex={1000} />
       <Routes>
-        <Route exact path="/" element={<SearchPage />} />
+        <Route  path="/" element={<SearchPage />} />
         <Route path="/rezultati/:keyword" element={<ResultPage />} />
       </Routes>
     </MantineProvider>

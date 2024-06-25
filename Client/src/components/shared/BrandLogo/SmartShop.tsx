@@ -1,7 +1,11 @@
-import React from "react";
 import { BrandShopee } from "tabler-icons-react";
 import classes from "../../../components/Brand/Brand.module.scss";
-export function SmartShop({ showLogo }) {
+
+interface NotificationProps {
+  showLogo: boolean;
+}
+
+export function SmartShop({ showLogo }:NotificationProps) {
   return (
     <div className={classes.logo__wrapper}>
       {showLogo && (

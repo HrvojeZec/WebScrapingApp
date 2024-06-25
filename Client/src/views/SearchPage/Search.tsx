@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "../../components/Search/Search.module.scss";
 import { ContactPage } from "../ContactPage/ContactPage";
 import { showLoadingDataNotification } from "../../components/shared/Notification/Notification";
@@ -11,7 +11,7 @@ import { useKeywordsData } from "../../stores/GetAllKeywords";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
   const [disabledButton, setDisabledButton] = useState(true);
   const { data: keywordsData } = useKeywordsData();
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ function Search() {
                 error={error}
                 size="lg"
                 radius="lg"
-                data={keywordsData}
+                data={keywordsData || []}
                 withScrollArea={false}
                 styles={{ dropdown: { maxHeight: 200, overflowY: "auto" } }}
                 onChange={(newKeyword) => setKeyword(newKeyword)}

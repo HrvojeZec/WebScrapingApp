@@ -1,4 +1,3 @@
-import React from "react";
 import classes from "./Footer.module.scss";
 import { SmartShop } from "../../shared/BrandLogo/SmartShop";
 import {

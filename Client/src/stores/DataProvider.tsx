@@ -7,7 +7,11 @@ import {
 } from "./GetRandomProducts";
 import { GetAllKeywordsProvider, useKeywordsData } from "./GetAllKeywords";
 
-const DataProviderInner = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const DataProviderInner = ({children} :Props) => {
   const { loading: keywordsLoading, error: keywordsError } = useKeywordsData();
   const { loading: productsLoading, error: productsError } = useProductsData();
 
@@ -20,7 +24,7 @@ const DataProviderInner = ({ children }) => {
   return children;
 };
 
-export function DataProvider({ children }) {
+export function DataProvider({children} :Props) {
   return (
     <GetAllKeywordsProvider>
       <GetRandomProductsProvider>

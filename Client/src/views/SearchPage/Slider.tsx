@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Slider from "react-slick";
 import classes from "../../components/Search/Search.module.scss";
 import { useProductsData } from "../../stores/GetRandomProducts";
 
+interface Images {
+  src:string,
+  keyword:string
+}
+function getRandomImages(images: Images[], count: number): Images[] {
+  const shuffled = images.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+}
+
 export function SliderComponent() {
   const { data: products } = useProductsData();
-  const [randomImages, setRandomImages] = useState([]);
+  const [randomImages, setRandomImages] = useState<Images[]>([]);
 
   useEffect(() => {
-    if (products?.length > 0) {
+    if (products && products.length > 0) {
       const images = products
         .map((product) =>
           product.images.map((image) => ({
@@ -21,10 +30,6 @@ export function SliderComponent() {
     }
   }, [products]);
 
-  function getRandomImages(images, count) {
-    const shuffled = images.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  }
 
   const settings = {
     infinite: true,

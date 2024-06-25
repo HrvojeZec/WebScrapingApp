@@ -1,4 +1,3 @@
-import React from "react";
 import { SmartShop } from "../../shared/BrandLogo/SmartShop";
 import classes from "./Header.module.scss";
 import { Link } from "react-router-dom";

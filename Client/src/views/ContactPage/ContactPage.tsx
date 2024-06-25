@@ -1,4 +1,3 @@
-import React from "react";
 import classes from "../../components/Contact/Contact.module.scss";
 import { useForm } from "@mantine/form";
 import { showSuccessNotification } from "../../components/shared/Notification/Notification";
@@ -15,7 +14,8 @@ export function ContactPage() {
     },
   });
 
-  const handleSubmit = async ({ storeName }) => {
+  const handleSubmit = async ({ storeName }: { storeName: string }) => {
+    
     if (storeName.length < 2 || storeName.length > 10) {
       form.setFieldError("storeName", "Ime trgovine mora biti 2-10 znakova.");
       return;
@@ -42,12 +42,16 @@ export function ContactPage() {
       const messageSuccess = resSuccess.message;
       showSuccessNotification({ message: messageSuccess });
     } catch (error) {
-      form.setFieldError("storeName", error.message);
-    }
+      if (error instanceof Error) {
+        form.setFieldError("storeName", error.message);
+      } else {
+        form.setFieldError("storeName", "Dogodila se nepoznata greška.");
+      }   
+     }
   };
 
   const handleActionIconSubmit = () => {
-    handleSubmit(form.values);
+    handleSubmit({ storeName: form.values.storeName });
   };
 
   return (
