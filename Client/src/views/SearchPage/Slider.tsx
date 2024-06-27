@@ -19,8 +19,8 @@ export function SliderComponent() {
   useEffect(() => {
     if (products && products.length > 0) {
       const images = products
-        .map((product) =>
-          product.images.map((image) => ({
+        .map((product: any) =>
+          product.images.map((image: string) => ({
             src: image,
             keyword: product.title,
           }))
