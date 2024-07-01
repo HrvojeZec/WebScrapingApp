@@ -8,6 +8,6 @@ export interface Error{
     message?: string 
 }
 
-export interface keyword{
+export interface Keyword{
     keyword: string;
 }

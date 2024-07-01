@@ -25,8 +25,9 @@ const updateProductsPrice = (existingProducts, allNewProducts, scrapeId) => __aw
                     oldPrice: existingProduct.price,
                     scrapeId: scrapeId,
                     new: true,
+                    updatedAt: new Date(),
                 },
-            });
+            }, { runValidators: true });
         }
     }
 });

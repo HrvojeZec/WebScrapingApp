@@ -1,5 +1,5 @@
 "use strict";
-const httpStatus = require("../constants/httpResponseStauts");
+const httpStatus = require("../constants/HttpStauts");
 class CustomError extends Error {
     constructor({ message, name, statusCode, data }) {
         super(message);

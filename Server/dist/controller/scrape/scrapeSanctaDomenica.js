@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
-const url_1 = require("../../constants/url");
+const Url_1 = require("../../constants/Url");
 const storesModel_1 = require("../../model/storesModel");
 puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
 const scrapeProducts = (page, keyword, storeId, scrapeId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,7 +61,7 @@ const sanctaDomenicaScraping = (keyword, scrapeId) => __awaiter(void 0, void 0, 
     const store = yield storesModel_1.Stores.findOne({ storeName: storeName });
     const storeId = store ? store._id.toString() : "";
     let data = [];
-    yield page.goto(url_1.Url.SanctaDomenica);
+    yield page.goto(Url_1.Url.SanctaDomenica);
     yield new Promise((resolve) => setTimeout(resolve, 3000));
     yield page.type("input.amsearch-input", keyword, { delay: 100 });
     yield Promise.all([

@@ -12,10 +12,21 @@ import "aos/dist/aos.css";
 import Aos from "aos";
 import { ResultPage } from "./views/ResultPage/ResultPage";
 
-function App() {
+
+
+
+              function App() {
+
+
+
+                
   useEffect(() => {
     Aos.init({ duration: 500, once: true });
   }, []);
+
+
+
+
   return (
     <MantineProvider>
       <Notifications position="top-right" zIndex={1000} />

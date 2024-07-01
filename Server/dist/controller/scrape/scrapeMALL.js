@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
-const url_1 = require("../../constants/url");
+const Url_1 = require("../../constants/Url");
 const storesModel_1 = require("../../model/storesModel");
 puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
 const checkForNoResults = (page) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,7 +34,7 @@ const mallScraping = (keyword, scrapeId) => __awaiter(void 0, void 0, void 0, fu
     let prevHeight = -1;
     let maxScrolls = 100;
     let scrollCount = 0;
-    yield page.goto(url_1.Url.MallUrl);
+    yield page.goto(Url_1.Url.MallUrl);
     yield new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
     const btn = yield page.waitForSelector("button#search-button"); // cekaj dok se ne pojavi button
     yield page.type("input#site-search-input", keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra

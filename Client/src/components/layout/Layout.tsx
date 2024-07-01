@@ -1,12 +1,8 @@
-import React from "react";
+import { PropsWithChildren } from "react";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 
-interface Props{
-  children: React.ReactNode;
-}
-
-function Layout(props:Props) {
+function Layout(props:PropsWithChildren) {
   return (
     <div>
       <Header />

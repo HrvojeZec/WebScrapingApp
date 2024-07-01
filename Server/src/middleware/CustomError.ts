@@ -1,4 +1,4 @@
-const httpStatus = require("../constants/httpResponseStauts");
+const httpStatus = require("../constants/HttpStauts");
 
 class CustomError extends Error {
   public name: string;

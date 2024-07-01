@@ -5,7 +5,7 @@ const {
 import {Product,IProduct} from "../../model/productModel";
 import {Stores,IStore} from "../../model/storesModel";
 import {Scrape} from "../../model/scrapeModel";
-import { keyword } from "../../types/params";
+import { Keyword } from "../../types/params";
 import mongoose from "mongoose";
 
 
@@ -30,8 +30,10 @@ const updateProductsPrice = async (
             oldPrice: existingProduct.price,
             scrapeId: scrapeId,
             new: true,
+            updatedAt: new Date(),
           },
-        }
+        },
+        { runValidators: true }
       );
     }
   }
@@ -50,7 +52,7 @@ const addNewProducts = async (allNewProducts:IProduct[], existingProducts:IProdu
   }
 };
 
-const executeService = async (keyword: keyword) => {
+const executeService = async (keyword: Keyword) => {
   const newScrapingJob = new Scrape({
     status: "started",
     startTime: new Date(),

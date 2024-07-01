@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin  from "puppeteer-extra-plugin-stealth";
-import {Url} from "../../constants/url";
+import {Url} from "../../constants/Url";
 import {Stores} from "../../model/storesModel"
 
 puppeteer.use(StealthPlugin());
