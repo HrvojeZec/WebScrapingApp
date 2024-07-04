@@ -15,7 +15,6 @@ export function ContactPage() {
   });
 
   const handleSubmit = async ({ storeName }: { storeName: string }) => {
-    
     if (storeName.length < 2 || storeName.length > 10) {
       form.setFieldError("storeName", "Ime trgovine mora biti 2-10 znakova.");
       return;
@@ -46,8 +45,8 @@ export function ContactPage() {
         form.setFieldError("storeName", error.message);
       } else {
         form.setFieldError("storeName", "Dogodila se nepoznata greška.");
-      }   
-     }
+      }
+    }
   };
 
   const handleActionIconSubmit = () => {
@@ -56,14 +55,14 @@ export function ContactPage() {
 
   return (
     <div className={classes.contact} data-aos="fade-up">
-      <div className={classes.contact__wrapper}>
+      <div className={classes.contactWrapper}>
         <h1>Kontaktirajte nas</h1>
         <p>
           Unesite ime trgovine koju biste željeli pretraživati u budućnosti:
         </p>
 
         <form
-          className={classes.contact__input}
+          className={classes.contactInput}
           onSubmit={form.onSubmit((values) => handleSubmit(values))}
         >
           <TextInput

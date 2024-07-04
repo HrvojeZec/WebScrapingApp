@@ -1,11 +1,11 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import classes from "../../components/Search/Search.module.scss";
 import { useProductsData } from "../../stores/GetRandomProducts";
 
 interface Images {
-  src:string,
-  keyword:string
+  src: string;
+  keyword: string;
 }
 function getRandomImages(images: Images[], count: number): Images[] {
   const shuffled = images.sort(() => 0.5 - Math.random());
@@ -30,7 +30,6 @@ export function SliderComponent() {
     }
   }, [products]);
 
-
   const settings = {
     infinite: true,
     fade: true,
@@ -44,8 +43,8 @@ export function SliderComponent() {
   };
 
   return (
-    <div className={classes.image__content} data-aos="fade-left">
-      <div className={classes.slider__container}>
+    <div className={classes.imageContent} data-aos="fade-left">
+      <div className={classes.sliderContainer}>
         <Slider {...settings}>
           {randomImages.map((image, index) => (
             <div key={index}>

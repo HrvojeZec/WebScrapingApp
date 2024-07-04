@@ -67,16 +67,16 @@ function Search() {
   return (
     <>
       <div className={classes.scrape}>
-        <div className={classes.scrape__wrapper}>
-          <div className={classes.scrape__content} data-aos="fade-right">
-            <div className={classes.content__upper}>
+        <div className={classes.scrapeWrapper}>
+          <div className={classes.scrapeContent} data-aos="fade-right">
+            <div className={classes.contentUpper}>
               <SmartShopText />
               <p>
                 Moćna platforma za analizu proizvoda i rasta koja vam pomaže u
                 pretraživanju više trgovina, uključujući Mall i Sancta Domenica.
               </p>
             </div>
-            <div className={classes.content__input}>
+            <div className={classes.contentInput}>
               <form action=""></form>
               <Autocomplete
                 type="text"
@@ -90,7 +90,7 @@ function Search() {
                 styles={{ dropdown: { maxHeight: 200, overflowY: "auto" } }}
                 onChange={(newKeyword) => setKeyword(newKeyword)}
               />
-              <div className={classes.button__wrapper}>
+              <div className={classes.buttonWrapper}>
                 <Tooltip label="Unesite traženi proizvod">
                   <Button
                     type="button"

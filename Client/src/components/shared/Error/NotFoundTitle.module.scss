@@ -12,12 +12,12 @@
   color: var(--mantine-color-gray-2);
 
   @media (max-width: var(--mantine-breakpoint-sm)) {
-    font-size: rem(32px);
+    font-size: rem(32px, var(--mantine-root-font-size));
   }
 }
 
 .description {
-  max-width: rem(500px);
+  max-width: rem(500px, var(--mantine-root-font-size));
   margin: auto;
   margin-top: var(--mantine-spacing-xl);
   margin-bottom: calc(1.5 * var(--mantine-spacing-xl));
@@ -27,9 +27,9 @@
   font-family: Greycliff CF, var(--mantine-font-family);
   text-align: center;
   font-weight: 900;
-  font-size: rem(38px);
+  font-size: rem(38px, var(--mantine-root-font-size));
 
   @media (max-width: var(--mantine-breakpoint-sm)) {
-    font-size: rem(32px);
+    font-size: rem(32px, var(--mantine-root-font-size));
   }
 }

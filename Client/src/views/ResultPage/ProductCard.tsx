@@ -1,6 +1,6 @@
 import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
-import classes from "../../components/CarouselCard/CarouselCard.module.css";
+import classes from "../../components/CarouselCard/CarouselCard.module.scss";
 import dayjs from "dayjs";
 import { Product } from "../../lib/ProductTypes";
 
@@ -73,7 +73,7 @@ export function ProductCard({
           </div>
 
           <Button
-            onClick={(event) =>  link && (window.location.href = link)}
+            onClick={(event) => link && (window.location.href = link)}
             radius="md"
           >
             Kupi

@@ -1,4 +1,4 @@
-import  { forwardRef } from "react";
+import { forwardRef } from "react";
 import { ArrowsSort } from "tabler-icons-react";
 import classes from "../../components/CardTitleWithSort/CardTitleWithSort.module.scss";
 import { HoverCard, Group, Flex, UnstyledButton, Divider } from "@mantine/core";
@@ -20,8 +20,8 @@ export function CardTitleWithSort({
   handleSortLowToHigh,
 }: CardTitleWithSortProps) {
   return (
-    <div className={classes.card__title}>
-      <div className={classes.card__title__wrapper}>
+    <div className={classes.cardTitle}>
+      <div className={classes.cardTitleWrapper}>
         <h1>{keyword}</h1>
       </div>
       <Group>
@@ -46,7 +46,7 @@ export function CardTitleWithSort({
               </p>
             </Flex>
             <Divider my="md" />
-            <div className={classes.sort__button__wrapper}>
+            <div className={classes.sortButtonWrapper}>
               <div>
                 {" "}
                 <UnstyledButton onClick={handleSortLowToHigh}>

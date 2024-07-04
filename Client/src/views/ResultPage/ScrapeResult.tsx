@@ -15,9 +15,9 @@ import { Link } from "react-router-dom";
 import { Product } from "../../lib/ProductTypes";
 
 interface DataType {
-  products: Product[],
-  totalPages: number,
-  currentPage: number,
+  products: Product[];
+  totalPages: number;
+  currentPage: number;
 }
 
 function useCurrentURL() {
@@ -40,7 +40,7 @@ function ScrapeResult() {
     products: [],
     totalPages: 1,
     currentPage: 1,
-  })
+  });
   const [showProductList, setShowProductList] = useState<Product[]>([]);
   const [productsPerPage] = useState(15);
   const { pathname, search, params, page } = useCurrentURL();
@@ -129,7 +129,7 @@ function ScrapeResult() {
           </Text>
           <Group justify="center">
             <Link to="/">
-              <Button variant="subtle" size="md" >
+              <Button variant="subtle" size="md">
                 Vrati me na početnu stranicu
               </Button>
             </Link>
@@ -144,11 +144,11 @@ function ScrapeResult() {
             handleSortHighToLow={handleSortHighToLow}
             keyword={params.keyword}
           />
-          <div className={classes.card__wrapper}>
+          <div className={classes.cardWrapper}>
             {showProductList.map((product, index) => (
               <ProductCard
                 key={index}
-                productId={product.productId} 
+                productId={product.productId}
                 title={product.title}
                 description={product.description}
                 price={product.price}
@@ -160,7 +160,7 @@ function ScrapeResult() {
               />
             ))}
           </div>
-          <div className={classes.pagination__wrapper}>
+          <div className={classes.paginationWrapper}>
             <Pagination
               total={data.totalPages}
               value={page}

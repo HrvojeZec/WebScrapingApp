@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <div className={classes.header} data-aos="fade-down">
-      <div className={classes.header__wrapper}>
-        <Link to="/" className={classes.header__link}>
+      <div className={classes.headerWrapper}>
+        <Link to="/" className={classes.headerLink}>
           <SmartShop showLogo={true} />
         </Link>
       </div>

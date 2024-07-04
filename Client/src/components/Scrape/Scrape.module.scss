@@ -8,13 +8,13 @@
   margin: 0 auto;
   padding: 1.5rem;
   padding-top: 80px;
-  .card__title {
+  .cardTitle {
     max-width: 1950px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    .card__title__wrapper {
+    .cardTitleWrapper {
       max-width: 1000px;
       width: 100%;
       padding: 0 1.5rem;
@@ -25,20 +25,20 @@
       }
     }
 
-    .sort__dropdown {
+    .sortDropdown {
       display: flex;
       flex-direction: column;
       background-color: red;
       p {
         text-align: center;
       }
-      .sort__button__wrapper {
+      .sortButtonWrapper {
         display: flex;
         flex-direction: column;
       }
     }
   }
-  .card__wrapper {
+  .cardWrapper {
     margin: 0 auto;
     padding: 1.5rem;
     display: flex;
@@ -48,7 +48,7 @@
     gap: 1.5rem;
   }
 
-  .pagination__wrapper {
+  .paginationWrapper {
     display: flex;
     justify-content: center;
     align-items: center;

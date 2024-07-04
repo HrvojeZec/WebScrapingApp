@@ -11,7 +11,7 @@
   background-color: $primary-header-color;
   margin: 0 auto;
 
-  .footer__wrapper {
+  .footerWrapper {
     max-width: 1000px;
     width: 100%;
     display: flex;
@@ -19,12 +19,12 @@
     align-items: flex-start;
     padding: 1.5rem;
 
-    .footer__content {
+    .footerContent {
       display: flex;
       justify-content: center;
       align-items: flex-start;
       flex-direction: column;
-      .content__wrapper {
+      .contentWrapper {
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -34,16 +34,16 @@
           transform: translateY(0);
           animation: header-scroll-down 2s ease-in-out infinite;
         }
-        .logo__name {
+        .logoName {
           display: flex;
           align-items: center;
-          .brand__smart {
+          .brandSmart {
             color: $primary-header-text-color;
             font-family: $extra-bold-font-family;
             font-size: 1.25rem;
             font-weight: $font-weight-bold;
           }
-          .brand__shop {
+          .brandShop {
             color: $primary-logo-color;
             font-family: $base-font-family;
             font-size: 1.25rem;
@@ -58,7 +58,7 @@
         color: $primary-header-text-color;
       }
     }
-    .footer__company {
+    .footerCompany {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -77,7 +77,7 @@
         text-decoration: none;
       }
     }
-    .footer__medias {
+    .footerMedias {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -95,7 +95,7 @@
         color: $primary-header-text-color;
         text-decoration: none;
       }
-      .medias__logo {
+      .mediasLogo {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
