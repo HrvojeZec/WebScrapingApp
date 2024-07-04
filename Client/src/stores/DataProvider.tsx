@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { LoaderGlobal } from "../components/shared/Loader/Loader";
 import { NotFoundTitle } from "../components/shared/Error/NotFoundTitle";
 import {
@@ -11,7 +11,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const DataProviderInner = ({children} :Props) => {
+const DataProviderInner = (props: PropsWithChildren<Props>) => {
   const { loading: keywordsLoading, error: keywordsError } = useKeywordsData();
   const { loading: productsLoading, error: productsError } = useProductsData();
 
@@ -21,14 +21,14 @@ const DataProviderInner = ({children} :Props) => {
   if (productsError || keywordsError) {
     return <NotFoundTitle />;
   }
-  return children;
+  return props.children;
 };
 
-export function DataProvider({children} :Props) {
+export function DataProvider(props: PropsWithChildren<Props>) {
   return (
     <GetAllKeywordsProvider>
       <GetRandomProductsProvider>
-        <DataProviderInner>{children}</DataProviderInner>
+        <DataProviderInner>{props.children}</DataProviderInner>
       </GetRandomProductsProvider>
     </GetAllKeywordsProvider>
   );

@@ -1,27 +1,36 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { constants } from "../config/constants";
 
-interface Props{
+interface Props {
   children: React.ReactNode;
 }
 
-interface KeywordContextType{
-data: string[] | null,
-error: boolean,
-loading: boolean
+interface KeywordContextType {
+  data: string[] | null;
+  error: boolean;
+  loading: boolean;
 }
-const KeywordsContext = createContext<KeywordContextType | undefined>(undefined);
+const KeywordsContext = createContext<KeywordContextType | undefined>(
+  undefined
+);
 
-export function useKeywordsData(): KeywordContextType{
+export function useKeywordsData(): KeywordContextType {
   const context = useContext(KeywordsContext);
   if (context === undefined) {
-    throw new Error("useKeywordsContext must be used with GetAllKeywordsProvider");
+    throw new Error(
+      "useKeywordsContext must be used with GetAllKeywordsProvider"
+    );
   }
   return context;
 }
 
-
-export function GetAllKeywordsProvider({children}:Props) {
+export function GetAllKeywordsProvider(props: PropsWithChildren<Props>) {
   const [data, setData] = useState<string[] | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -35,7 +44,7 @@ export function GetAllKeywordsProvider({children}:Props) {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
-  const value: KeywordContextType= {
+  const value: KeywordContextType = {
     data,
     loading,
     error,
@@ -43,7 +52,7 @@ export function GetAllKeywordsProvider({children}:Props) {
   console.log("allKeywords: ", value);
   return (
     <KeywordsContext.Provider value={value}>
-      {children}
+      {props.children}
     </KeywordsContext.Provider>
   );
 }
