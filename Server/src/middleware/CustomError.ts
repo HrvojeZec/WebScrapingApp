@@ -5,7 +5,17 @@ class CustomError extends Error {
   public statusCode: number;
   public data: any;
 
-  constructor({ message, name, statusCode, data }:{message: string, name: string, statusCode: number, data?: any}) {
+  constructor({
+    message,
+    name,
+    statusCode,
+    data,
+  }: {
+    message: string;
+    name: string;
+    statusCode: number;
+    data?: any;
+  }) {
     super(message);
     this.name = name;
     this.statusCode = statusCode;
