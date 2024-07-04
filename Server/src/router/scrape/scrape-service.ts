@@ -2,22 +2,20 @@ const { mallScraping } = require("../../controller/scrape/scrapeMALL");
 const {
   sanctaDomenicaScraping,
 } = require("../../controller/scrape/scrapeSanctaDomenica");
-import {Product,IProduct} from "../../model/productModel";
-import {Stores,IStore} from "../../model/storesModel";
-import {Scrape} from "../../model/scrapeModel";
-import { keyword } from "../../types/params";
+import { Product, IProduct } from "../../model/productModel";
+import { Stores, IStore } from "../../model/storesModel";
+import { Scrape } from "../../model/scrapeModel";
+import { Keyword } from "../../types/params";
 import mongoose from "mongoose";
 
-
-
 const updateProductsPrice = async (
-  existingProducts:IProduct[],
-  allNewProducts:IProduct[],
+  existingProducts: IProduct[],
+  allNewProducts: IProduct[],
   scrapeId: mongoose.Types.ObjectId
 ) => {
   for (const newProduct of allNewProducts) {
     const existingProduct = existingProducts.find(
-      (product:IProduct) =>
+      (product: IProduct) =>
         product.productId === newProduct.productId &&
         product.storeId === newProduct.storeId
     );
@@ -37,11 +35,14 @@ const updateProductsPrice = async (
   }
 };
 
-const addNewProducts = async (allNewProducts:IProduct[], existingProducts:IProduct[]) => {
+const addNewProducts = async (
+  allNewProducts: IProduct[],
+  existingProducts: IProduct[]
+) => {
   const filteredProducts = allNewProducts.filter(
-    (newProduct:IProduct) =>
+    (newProduct: IProduct) =>
       !existingProducts.some(
-        (product:IProduct) => product.productId === newProduct.productId
+        (product: IProduct) => product.productId === newProduct.productId
       )
   );
 
@@ -50,7 +51,7 @@ const addNewProducts = async (allNewProducts:IProduct[], existingProducts:IProdu
   }
 };
 
-const executeService = async (keyword: keyword) => {
+const executeService = async (keyword: Keyword) => {
   const newScrapingJob = new Scrape({
     status: "started",
     startTime: new Date(),
@@ -96,7 +97,7 @@ const executeService = async (keyword: keyword) => {
   }
 
   if (allNewProducts.length > 0) {
-    const existingProducts:IProduct[] = await Product.find();
+    const existingProducts: IProduct[] = await Product.find();
     if (existingProducts.length === 0) {
       await Product.insertMany(allNewProducts);
     } else {

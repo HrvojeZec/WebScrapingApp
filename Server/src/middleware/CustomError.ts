@@ -1,4 +1,4 @@
-const httpStatus = require("../constants/httpResponseStauts");
+const HttpStatus = require("../constants/httpStauts");
 
 class CustomError extends Error {
   public name: string;
@@ -28,7 +28,7 @@ class CustomBadRequest extends CustomError {
     super({
       message,
       name: "HttpBadRequest",
-      statusCode: httpStatus.BAD_REQUEST,
+      statusCode: HttpStatus.BAD_REQUEST,
       data,
     });
   }
@@ -39,7 +39,7 @@ class CustomNotFound extends CustomError {
     super({
       message,
       name: "HttpNotFound",
-      statusCode: httpStatus.NOT_FOUND,
+      statusCode: HttpStatus.NOT_FOUND,
       data,
     });
   }
@@ -50,7 +50,7 @@ class CustomInternalServerError extends CustomError {
     super({
       message,
       name: "HttpInternalServerError",
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       data,
     });
   }
@@ -61,7 +61,7 @@ class CustomMultiStatus extends CustomError {
     super({
       message,
       name: "HttpMultiStatus",
-      statusCode: httpStatus.MULTI_STATUS,
+      statusCode: HttpStatus.MULTI_STATUS,
       data,
     });
   }
