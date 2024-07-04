@@ -2,7 +2,7 @@ import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import classes from "../../components/CarouselCard/CarouselCard.module.scss";
 import dayjs from "dayjs";
-import { Product } from "../../lib/ProductTypes";
+import { Product } from "../../types/ProductTypes";
 
 export function ProductCard({
   title,

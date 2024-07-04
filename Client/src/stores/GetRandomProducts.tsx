@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { constants } from "../config/constants";
-import { Product } from "../lib/ProductTypes";
+import { Product } from "../types/ProductTypes";
 
 interface Props {
   children: React.ReactNode;

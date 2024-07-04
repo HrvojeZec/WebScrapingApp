@@ -12,7 +12,7 @@ import {
 } from "../../components/shared/Notification/Notification";
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { Product } from "../../lib/ProductTypes";
+import { Product } from "../../types/ProductTypes";
 
 interface DataType {
   products: Product[];
