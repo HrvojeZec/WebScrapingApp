@@ -36,7 +36,7 @@ const mallScraping = async (keyword: string, scrapeId: string) => {
   await Promise.all([
     page.waitForNavigation(),
     await page.keyboard.press("Enter"), // KORISTIM KLIK NA ENTER
-    // page.click("button#search-button"), // Klikni na gumb // OVO NE RADI NE ZNAM ZASTO !!!!!!!!!!!!!
+    // page.click("button#search-button"), // Klikni na gumb // OVO NE RADI
   ]);
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
