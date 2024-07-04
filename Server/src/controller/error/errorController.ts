@@ -1,7 +1,6 @@
-import {  NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-
-function globalErrorhandler(error: any, req: Request, res: Response, next: NextFunction) {
+function globalErrorhandler(error: any, req: Request, res: Response) {
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
 

@@ -64,7 +64,7 @@ const executeService = async (keyword: keyword) => {
   const promises = [mallDataPromise, sanctaDomenicaDataPromise];
   const results = await Promise.allSettled(promises);
 
-  let allNewProducts: IProduct[] = [];
+  const allNewProducts: IProduct[] = [];
   const errors = [];
 
   const isArrayEmpty = results.every(

@@ -18,7 +18,7 @@ const findProductsByKeyword = async (keyword: string, skip: number, limit: numbe
     .skip(skip)
     .limit(limit);
 
-  let result = [];
+  const result = [];
 
   if (existingProducts.length > 0) {
     for (const product of existingProducts) {
@@ -38,7 +38,7 @@ const findProductsByKeyword = async (keyword: string, skip: number, limit: numbe
 
 const findAllProducts = async () => {
   const existingProducts = await Product.find();
-  let result = [];
+  const result = [];
   for (const product of existingProducts) {
     const store = await Stores.findById(product.storeId);
     if (store) {
@@ -66,7 +66,7 @@ const findAllKeywords = async () => {
 const findProductsByScrapeId = async (scrapeId: string) => {
   const existingProducts = await Product.find({ scrapeId });
   console.log(existingProducts);
-  let result = [];
+  const result = [];
   if (existingProducts.length > 0) {
     for (const product of existingProducts) {
       const store = await Stores.findById(product.storeId);

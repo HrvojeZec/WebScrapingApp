@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer-extra";
-import StealthPlugin from"puppeteer-extra-plugin-stealth";
-import {Url} from "../../constants/url";
-import {Stores} from "../../model/storesModel";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { Url } from "../../constants/url";
+import { Stores } from "../../model/storesModel";
 
 puppeteer.use(StealthPlugin());
 
@@ -23,13 +23,13 @@ const mallScraping = async (keyword: string, scrapeId: string) => {
   const storeId = store?._id;
 
   let prevHeight: any = -1;
-  let maxScrolls: number = 100;
+  const maxScrolls: number = 100;
   let scrollCount: number = 0;
 
   await page.goto(Url.MallUrl);
   await new Promise((resolve) => setTimeout(resolve, 3000)); // cekaj 3 sekunde
 
-  const btn = await page.waitForSelector("button#search-button"); // cekaj dok se ne pojavi button
+  await page.waitForSelector("button#search-button"); // cekaj dok se ne pojavi button
 
   await page.type("input#site-search-input", keyword, { delay: 100 }); //dohvaca search id i ubacije key word unutra
   await new Promise((resolve) => setTimeout(resolve, 1000)); // cekaj 1 s
@@ -97,7 +97,7 @@ const mallScraping = async (keyword: string, scrapeId: string) => {
     }
 
     // Calculate new scroll height and compare
-    let newHeight = await page.evaluate("document.body.scrollHeight");
+    const newHeight = await page.evaluate("document.body.scrollHeight");
     console.log("new Height: ", newHeight);
     console.log("prevHeight: ", prevHeight);
     if (newHeight == prevHeight) {
@@ -121,13 +121,13 @@ const mallScraping = async (keyword: string, scrapeId: string) => {
       const description = await product.evaluate((element: any) => {
         const brief = element.querySelector(".pb-brief__brief");
         if (!brief) return "";
-      
+
         const p = brief.querySelector("p");
         if (p) return p.innerText.trim();
-      
+
         const span = brief.querySelector("span");
         if (span) return span.innerText.trim();
-      
+
         return brief.innerText.trim();
       });
       const price = await product.$eval(".pb-price__price span", (element) =>
@@ -137,7 +137,9 @@ const mallScraping = async (keyword: string, scrapeId: string) => {
         element.getAttribute("href")
       );
       const imgs = await product.$$eval(".hooper-slide img[src]", (imgs) =>
-        Array.isArray(imgs) ? imgs.map((img) => img.getAttribute("src") || "") : []
+        Array.isArray(imgs)
+          ? imgs.map((img) => img.getAttribute("src") || "")
+          : []
       );
       const productId = await product.evaluate((element) =>
         element.getAttribute("data-scroll-id")
