@@ -47,7 +47,6 @@
   },
   "description": "",
   "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "*.{js,jsx}": ["eslint --fix"]
   }
 }
