@@ -19,7 +19,7 @@ export const addStore = async ({ storeName }: StoreName) => {
   }
 };
 
-const createStoreData = async () => {
+export const createStoreData = async () => {
   const stores: IStore[] = await Stores.find();
   const existingStoreNames: string[] = stores
     .map((store) => store.storeName)
