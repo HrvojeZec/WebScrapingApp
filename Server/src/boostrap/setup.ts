@@ -1,21 +1,21 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 const mallLogo = fs.readFileSync(
-  path.resolve(__dirname, "../assets/mallLogo.svg"),
-  "utf8"
+  path.resolve(__dirname, '../assets/mallLogo.svg'),
+  'utf8',
 );
 const SanctaDomenicaLogo = fs.readFileSync(
-  path.resolve(__dirname, "../assets/sanctaDomenicaLogo.svg"),
-  "utf8"
+  path.resolve(__dirname, '../assets/sanctaDomenicaLogo.svg'),
+  'utf8',
 );
 
-const StoresData = [
+export const StoresData = [
   {
-    storeName: "Mall",
+    storeName: 'Mall',
     logo: mallLogo,
   },
   {
-    storeName: "Sancta Domenica",
+    storeName: 'Sancta Domenica',
     logo: SanctaDomenicaLogo,
   },
 ];
