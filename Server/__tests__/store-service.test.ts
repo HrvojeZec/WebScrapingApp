@@ -1,24 +1,22 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import {
+  connectMemoryMongoDB,
+  disconnectMemoryMongoDB,
+  clearDatabase,
+} from '../src/test-utils/setup-mongodb';
 import { addStore, createStoreData } from '../src/router/store/stores-service';
 import { Stores } from '../src/model/storesModel';
 import { StoresData } from '../src/boostrap/setup';
 
-let mongoServer: MongoMemoryServer;
-
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
-  await mongoose.connect(uri);
+  await connectMemoryMongoDB();
 });
 
 afterEach(async () => {
-  await Stores.deleteMany({});
+  await clearDatabase();
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
+  await disconnectMemoryMongoDB();
 });
 
 describe('addStore function', () => {

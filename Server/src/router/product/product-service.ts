@@ -1,8 +1,11 @@
-import {Stores} from "../../model/storesModel";
-import {Product} from "../../model/productModel";
+import { Stores } from '../../model/storesModel';
+import { Product } from '../../model/productModel';
 
-
-const paginationHandler = async (keyword: string, page: number, pageSize: number) => {
+export const paginationHandler = async (
+  keyword: string,
+  page: number,
+  pageSize: number,
+) => {
   const existingProducts = await Product.find({ keyword });
   const dataLength = existingProducts.length;
 
@@ -13,7 +16,11 @@ const paginationHandler = async (keyword: string, page: number, pageSize: number
   return { totalPages, skip, limit };
 };
 
-const findProductsByKeyword = async (keyword: string, skip: number, limit: number) => {
+export const findProductsByKeyword = async (
+  keyword: string,
+  skip: number,
+  limit: number,
+) => {
   const existingProducts = await Product.find({ keyword })
     .skip(skip)
     .limit(limit);
@@ -36,7 +43,7 @@ const findProductsByKeyword = async (keyword: string, skip: number, limit: numbe
   return result;
 };
 
-const findAllProducts = async () => {
+export const findAllProducts = async () => {
   const existingProducts = await Product.find();
   const result = [];
   for (const product of existingProducts) {
@@ -53,17 +60,17 @@ const findAllProducts = async () => {
   return result;
 };
 
-const findRandomProducts = async () => {
+export const findRandomProducts = async () => {
   const result = await Product.aggregate([{ $sample: { size: 10 } }]);
   return result;
 };
 
-const findAllKeywords = async () => {
-  const result = await Product.distinct("keyword");
+export const findAllKeywords = async () => {
+  const result = await Product.distinct('keyword');
   return result;
 };
 
-const findProductsByScrapeId = async (scrapeId: string) => {
+export const findProductsByScrapeId = async (scrapeId: string) => {
   const existingProducts = await Product.find({ scrapeId });
   console.log(existingProducts);
   const result = [];
