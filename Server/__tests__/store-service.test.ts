@@ -2,7 +2,7 @@ import {
   connectMemoryMongoDB,
   disconnectMemoryMongoDB,
   clearDatabase,
-} from '../src/test-utils/setup-mongodb';
+} from './test-utils/setup-mongodb';
 import { addStore, createStoreData } from '../src/router/store/stores-service';
 import { Stores } from '../src/model/storesModel';
 import { StoresData } from '../src/boostrap/setup';
