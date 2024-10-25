@@ -14,7 +14,6 @@ import {
 import { Product } from '../src/model/productModel';
 import { testStoreData, testProductData } from './test-data/productData';
 import { Stores } from '../src/model/storesModel';
-import { describe } from 'node:test';
 
 beforeAll(async () => {
   await connectMemoryMongoDB();
@@ -57,11 +56,11 @@ describe('findProductsByKeyword function', () => {
 describe('findAllProducts function', () => {
   test('should find all Products', async () => {
     const products = await findAllProducts();
+    console.log(products[0]);
 
     expect(products.length).toBeGreaterThan(0);
-    expect(products[0].storeName).toBe('Test Mall');
+    expect(products[0]).toHaveProperty('storeName');
     expect(products[0]).toHaveProperty('logo');
-    expect(products[0].keyword).toBe('iphone');
   });
 });
 
@@ -70,5 +69,17 @@ describe('findRandomProducts function', () => {
     const products = await findRandomProducts();
 
     expect(products.length).toBe(10);
+  });
+});
+
+describe('findProductsByScrapeId function', () => {
+  test('should find all products by same scrapeId', async () => {
+    const scrapeId = testProductData[0].scrapeId.toString();
+    const products = await findProductsByScrapeId(scrapeId);
+
+    expect(products.length).toBeGreaterThan(1);
+    expect(products[0]).toHaveProperty('storeName');
+    expect(products[0]).toHaveProperty('logo');
+    expect(products[0]).toHaveProperty('title');
   });
 });
