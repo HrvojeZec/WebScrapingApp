@@ -56,7 +56,6 @@ describe('findProductsByKeyword function', () => {
 describe('findAllProducts function', () => {
   test('should find all Products', async () => {
     const products = await findAllProducts();
-    console.log(products[0]);
 
     expect(products.length).toBeGreaterThan(0);
     expect(products[0]).toHaveProperty('storeName');
