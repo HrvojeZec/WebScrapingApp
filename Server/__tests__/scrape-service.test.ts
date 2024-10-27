@@ -1,5 +1,6 @@
 import path from 'path';
 import { mallScraping } from '../src/controller/scrape/scrapeMALL';
+import { sanctaDomenicaScraping } from '../src/controller/scrape/scrapeSanctaDomenica';
 
 jest.mock('../src/model/storesModel', () => ({
   Stores: {
@@ -14,8 +15,21 @@ describe('Scraping service', () => {
   test('should scrape mall from local HTML file', async () => {
     const htmlFilePath = path.resolve(__dirname, './mockData/mall.html');
     const products = await mallScraping(keyword, scrapeId, htmlFilePath);
-    console.log(products);
 
+    expect(products).toBeInstanceOf(Array);
+  }, 10000);
+
+  test('sholud scrap sanctaDomenica from local HTML file', async () => {
+    const htmlFilePath = path.resolve(
+      __dirname,
+      './mockData/sanctaDomenica.html',
+    );
+    const products = await sanctaDomenicaScraping(
+      keyword,
+      scrapeId,
+      htmlFilePath,
+    );
+    console.log(products);
     expect(products).toBeInstanceOf(Array);
   }, 10000);
 });

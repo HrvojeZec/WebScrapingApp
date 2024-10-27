@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
 
 puppeteer.use(StealthPlugin());
-
 const scrapeProducts = async (
   page: any,
   keyword: string,
@@ -47,9 +46,8 @@ const scrapeProducts = async (
       } catch {
         oldPrice = null;
       }
-
       const link = await product.$eval(
-        '.product-item-name a[href]',
+        '.product-item-link',
         (element: HTMLElement) => element.getAttribute('href'),
       );
       const image = await product.$eval(
