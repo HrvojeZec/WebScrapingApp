@@ -22,7 +22,11 @@ export const mallScraping = async (
   scrapeId: string,
   filePath?: string,
 ) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    ignoreDefaultArgs: ['--disable-extensions'],
+  });
   const page = await browser.newPage();
 
   const store = await Stores.findOne({ storeName: 'Mall' });

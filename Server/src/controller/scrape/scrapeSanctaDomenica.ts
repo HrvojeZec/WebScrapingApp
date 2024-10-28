@@ -83,6 +83,7 @@ export const sanctaDomenicaScraping = async (
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    ignoreDefaultArgs: ['--disable-extensions'],
   });
   const page = await browser.newPage();
   const storeName = 'Sancta Domenica';
