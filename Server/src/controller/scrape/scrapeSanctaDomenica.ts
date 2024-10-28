@@ -80,7 +80,10 @@ export const sanctaDomenicaScraping = async (
   scrapeId: string,
   filePath?: string,
 ) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
   const page = await browser.newPage();
   const storeName = 'Sancta Domenica';
   const store = await Stores.findOne({ storeName });
