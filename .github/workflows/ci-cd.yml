@@ -22,11 +22,6 @@ jobs:
           cd Server
           npm install
 
-      - name: Install Frontend Dependencies
-        run: |
-          cd Client
-          npm install
-
       - name: Run Backend Tests
         run: |
           cd Server

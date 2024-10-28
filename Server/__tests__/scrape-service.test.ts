@@ -29,7 +29,7 @@ describe('Scraping service', () => {
       scrapeId,
       htmlFilePath,
     );
-    console.log(products);
+
     expect(products).toBeInstanceOf(Array);
   }, 10000);
 });

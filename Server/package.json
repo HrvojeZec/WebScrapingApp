@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest",
     "lint:fix": "eslint --fix ./*.js",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
