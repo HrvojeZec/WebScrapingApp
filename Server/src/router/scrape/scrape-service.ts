@@ -1,23 +1,23 @@
-const { mallScraping } = require("../../controller/scrape/scrapeMALL");
+const { mallScraping } = require('../../controller/scrape/scrapeMALL');
 const {
   sanctaDomenicaScraping,
-} = require("../../controller/scrape/scrapeSanctaDomenica");
-import { Product, IProduct } from "../../model/productModel";
-import { Stores, IStore } from "../../model/storesModel";
-import { Scrape } from "../../model/scrapeModel";
-import { Keyword } from "../../types/params";
-import mongoose from "mongoose";
+} = require('../../controller/scrape/scrapeSanctaDomenica');
+import { Product, IProduct } from '../../model/productModel';
+import { Stores, IStore } from '../../model/storesModel';
+import { Scrape } from '../../model/scrapeModel';
+import { Keyword } from '../../types/params';
+import mongoose from 'mongoose';
 
 const updateProductsPrice = async (
   existingProducts: IProduct[],
   allNewProducts: IProduct[],
-  scrapeId: mongoose.Types.ObjectId
+  scrapeId: mongoose.Types.ObjectId,
 ) => {
   for (const newProduct of allNewProducts) {
     const existingProduct = existingProducts.find(
       (product: IProduct) =>
         product.productId === newProduct.productId &&
-        product.storeId === newProduct.storeId
+        product.storeId === newProduct.storeId,
     );
     if (existingProduct && existingProduct.price !== newProduct.price) {
       await Product.updateOne(
@@ -29,7 +29,7 @@ const updateProductsPrice = async (
             scrapeId: scrapeId,
             new: true,
           },
-        }
+        },
       );
     }
   }
@@ -37,13 +37,13 @@ const updateProductsPrice = async (
 
 const addNewProducts = async (
   allNewProducts: IProduct[],
-  existingProducts: IProduct[]
+  existingProducts: IProduct[],
 ) => {
   const filteredProducts = allNewProducts.filter(
     (newProduct: IProduct) =>
       !existingProducts.some(
-        (product: IProduct) => product.productId === newProduct.productId
-      )
+        (product: IProduct) => product.productId === newProduct.productId,
+      ),
   );
 
   if (filteredProducts.length > 0) {
@@ -53,7 +53,7 @@ const addNewProducts = async (
 
 const executeService = async (keyword: Keyword) => {
   const newScrapingJob = new Scrape({
-    status: "started",
+    status: 'started',
     startTime: new Date(),
     keyword: keyword,
   });
@@ -69,14 +69,14 @@ const executeService = async (keyword: Keyword) => {
   const errors = [];
 
   const isArrayEmpty = results.every(
-    (result) => result.status === "fulfilled" && result.value.length === 0
+    (result) => result.status === 'fulfilled' && result.value.length === 0,
   );
-  console.log("isArrayEmpty", isArrayEmpty);
+  console.log('isArrayEmpty', isArrayEmpty);
   if (isArrayEmpty) {
     throw { status: 404 };
   }
   for (const [index, result] of results.entries()) {
-    if (result.status === "rejected") {
+    if (result.status === 'rejected') {
       errors.push({
         functionName: `Function${index + 1}`,
         reason: result.reason,
@@ -90,7 +90,7 @@ const executeService = async (keyword: Keyword) => {
       } else {
         errors.push({
           functionName: `Function${index + 1}`,
-          reason: "Invalid data format",
+          reason: 'Invalid data format',
         });
       }
     }
@@ -118,7 +118,7 @@ const executeService = async (keyword: Keyword) => {
       productsWithStoreAttributes.push(productWithStoreAttributes);
     }
   }
-  newScrapingJob.status = "finished";
+  newScrapingJob.status = 'finished';
   newScrapingJob.endTime = new Date();
   await newScrapingJob.save();
 

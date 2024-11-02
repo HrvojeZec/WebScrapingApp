@@ -1,22 +1,22 @@
 import express, { NextFunction, Request, Response } from 'express';
 const executeService = require('./scrape-service');
 const {
-  CustomBadRequest,
   CustomInternalServerError,
   CustomNotFound,
   CustomMultiStatus,
 } = require('../../middleware/CustomError');
 const router = express.Router();
 import { Error } from '../../types/params';
-import { setScrapingStatus } from './status-scrape-router';
+const { setScrapingStatus } = require('../scrapeStatus/scrapeStatus-service');
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   const { keyword } = req.body;
+  console.log(keyword);
 
   try {
     setScrapingStatus(true);
-
     const products = await executeService(keyword);
+    console.log('zavrsio sa scrapanjem ');
 
     res.status(200).json({ status: 'finished', products });
   } catch (error: unknown) {

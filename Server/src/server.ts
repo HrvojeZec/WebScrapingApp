@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 require('dotenv').config();
 
 const scrapeRoute = require('./router/scrape/scrape-router');
-const scrapeStatusRouter = require('./router/scrape/status-scrape-router');
+const scrapeStatusRouter = require('./router/scrapeStatus/scrapeStatus-router');
 const storeRouter = require('./router/store/stores-router');
 const productRouter = require('./router/product/product-router');
 const globalErrorhandler = require('./controller/error/errorController');

@@ -22,6 +22,8 @@ services:
       - scrape-app
     ports:
       - 5000:5000
+    depends_on:
+      - mongo
   scrape-status-service:
     build:
       context: ./Server
@@ -35,6 +37,23 @@ services:
       - scrape-app
     ports:
       - 5001:5001
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./Client:/app
+      - /app/node_modules
+    networks:
+      - scrape-app
+    ports:
+      - 5173:5173
+    command: npm run dev -- --host
+    depends_on:
+      - scrape-service
 volumes:
   mongo_data:
 networks:
