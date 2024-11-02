@@ -13,6 +13,9 @@ const { createStoreData } = require('./router/store/stores-service');
 const app = express();
 const port = process.env.PORT;
 
+const app1 = express();
+const statusPORT = process.env.PORT_STATUS;
+
 app.use(
   cors({
     origin: 'http://localhost:5173',

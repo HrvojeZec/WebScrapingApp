@@ -1,6 +1,14 @@
 name: scrape-app
 
 services:
+  mongo:
+    image: mongo:7.0.12
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - scrape-app
   api:
     build:
       context: ./Server
@@ -10,5 +18,12 @@ services:
     volumes:
       - ./Server:/app
       - /app/node_modules
+    networks:
+      - scrape-app
     ports:
       - 5000:5000
+volumes:
+  mongo_data:
+networks:
+  scrape-app:
+    driver: bridge
