@@ -36,7 +36,7 @@ app.use(globalErrorhandler);
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-app1.listen(port, () => {
+app1.listen(statusPORT, () => {
   console.log(`Server listening on port ${statusPORT}`);
 });
 mongoose

@@ -9,7 +9,7 @@ services:
       - mongo_data:/data/db
     networks:
       - scrape-app
-  api:
+  scrape-service:
     build:
       context: ./Server
       dockerfile: Dockerfile
@@ -22,6 +22,19 @@ services:
       - scrape-app
     ports:
       - 5000:5000
+  scrape-status-service:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./Server/.env
+    volumes:
+      - ./Server:/app
+      - /app/node_modules
+    networks:
+      - scrape-app
+    ports:
+      - 5001:5001
 volumes:
   mongo_data:
 networks:
