@@ -1,5 +1,5 @@
 import { Stores, IStore } from '../../model/storesModel';
-const { StoresData } = require('../../boostrap/setup');
+const { StoresData } = require('../../bootstrap/setup');
 import { StoreName } from '../../types/params';
 
 export const addStore = async ({ storeName }: StoreName) => {

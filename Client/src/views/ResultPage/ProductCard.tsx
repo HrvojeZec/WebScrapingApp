@@ -1,8 +1,8 @@
-import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
-import classes from "../../components/CarouselCard/CarouselCard.module.scss";
-import dayjs from "dayjs";
-import { Product } from "../../types/ProductTypes";
+import { Image, Card, Text, Group, Button, Spoiler } from '@mantine/core';
+import { Carousel } from '@mantine/carousel';
+import classes from '../../components/CarouselCard/CarouselCard.module.scss';
+import dayjs from 'dayjs';
+import { Product } from '../../types/ProductTypes';
 
 export function ProductCard({
   title,
@@ -15,8 +15,8 @@ export function ProductCard({
   updatedAt,
 }: Product) {
   dayjs().format();
-  dayjs(`${updatedAt}`).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]");
-  const formatData = dayjs(`${updatedAt}`).format("DD/MM/YYYY");
+  dayjs(`${updatedAt}`).format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]');
+  const formatData = dayjs(`${updatedAt}`).format('DD/MM/YYYY');
 
   const imageArray = Array.isArray(images) ? images : [images];
   const slides = imageArray.map((image) => (
@@ -27,17 +27,30 @@ export function ProductCard({
 
   return (
     <>
-      {" "}
+      {' '}
       <Card className={classes.card} radius="md" withBorder padding="xl">
-        {logo.startsWith("<svg") ? (
+        {logo.startsWith('<svg') ? (
           <div
             dangerouslySetInnerHTML={{ __html: logo }}
-            style={{ display: "flex", justifyContent: "flex-end" }}
+            style={{ display: 'flex', justifyContent: 'flex-end' }}
           />
         ) : (
-          <img className={classes.storeLogo} src={logo} alt={`Logo ${title}`} />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              width: '82px',
+              alignSelf: 'end',
+            }}
+          >
+            <img
+              className={classes.storeLogo}
+              src={logo}
+              alt={`Logo ${title}`}
+            />
+          </div>
         )}
-        <Card.Section style={{ padding: "0.5rem" }}>
+        <Card.Section style={{ padding: '0.5rem' }}>
           <Carousel
             withIndicators
             loop
@@ -67,7 +80,7 @@ export function ProductCard({
               {price}
             </Text>
             <Text span fz="sm" c="dimmed">
-              {" "}
+              {' '}
               / {oldPrice}
             </Text>
           </div>

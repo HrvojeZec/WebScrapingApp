@@ -1,4 +1,4 @@
-@use "../../assets/stylesheets/Variables.module.scss" as *;
+@use '../../assets/stylesheets/Variables.module.scss' as *;
 
 .scrapeResult {
   max-width: 1950px;
@@ -43,7 +43,6 @@
     padding: 1.5rem;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
   }
@@ -75,7 +74,9 @@
 }
 
 .title {
-  font-family: Greycliff CF, var(--mantine-font-family);
+  font-family:
+    Greycliff CF,
+    var(--mantine-font-family);
   text-align: center;
   font-weight: 900;
   font-size: 38px;

@@ -1,5 +1,8 @@
 import { Stores } from '../../model/storesModel';
 import { Product } from '../../model/productModel';
+import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { log } from 'console';
 
 export const paginationHandler = async (
   keyword: string,
@@ -89,6 +92,48 @@ export const findProductsByScrapeId = async (scrapeId: string) => {
   }
   return result;
 };
+
+export const findProductsByKeywordAndStoreID = async (
+  keyword: string,
+  storeId: string,
+  skip: number,
+  limit: number,
+) => {
+  console.log('storeId u  findProductsByKeywordAndStoreID :', storeId);
+
+  const objectStoreId = new ObjectId(storeId);
+  console.log(objectStoreId);
+  /*   const existingProducts = await Product.find({ objectStoreId }); */
+  const existingProducts = await Product.find({
+    keyword: { $regex: keyword, $options: 'i' },
+    storeId: objectStoreId,
+  })
+    .skip(skip)
+    .limit(limit);
+  console.log(existingProducts);
+
+  const result = [];
+  console.log(existingProducts);
+
+  if (existingProducts.length > 0) {
+    for (const product of existingProducts) {
+      const store = await Stores.findById(product.storeId);
+      console.log(store);
+      if (store) {
+        const productWithStoreAttributes = {
+          ...product.toObject(),
+          storeName: store.storeName,
+          logo: store.logo,
+        };
+        result.push(productWithStoreAttributes);
+      }
+    }
+  }
+  console.log(result);
+
+  return result;
+};
+
 module.exports = {
   findAllKeywords,
   findProductsByKeyword,
@@ -96,4 +141,5 @@ module.exports = {
   findRandomProducts,
   findProductsByScrapeId,
   paginationHandler,
+  findProductsByKeywordAndStoreID,
 };

@@ -1,10 +1,11 @@
-let scrapingInProgress = false;
+import { Scrape } from '../../model/scrapeModel';
+import mongoose from 'mongoose';
 
-const setScrapingStatus = (status: boolean) => {
-  scrapingInProgress = status;
+const findScrapeByID = async (scrapeId: mongoose.Types.ObjectId) => {
+  const objectId = new mongoose.Types.ObjectId(scrapeId);
+  const result = await Scrape.findOne(objectId);
+
+  return result;
 };
 
-const getScrapingStatus = () => {
-  return scrapingInProgress;
-};
-module.exports = { getScrapingStatus, setScrapingStatus };
+module.exports = findScrapeByID;

@@ -8,7 +8,7 @@ import path from 'path';
 puppeteer.use(StealthPlugin());
 
 const checkForNoResults = async (page: any) => {
-  const noResults = await page.$('.alert-box');
+  const noResults = await page.$('.category__right__empty');
 
   if (noResults) {
     return true;
@@ -23,7 +23,7 @@ export const mallScraping = async (
   filePath?: string,
 ) => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     ignoreDefaultArgs: ['--disable-extensions'],
   });
@@ -139,8 +139,15 @@ export const mallScraping = async (
   // dohvacanje podataka
   const products = await page.$$('.category-products .pbcr');
 
-  const data = await Promise.all(
+  const rawData = await Promise.all(
     products.map(async (product) => {
+      const isUnavailable = await product.$(
+        '.category-product-availability__label--unavailable',
+      );
+      if (isUnavailable) {
+        return null; // Preskoči nedostupan proizvod
+      }
+
       const title = await product.$eval(
         '.pb-brief__title-wrap .pb-brief__title',
         (element) => (element as HTMLElement).innerText.trim(),
@@ -161,9 +168,11 @@ export const mallScraping = async (
       const price = await product.$eval('.pb-price__price span', (element) =>
         element.innerText.trim(),
       );
-      const link = await product.$eval('.pb-price a[href]', (element) =>
-        element.getAttribute('href'),
+      const link = await product.$eval(
+        'a.pb-price__discounts[href]',
+        (element) => element.getAttribute('href'),
       );
+
       const imgs = await product.$$eval('.hooper-slide img[src]', (imgs) =>
         Array.isArray(imgs)
           ? imgs.map((img) => img.getAttribute('src') || '')
@@ -216,7 +225,7 @@ export const mallScraping = async (
   const content = await page.content();
   fs.writeFileSync(filePath, content); */
   await browser.close();
-
+  const data = rawData.filter((item) => item !== null);
   return data;
 };
 
