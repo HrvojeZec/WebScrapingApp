@@ -25,6 +25,7 @@ keep to strict rate limits.
 
 - **Web** (`apps/web`): React, TypeScript, Vite, Mantine
 - **API** (`apps/api`): Node.js, Express, TypeScript, Mongoose, MongoDB
+- **Shared** (`packages/shared`): zod schemas, DTO types and limits used by both apps
 - **Scraping**: Puppeteer today; HTTP with HTML parsing and a browser fallback from v0.3.0
 - **Repository**: npm workspaces with one lockfile at the root
 

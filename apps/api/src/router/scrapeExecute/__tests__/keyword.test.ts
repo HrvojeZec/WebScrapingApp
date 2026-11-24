@@ -6,6 +6,17 @@ describe("parseKeyword", () => {
     expect(parseKeyword("  iphone 16 ")).toBe("iphone 16");
   });
 
+  test("normalizes the keyword like the web app does", () => {
+    expect(parseKeyword("Čaša")).toBe("čaša");
+    expect(parseKeyword("  Apple   iPhone ")).toBe("apple iphone");
+  });
+
+  test("rejects keywords the shared schema does not allow", () => {
+    expect(parseKeyword("a")).toBeNull();
+    expect(parseKeyword("iphone,16")).toBeNull();
+    expect(parseKeyword("<script>")).toBeNull();
+  });
+
   test("rejects a query operator object", () => {
     expect(parseKeyword({ $ne: null })).toBeNull();
   });
