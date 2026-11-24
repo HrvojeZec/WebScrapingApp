@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import axios from "axios";
+import { env } from "../../config";
 import { parseKeyword } from "../scrapeExecute/keyword";
 const { CustomInternalServerError } = require("../../middleware/CustomError");
 const { createNewScrape, endScrapeStatus } = require("./scrape-service");
@@ -19,7 +20,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     const scrapeJob = response.newScrapingJob || response.updatedScrape;
 
     await axios.post(
-      `http://127.0.0.1:${process.env.PORT_STATUS}/api/execute`,
+      env.EXECUTE_URL,
       {
         keyword: keyword,
         newScrapingJob: scrapeJob,
