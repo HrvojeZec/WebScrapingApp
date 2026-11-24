@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   new point only when the price changes, keyword results, a keyword cache and scrape jobs that
   expire after 30 days. Stores are created on startup, and `npm run store:set` switches a store
   off or on (#18)
+- Polite HTTP client for the scrapers: an honest `StoreSeekerBot` User-Agent, one request per
+  store every 2 seconds, robots.txt checked before every page, retries with backoff on 5xx and
+  network errors, a pause on 429, and no parsing of block pages, off-site redirects or bodies over
+  5 MB (#19)
 
 ### Changed
 
