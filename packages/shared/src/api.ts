@@ -6,7 +6,7 @@ import type { FetchMethod, JobStatus, StoreRunStatus } from "./statuses.js";
 import { storeSlugSchema } from "./stores.js";
 import type { StoreSlug } from "./stores.js";
 
-export const objectIdSchema = z.string().regex(/^[a-f0-9]{24}$/i);
+export const objectIdSchema = z.string().regex(/^[a-f0-9]{24}$/i, "Neispravan ID.");
 
 const storeListSchema = z
   .string()

@@ -30,8 +30,10 @@ describe("objectIdSchema", () => {
     expect(objectIdSchema.safeParse("64b7f0c2a1e4d3b2c1a0f9e8").success).toBe(true);
   });
 
-  test("rejects anything else", () => {
-    expect(objectIdSchema.safeParse("abc").success).toBe(false);
+  test("rejects anything else with a message for the user", () => {
+    const result = objectIdSchema.safeParse("abc");
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.message).toBe("Neispravan ID.");
   });
 });
 
