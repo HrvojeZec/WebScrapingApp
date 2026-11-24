@@ -4,9 +4,12 @@
   "version": "0.2.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run build -w @storeseeker/shared",
     "dev": "vite",
+    "prebuild": "npm run build -w @storeseeker/shared",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "pretypecheck": "npm run build -w @storeseeker/shared",
     "typecheck": "tsc -b"
   },
   "dependencies": {
@@ -15,6 +18,7 @@
     "@mantine/form": "^7.9.2",
     "@mantine/hooks": "^7.9.2",
     "@mantine/notifications": "^7.9.2",
+    "@storeseeker/shared": "*",
     "@tabler/icons-react": "^3.4.0",
     "aos": "^2.3.4",
     "dayjs": "^1.11.11",
