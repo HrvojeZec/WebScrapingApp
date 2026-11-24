@@ -7,7 +7,6 @@ require("dotenv").config();
 const scrapeRoute = require("./router/scrape/scrape-router");
 const scrapeExecuteRouter = require("./router/scrapeExecute/scrape-execute-router");
 const scrapeStatusRouter = require("./router/scrapeStatus/scrapeStatus-router");
-const storeRouter = require("./router/store/stores-router");
 const productRouter = require("./router/product/product-router");
 const globalErrorhandler = require("./controller/error/errorController");
 const { createStoreData } = require("./router/store/stores-service");
@@ -34,7 +33,6 @@ scrapeApp.use(express.json());
 scrapeApp.use("/api/execute", scrapeExecuteRouter); // bavi se izvođenjem scrapanja na portu 5001 i salje rezultate u bazu
 app.use("/api/status", scrapeStatusRouter); // bavi se provjerom statusa scrapanja
 app.use("/api/scrape", scrapeRoute); // pokreće scrapanje i vraća scrapeId
-app.use("/api/storeData", storeRouter);
 app.use("/api/products", productRouter);
 app.use(globalErrorhandler);
 

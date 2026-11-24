@@ -1,23 +1,5 @@
 import { Stores, IStore } from "../../model/storesModel";
 const { StoresData } = require("../../bootstrap/setup");
-import { StoreName } from "../../types/params";
-
-export const addStore = async ({ storeName }: StoreName) => {
-  const existingStoreName = await Stores.findOne({ storeName: storeName });
-
-  if (existingStoreName) {
-    return { success: false, error: "STORE_ALREADY_EXISTS" };
-  } else {
-    const store = [{ logo: null, storeName: storeName }];
-    const result = await Stores.insertMany(store);
-
-    if (result) {
-      return { success: true };
-    } else {
-      return { success: false, error: "INSERTION_FAILED" };
-    }
-  }
-};
 
 export const createStoreData = async () => {
   const stores: IStore[] = await Stores.find();
@@ -36,4 +18,4 @@ export const createStoreData = async () => {
     console.log("No new stores added to the database.");
   }
 };
-module.exports = { addStore, createStoreData };
+module.exports = { createStoreData };

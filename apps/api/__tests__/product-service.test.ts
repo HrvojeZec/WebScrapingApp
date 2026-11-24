@@ -1,9 +1,7 @@
 import {
   findAllKeywords,
   findProductsByKeyword,
-  findAllProducts,
   findRandomProducts,
-  findProductsByScrapeId,
   paginationHandler,
 } from "../src/router/product/product-service";
 import {
@@ -53,32 +51,10 @@ describe("findProductsByKeyword function", () => {
   });
 });
 
-describe("findAllProducts function", () => {
-  test("should find all Products", async () => {
-    const products = await findAllProducts();
-
-    expect(products.length).toBeGreaterThan(0);
-    expect(products[0]).toHaveProperty("storeName");
-    expect(products[0]).toHaveProperty("logo");
-  });
-});
-
 describe("findRandomProducts function", () => {
   test("should find 10 random products", async () => {
     const products = await findRandomProducts();
 
     expect(products.length).toBe(10);
-  });
-});
-
-describe("findProductsByScrapeId function", () => {
-  test("should find all products by same scrapeId", async () => {
-    const scrapeId = testProductData[0].scrapeId.toString();
-    const products = await findProductsByScrapeId(scrapeId);
-
-    expect(products.length).toBeGreaterThan(1);
-    expect(products[0]).toHaveProperty("storeName");
-    expect(products[0]).toHaveProperty("logo");
-    expect(products[0]).toHaveProperty("title");
   });
 });
