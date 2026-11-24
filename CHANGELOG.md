@@ -20,10 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   at the repository root (#5)
 - The codebase is formatted with Prettier, and all files use LF line endings (#8)
 - The README describes the project and the ongoing refactor instead of scraper selector notes (#6)
+- Puppeteer 25, mongodb-memory-server 11 with MongoDB 8.0.13 for tests (the version on Atlas) and
+  rimraf 6; scrapers run headless (#15)
 
 ### Removed
 
 - The store suggestion form on the home page, which wrote to an unauthenticated endpoint (#13)
+- Unused or redundant packages: `fs`, `path`, `node-fetch`, `body-parser`, a direct `mongodb`,
+  `@types/mocha` and `@tabler/icons` (#15)
+- The scraper test that launched Chrome against hand-written HTML of a site that no longer exists;
+  fixture-based parser tests replace it in v0.3.0 (#15)
 
 ### Fixed
 
@@ -40,6 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reject a keyword that is not a non-empty string (#13)
 - The Mall scraper accepts image URLs only on the `https://www.mall.hr` origin instead of
   checking their prefix (#13)
+- Patched dependencies: `npm audit` goes from 18 advisories (11 high) to 6 (1 high). Express,
+  Mongoose and Axios start at patched versions. The remaining high advisory is in the Vite 5 dev
+  server, which now listens on localhost only; the Vite 8 and React Router 7 upgrades follow in
+  #25 (#15)
 
 ## [0.1.0] - 2026-11-24
 
