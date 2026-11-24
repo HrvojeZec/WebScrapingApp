@@ -33,6 +33,7 @@
     "puppeteer": "^25.18.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "robots-parser": "^3.0.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
