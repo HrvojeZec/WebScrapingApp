@@ -36,23 +36,6 @@ export const findProductsByKeyword = async (keyword: string, skip: number, limit
   return result;
 };
 
-export const findAllProducts = async () => {
-  const existingProducts = await Product.find();
-  const result = [];
-  for (const product of existingProducts) {
-    const store = await Stores.findById(product.storeId);
-    if (store) {
-      const productWithStoreAttributes = {
-        ...product.toObject(),
-        storeName: store.storeName,
-        logo: store.logo,
-      };
-      result.push(productWithStoreAttributes);
-    }
-  }
-  return result;
-};
-
 export const findRandomProducts = async () => {
   const result = await Product.aggregate([{ $sample: { size: 10 } }]);
   return result;
@@ -60,26 +43,6 @@ export const findRandomProducts = async () => {
 
 export const findAllKeywords = async () => {
   const result = await Product.distinct("keyword");
-  return result;
-};
-
-export const findProductsByScrapeId = async (scrapeId: string) => {
-  const existingProducts = await Product.find({ scrapeId });
-  console.log(existingProducts);
-  const result = [];
-  if (existingProducts.length > 0) {
-    for (const product of existingProducts) {
-      const store = await Stores.findById(product.storeId);
-      if (store) {
-        const productWithStoreAttributes = {
-          ...product.toObject(),
-          storeName: store.storeName,
-          logo: store.logo,
-        };
-        result.push(productWithStoreAttributes);
-      }
-    }
-  }
   return result;
 };
 
@@ -127,9 +90,7 @@ export const findProductsByKeywordAndStoreID = async (
 module.exports = {
   findAllKeywords,
   findProductsByKeyword,
-  findAllProducts,
   findRandomProducts,
-  findProductsByScrapeId,
   paginationHandler,
   findProductsByKeywordAndStoreID,
 };

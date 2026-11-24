@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import classes from "../../components/Search/Search.module.scss";
-import { ContactPage } from "../ContactPage/ContactPage";
 import { showLoadingDataNotification } from "../../components/shared/Notification/Notification";
 import { SliderComponent } from "./Slider";
 import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
@@ -178,7 +177,6 @@ function Search() {
           <SliderComponent />
         </div>
       </div>
-      <ContactPage />
     </>
   );
 }

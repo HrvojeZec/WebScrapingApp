@@ -2,10 +2,8 @@ import { log } from "console";
 import express, { NextFunction, Request, Response } from "express";
 const {
   findProductsByKeyword,
-  findAllProducts,
   findRandomProducts,
   findAllKeywords,
-  findProductsByScrapeId,
   paginationHandler,
   findProductsByKeywordAndStoreID,
 } = require("../product/product-service");
@@ -15,8 +13,6 @@ const {
   CustomNotFound,
 } = require("../../middleware/CustomError");
 const router = express.Router();
-const { Product } = require("../../model/productModel"); // Model za proizvod
-const { Scrape } = require("../../model/scrapeModel"); // Model za scrape (ako treba)
 // Get products by keyword
 router.get("/keyword", async (req, res, next) => {
   const { keyword, page, pageSize, storeId } = req.query;
@@ -64,19 +60,6 @@ router.get("/keyword", async (req, res, next) => {
   }
 });
 
-// Get all products
-router.get("/", async (req, res, next) => {
-  try {
-    const products = await findAllProducts();
-    return res.status(200).json(products);
-  } catch (error) {
-    const err = new CustomInternalServerError(
-      "Došlo je do pogreške prilikom dohvata svih proizvoda.",
-    );
-    return next(err);
-  }
-});
-
 // Get 10 random products
 router.get("/randomProducts", async (req, res, next) => {
   try {
@@ -98,48 +81,6 @@ router.get("/allKeywords", async (req, res, next) => {
   } catch (error) {
     const err = new CustomInternalServerError("Došlo je do greške prilikom dohvaćanja keyowrds-a.");
     return next(err);
-  }
-});
-
-//dohvacanje proizvoda po scrapeIdu ako su finished
-router.get("/scrapeId", async (req, res, next) => {
-  const scrapeId = req.query.scrapeId;
-
-  try {
-    const response = await findProductsByScrapeId(scrapeId);
-    console.log(response);
-    if (response.length === 0) {
-      const err = new CustomNotFound("Nema proizvoda s danim scrape ID-om.");
-      return next(err);
-    }
-    return res.status(200).json(response);
-  } catch (error) {
-    const err = new CustomInternalServerError("Došlo je do pogreške prilikom pretrage proizvoda.");
-    return next(err);
-  }
-});
-
-router.delete("/delete-products", async (req: Request, res: Response, next: NextFunction) => {
-  const { keyword } = req.body;
-  console.log(keyword);
-
-  if (!keyword) {
-    return res.status(400).json({ error: "Ključna riječ je obavezna." });
-  }
-
-  try {
-    // Prvo brišemo proizvode koji imaju taj keyword
-    const result = await Product.deleteMany({ keyword: keyword });
-
-    if (result.deletedCount > 0) {
-      return res.status(200).json({
-        message: `Obrisano ${result.deletedCount} proizvoda pod keywordom: ${keyword}.`,
-      });
-    } else {
-      return res.status(404).json({ message: "Nema proizvoda za dati keyword." });
-    }
-  } catch (error) {
-    next(new Error("Došlo je do greške prilikom brisanja proizvoda."));
   }
 });
 

@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Url } from "../../constants/url";
+import { toMallUrl } from "./mallUrl";
 import { Stores } from "../../model/storesModel";
 import fs from "fs";
 import path from "path";
@@ -163,9 +164,9 @@ export const mallScraping = async (keyword: string, scrapeId: string, filePath?:
       );
       const productId = await product.evaluate((element) => element.getAttribute("data-scroll-id"));
 
-      const uniqueImages = [...new Set(imgs)].map((img) => {
-        return img.startsWith("https://www.mall.hr") ? img : `https://www.mall.hr${img}`;
-      });
+      const uniqueImages = [...new Set(imgs)]
+        .map(toMallUrl)
+        .filter((url): url is string => url !== null);
       let oldPrice: string | null;
       try {
         oldPrice = await product.$eval(".pb-price__price-old", (element) =>
