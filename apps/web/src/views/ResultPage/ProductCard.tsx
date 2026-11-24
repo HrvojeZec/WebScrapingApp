@@ -81,7 +81,7 @@ export function ProductCard({
             </Text>
           </div>
 
-          <Button onClick={(event) => link && (window.location.href = link)} radius="md">
+          <Button onClick={() => link && (window.location.href = link)} radius="md">
             Kupi
           </Button>
         </Group>

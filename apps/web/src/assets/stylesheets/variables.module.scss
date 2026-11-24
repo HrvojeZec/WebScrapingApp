@@ -7,26 +7,8 @@ $primary-header-text-color: #aaa;
 $primary-logo-color: #ff7f50;
 
 /*------------------------------------*\
-** FONT CONFIG
+** FONT CONFIG (the @font-face rules live in fonts.css, imported once from main.tsx)
 \*------------------------------------*/
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter-Regular.ttf") format("truetype");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter-Bold.ttf") format("truetype");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter-ExtraBold.ttf") format("truetype");
-  font-weight: 800;
-}
 
 $base-font-family: "Inter", sans-serif;
 $bold-font-family: "Inter", sans-serif;

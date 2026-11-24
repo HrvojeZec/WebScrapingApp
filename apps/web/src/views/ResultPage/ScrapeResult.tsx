@@ -4,7 +4,7 @@ import { CardTitleWithSort } from "./CardTitleWithSort";
 import { ProductCard } from "./ProductCard";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
 import { constants } from "../../config/constants";
-import { Avatar, Flex, Pagination, Select } from "@mantine/core";
+import { Flex, Pagination, Select } from "@mantine/core";
 import classes from "../../components/Scrape/Scrape.module.scss";
 import {
   showErrorNotification,
@@ -13,6 +13,7 @@ import {
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { Product } from "../../types/ProductTypes";
+import { IconCheck } from "@tabler/icons-react";
 
 interface DataType {
   products: Product[];
@@ -34,15 +35,16 @@ function useCurrentURL() {
   };
 }
 
-interface StoreSelectItemProps extends React.ComponentPropsWithoutRef<"div"> {
+interface StoreSelectItemProps {
   label: string;
   logo: string;
+  checked?: boolean;
 }
-const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
+const StoreSelectItem = ({ label, logo, checked }: StoreSelectItemProps) => {
   const isSvg = logo && logo.startsWith("<svg");
 
   return (
-    <Group wrap="nowrap" spacing="xs" {...others}>
+    <Group wrap="nowrap" gap="xs">
       {isSvg ? (
         <div
           style={{
@@ -68,6 +70,7 @@ const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
       ) : null}
 
       <Text>{label}</Text>
+      {checked && <IconCheck size={16} aria-hidden />}
     </Group>
   );
 };
@@ -97,7 +100,7 @@ function ScrapeResult() {
 
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
-  const { pathname, search, params, page, scrapeId, keyword } = useCurrentURL();
+  const { pathname, search, params, page } = useCurrentURL();
   const navigate = useNavigate();
 
   const handlePageChange = (newPage: number) => {
@@ -110,9 +113,6 @@ function ScrapeResult() {
 
     if (storeIdToUse) {
       return `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}&storeId=${storeIdToUse}`;
-    } else if (params.scrapeId) {
-      // Ako postoji scrapeId, koristi scraping API
-      return `${constants.apiUrl}/api/products/scrape?scrapeId=${params.scrapeId}&keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}`;
     } else if (params.keyword) {
       // Ako postoji samo keyword, koristi search API
       return `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}`;
@@ -148,13 +148,13 @@ function ScrapeResult() {
     }
   };
 
-  // useEffect koji poziva fetchData kada se keyword ili scrapeId promijene
+  // useEffect koji poziva fetchData kada se keyword promijeni
   useEffect(() => {
     const url = getUrl();
     if (url) {
       fetchData(url);
     }
-  }, [params.keyword, params.scrapeId, page, productsPerPage, selectedStore]);
+  }, [params.keyword, page, productsPerPage, selectedStore]);
 
   const handleSortLowToHigh = () => {
     const sortedProducts = [...showProductList].sort(
@@ -186,9 +186,9 @@ function ScrapeResult() {
 
     // Pa dopuni trgovine iz proizvoda koje možda nisu u allStores
     data.products.forEach((product) => {
-      if (!storesMap.has(product.storeId)) {
+      if (product.storeId && !storesMap.has(product.storeId)) {
         storesMap.set(product.storeId, {
-          storeName: product.storeName,
+          storeName: product.storeName ?? "",
           logo: product.logo,
         });
       }
@@ -218,6 +218,8 @@ function ScrapeResult() {
   }, [data.products]);
 
   console.log(data.products);
+  const storeLogos = new Map(storeFilters.map(({ storeId, logo }) => [storeId, logo]));
+
   const handleStoreChange = (storeId: string | null) => {
     setSelectedStore(storeId);
 
@@ -267,13 +269,18 @@ function ScrapeResult() {
                   placeholder="Odaberi trgovinu"
                   value={selectedStore}
                   onChange={handleStoreChange}
-                  itemComponent={StoreSelectItem}
+                  renderOption={({ option, checked }) => (
+                    <StoreSelectItem
+                      label={option.label}
+                      checked={checked}
+                      logo={storeLogos.get(option.value) ?? ""}
+                    />
+                  )}
                   data={[
-                    { value: "", label: "Sve trgovine", logo: "" },
-                    ...storeFilters.map(({ storeId, storeName, logo }) => ({
+                    { value: "", label: "Sve trgovine" },
+                    ...storeFilters.map(({ storeId, storeName }) => ({
                       value: storeId,
                       label: storeName,
-                      logo,
                     })),
                   ]}
                   clearable
