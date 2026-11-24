@@ -144,7 +144,74 @@ describe("saveStoreResults", () => {
     const a = await Product.findOne({ externalId: "a" }).lean();
     expect(a).toMatchObject({ regularPriceCents: null, discountPercent: 0 });
     expect(a?.priceChangedAt).toBeUndefined();
+    expect(a?.previousPriceCents).toBeUndefined();
     expect(await PricePoint.countDocuments({ productId: a?._id })).toBe(2);
+  });
+
+  test("links every product to its own ID when new and known products are mixed", async () => {
+    await saveStoreResults({
+      storeSlug: "mall",
+      keyword: "iphone",
+      products: [parsed("old1"), parsed("old2")],
+      seenAt: FIRST_RUN,
+    });
+    await saveStoreResults({
+      storeSlug: "mall",
+      keyword: "iphone",
+      products: [
+        parsed("old1"),
+        parsed("new1", { priceCents: 111 }),
+        parsed("old2", { priceCents: 222 }),
+        parsed("new2", { priceCents: 333 }),
+      ],
+      seenAt: SECOND_RUN,
+    });
+
+    const products = await Product.find().lean();
+    const byId = new Map(products.map((product) => [String(product._id), product]));
+    const ranks = await KeywordResult.find().sort({ rank: 1 }).lean();
+    expect(ranks.map((row) => byId.get(String(row.productId))?.externalId)).toEqual([
+      "old1",
+      "new1",
+      "old2",
+      "new2",
+    ]);
+    const points = await PricePoint.find({ observedAt: SECOND_RUN }).lean();
+    expect(
+      points
+        .map((point) => [byId.get(String(point.productId))?.externalId, point.priceCents])
+        .sort(),
+    ).toEqual([
+      ["new1", 111],
+      ["new2", 333],
+      ["old2", 222],
+    ]);
+  });
+
+  test("an empty run of a store clears its links for the keyword and nothing else", async () => {
+    await saveStoreResults({
+      storeSlug: "mall",
+      keyword: "iphone",
+      products: [parsed("a")],
+      seenAt: FIRST_RUN,
+    });
+    await saveStoreResults({
+      storeSlug: "mall",
+      keyword: "samsung",
+      products: [parsed("a")],
+      seenAt: FIRST_RUN,
+    });
+    const result = await saveStoreResults({
+      storeSlug: "mall",
+      keyword: "iphone",
+      products: [],
+      seenAt: SECOND_RUN,
+    });
+
+    expect(result).toEqual({ saved: 0, priceChanges: 0 });
+    expect(await KeywordResult.countDocuments({ keyword: "iphone" })).toBe(0);
+    expect(await KeywordResult.countDocuments({ keyword: "samsung" })).toBe(1);
+    expect(await Product.countDocuments()).toBe(1);
   });
 
   test("saves a product listed twice once, with the rank of its first appearance", async () => {

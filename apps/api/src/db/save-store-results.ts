@@ -15,6 +15,11 @@ export type SaveStoreResultsInput = {
   seenAt: Date;
 };
 
+/**
+ * Saves one store's search results for a keyword. Call it only for an "ok" or "empty" run:
+ * an empty list removes the store's links for the keyword, so a blocked or failed run must not
+ * reach it.
+ */
 export async function saveStoreResults({
   storeSlug,
   keyword,
