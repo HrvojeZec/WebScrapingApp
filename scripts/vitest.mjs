@@ -4,9 +4,10 @@
 import { spawnSync } from "node:child_process";
 
 const cwd = process.cwd().replace(/^[a-z]:/, (drive) => drive.toUpperCase());
-const { status } = spawnSync("npx", ["vitest", ...process.argv.slice(2)], {
+const result = spawnSync("npx", ["vitest", ...process.argv.slice(2)], {
   cwd,
   stdio: "inherit",
   shell: process.platform === "win32",
 });
-process.exit(status ?? 1);
+if (result.error) console.error(result.error);
+process.exit(result.status ?? 1);

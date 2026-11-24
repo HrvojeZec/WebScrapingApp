@@ -10,7 +10,8 @@ export const connectMemoryMongoDB = async () => {
 
 export const disconnectMemoryMongoDB = async () => {
   await mongoose.disconnect();
-  await mongoServer.stop();
+  // Optional: when create() failed in beforeAll, this must not hide the real error
+  await mongoServer?.stop();
 };
 
 export const clearDatabase = async () => {
