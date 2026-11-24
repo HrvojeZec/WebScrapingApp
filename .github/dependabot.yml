@@ -1,0 +1,87 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Zagreb
+    # Same 7-day delay as `min-release-age` in .npmrc (security updates are not delayed)
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    assignees: [HrvojeZec]
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    # A dependency joins the first group that matches, so the tightly coupled packages come first.
+    groups:
+      # All @mantine/* packages pin each other's exact version and must move together
+      mantine:
+        patterns: ["@mantine/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    # Major upgrades of these are planned for v0.3 (see the roadmap), not merged from bot PRs
+    ignore:
+      - dependency-name: "@mantine/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-router-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "express"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "mongoose"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "puppeteer"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Zagreb
+    cooldown:
+      default-days: 7
+    labels: [dependencies, ci]
+    assignees: [HrvojeZec]
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directories: [/apps/api, /apps/web]
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Zagreb
+    cooldown:
+      default-days: 7
+    labels: [dependencies]
+    assignees: [HrvojeZec]
+    commit-message:
+      prefix: chore
+      include: scope
