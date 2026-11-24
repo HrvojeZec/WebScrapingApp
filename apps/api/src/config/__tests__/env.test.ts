@@ -41,4 +41,24 @@ describe("loadEnv", () => {
   test("starts the error message with a summary line", () => {
     expect(() => loadEnv({})).toThrow(/^Invalid environment variables:\n- MONGODB_URI: /);
   });
+
+  test("treats empty values as missing", () => {
+    expect(() => loadEnv({ MONGODB_URI: "" })).toThrow(/MONGODB_URI: is required/);
+    expect(loadEnv({ MONGODB_URI: VALID_URI, PORT: "" }).PORT).toBe(5000);
+  });
+
+  test("rejects ports outside 1-65535", () => {
+    expect(() => loadEnv({ MONGODB_URI: VALID_URI, PORT: "70000" })).toThrow(/PORT/);
+  });
+
+  test("keeps an explicit EXECUTE_URL", () => {
+    const url = "http://127.0.0.1:7000/api/execute";
+    expect(loadEnv({ MONGODB_URI: VALID_URI, EXECUTE_URL: url }).EXECUTE_URL).toBe(url);
+  });
+
+  test("normalizes CLIENT_URL to an origin, because CORS compares it exactly", () => {
+    expect(
+      loadEnv({ MONGODB_URI: VALID_URI, CLIENT_URL: "http://localhost:5173/" }).CLIENT_URL,
+    ).toBe("http://localhost:5173");
+  });
 });

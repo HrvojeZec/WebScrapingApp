@@ -9,7 +9,11 @@ const envSchema = z.object({
   MONGODB_URI: z
     .string({ error: "is required" })
     .regex(/^mongodb(\+srv)?:\/\//, "must start with mongodb:// or mongodb+srv://"),
-  CLIENT_URL: z.url().default("http://localhost:5173"),
+  // cors() compares the origin as an exact string, so "http://localhost:5173/" would block every request
+  CLIENT_URL: z
+    .url()
+    .default("http://localhost:5173")
+    .transform((value) => new URL(value).origin),
   EXECUTE_URL: z.url().optional(),
 });
 
