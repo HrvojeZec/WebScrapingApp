@@ -18,7 +18,7 @@
     "@tabler/icons-react": "^3.4.0",
     "aos": "^2.3.4",
     "dayjs": "^1.11.11",
-    "embla-carousel-react": "^7.1.0",
+    "embla-carousel-react": "^8.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.30.6",
