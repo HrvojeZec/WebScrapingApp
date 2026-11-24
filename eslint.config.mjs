@@ -28,7 +28,12 @@ export default tseslint.config(
     },
   },
   {
-    files: ["apps/api/**/*.{ts,js}", "**/*.{cjs,mjs}", "apps/web/vite.config.ts"],
+    files: [
+      "apps/api/**/*.{ts,js}",
+      "packages/**/*.{ts,js}",
+      "**/*.{cjs,mjs}",
+      "apps/web/vite.config.ts",
+    ],
     languageOptions: { globals: globals.node },
   },
   {
