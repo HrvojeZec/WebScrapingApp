@@ -18,6 +18,6 @@ const storesSchema = new Schema({
   },
 });
 
-const Stores =  mongoose.model<IStore>("Stores", storesSchema);
+const Stores = mongoose.model<IStore>("Stores", storesSchema);
 
-export{Stores, IStore}
+export { Stores, IStore };

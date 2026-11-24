@@ -1,14 +1,10 @@
-import { Stores } from '../../model/storesModel';
-import { Product } from '../../model/productModel';
-import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
-import { log } from 'console';
+import { Stores } from "../../model/storesModel";
+import { Product } from "../../model/productModel";
+import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
+import { log } from "console";
 
-export const paginationHandler = async (
-  keyword: string,
-  page: number,
-  pageSize: number,
-) => {
+export const paginationHandler = async (keyword: string, page: number, pageSize: number) => {
   const existingProducts = await Product.find({ keyword });
   const dataLength = existingProducts.length;
 
@@ -19,14 +15,8 @@ export const paginationHandler = async (
   return { totalPages, skip, limit };
 };
 
-export const findProductsByKeyword = async (
-  keyword: string,
-  skip: number,
-  limit: number,
-) => {
-  const existingProducts = await Product.find({ keyword })
-    .skip(skip)
-    .limit(limit);
+export const findProductsByKeyword = async (keyword: string, skip: number, limit: number) => {
+  const existingProducts = await Product.find({ keyword }).skip(skip).limit(limit);
 
   const result = [];
 
@@ -69,7 +59,7 @@ export const findRandomProducts = async () => {
 };
 
 export const findAllKeywords = async () => {
-  const result = await Product.distinct('keyword');
+  const result = await Product.distinct("keyword");
   return result;
 };
 
@@ -99,13 +89,13 @@ export const findProductsByKeywordAndStoreID = async (
   skip: number,
   limit: number,
 ) => {
-  console.log('storeId u  findProductsByKeywordAndStoreID :', storeId);
+  console.log("storeId u  findProductsByKeywordAndStoreID :", storeId);
 
   const objectStoreId = new ObjectId(storeId);
   console.log(objectStoreId);
   /*   const existingProducts = await Product.find({ objectStoreId }); */
   const existingProducts = await Product.find({
-    keyword: { $regex: keyword, $options: 'i' },
+    keyword: { $regex: keyword, $options: "i" },
     storeId: objectStoreId,
   })
     .skip(skip)

@@ -1,7 +1,7 @@
-import { forwardRef } from 'react';
-import { ArrowsSort } from 'tabler-icons-react';
-import classes from '../../components/CardTitleWithSort/CardTitleWithSort.module.scss';
-import { HoverCard, Group, Flex, UnstyledButton, Divider } from '@mantine/core';
+import { forwardRef } from "react";
+import { ArrowsSort } from "tabler-icons-react";
+import classes from "../../components/CardTitleWithSort/CardTitleWithSort.module.scss";
+import { HoverCard, Group, Flex, UnstyledButton, Divider } from "@mantine/core";
 
 interface CardTitleWithSortProps {
   keyword?: string;
@@ -12,7 +12,7 @@ interface CardTitleWithSortProps {
 
 const SortIcon = forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref} {...props}>
-    <ArrowsSort size={30} strokeWidth={1.5} color={'black'} />
+    <ArrowsSort size={30} strokeWidth={1.5} color={"black"} />
   </div>
 ));
 export function CardTitleWithSort({
@@ -29,13 +29,7 @@ export function CardTitleWithSort({
       <Group>
         <Flex gap="8rem" justify="center" align="center">
           {extraComponent && extraComponent}
-          <HoverCard
-            width={250}
-            shadow="md"
-            withArrow
-            openDelay={200}
-            closeDelay={4000}
-          >
+          <HoverCard width={250} shadow="md" withArrow openDelay={200} closeDelay={4000}>
             <HoverCard.Target>
               <SortIcon />
             </HoverCard.Target>
@@ -52,17 +46,13 @@ export function CardTitleWithSort({
               <Divider my="md" />
               <div className={classes.sortButtonWrapper}>
                 <div>
-                  {' '}
-                  <UnstyledButton onClick={handleSortLowToHigh}>
-                    Sort: low to high
-                  </UnstyledButton>
+                  {" "}
+                  <UnstyledButton onClick={handleSortLowToHigh}>Sort: low to high</UnstyledButton>
                 </div>
                 <Divider my="md" />
                 <div>
-                  {' '}
-                  <UnstyledButton onClick={handleSortHighToLow}>
-                    Sort: high to low
-                  </UnstyledButton>
+                  {" "}
+                  <UnstyledButton onClick={handleSortHighToLow}>Sort: high to low</UnstyledButton>
                 </div>
               </div>
             </HoverCard.Dropdown>

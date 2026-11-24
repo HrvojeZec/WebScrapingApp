@@ -10,13 +10,13 @@ each product and lets you know when a price drops.
 
 ## Roadmap
 
-| Milestone | Scope |
-|---|---|
-| v0.2.0 Foundations | npm workspaces, shared tooling, CI, passing tests, repository meta files |
+| Milestone                       | Scope                                                                                    |
+| ------------------------------- | ---------------------------------------------------------------------------------------- |
+| v0.2.0 Foundations              | npm workspaces, shared tooling, CI, passing tests, repository meta files                 |
 | v0.3.0 Scraping core and search | Shop adapters tested against saved pages, price history, search with filters, new design |
-| v0.4.0 Accounts and wishlist | Email and Google sign-in, wishlist |
-| v0.5.0 Price alerts | Scheduled price checks with in-app, email and Web Push notifications |
-| v1.0.0 Release | End-to-end tests, Docker, README with screenshots |
+| v0.4.0 Accounts and wishlist    | Email and Google sign-in, wishlist                                                       |
+| v0.5.0 Price alerts             | Scheduled price checks with in-app, email and Web Push notifications                     |
+| v1.0.0 Release                  | End-to-end tests, Docker, README with screenshots                                        |
 
 The scraper is being rebuilt to identify itself honestly, respect each shop's `robots.txt` and
 keep to strict rate limits.

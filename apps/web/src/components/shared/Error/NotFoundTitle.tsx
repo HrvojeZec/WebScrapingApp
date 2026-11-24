@@ -7,8 +7,8 @@ export function NotFoundTitle() {
       <div className={classes.label}>404</div>
       <Title className={classes.title}>Pronašli ste tajno mjesto.</Title>
       <Text c="dimmed" size="lg" ta="center" className={classes.description}>
-        Nažalost, ovo je samo 404 stranica. Možda ste pogrešno upisali adresu
-        ili je stranica premještena na drugu URL adresu.
+        Nažalost, ovo je samo 404 stranica. Možda ste pogrešno upisali adresu ili je stranica
+        premještena na drugu URL adresu.
       </Text>
       <Group justify="center">
         <Button variant="subtle" size="md">

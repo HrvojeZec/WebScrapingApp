@@ -8,8 +8,7 @@ interface NotificationProps {
   message: string;
 }
 
-
-export function showSuccessNotification({ message }:NotificationProps) {
+export function showSuccessNotification({ message }: NotificationProps) {
   notifications.show({
     title: "Success!",
     message: message,
@@ -20,7 +19,7 @@ export function showSuccessNotification({ message }:NotificationProps) {
   });
 }
 
-export function showErrorNotification({ message }:NotificationProps) {
+export function showErrorNotification({ message }: NotificationProps) {
   notifications.show({
     title: "Error!",
     message: message,
@@ -31,14 +30,13 @@ export function showErrorNotification({ message }:NotificationProps) {
   });
 }
 
-export function showLoadingDataNotification(value:boolean) {
+export function showLoadingDataNotification(value: boolean) {
   console.log(value);
   if (value) {
     notificationId = notifications.show({
       loading: true,
       title: "Učitavanje podataka",
-      message:
-        "Molimo pričekajte dok se podaci učitavaju, ne možete zatvoriti ovu obavijest",
+      message: "Molimo pričekajte dok se podaci učitavaju, ne možete zatvoriti ovu obavijest",
       autoClose: false,
       withCloseButton: false,
     });
@@ -47,8 +45,7 @@ export function showLoadingDataNotification(value:boolean) {
       id: notificationId,
       color: "teal",
       title: "Podaci su učitani",
-      message:
-        "Obavijest će se zatvoriti za 2 sekunde, sada možete zatvoriti ovu obavijest",
+      message: "Obavijest će se zatvoriti za 2 sekunde, sada možete zatvoriti ovu obavijest",
       icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
       loading: false,
       autoClose: 2000,

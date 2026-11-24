@@ -1,10 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { LoaderGlobal } from "../components/shared/Loader/Loader";
 import { NotFoundTitle } from "../components/shared/Error/NotFoundTitle";
-import {
-  useProductsData,
-  GetRandomProductsProvider,
-} from "./GetRandomProducts";
+import { useProductsData, GetRandomProductsProvider } from "./GetRandomProducts";
 import { GetAllKeywordsProvider, useKeywordsData } from "./GetAllKeywords";
 
 interface Props {

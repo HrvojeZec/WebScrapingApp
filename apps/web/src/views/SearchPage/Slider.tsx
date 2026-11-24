@@ -23,7 +23,7 @@ export function SliderComponent() {
           product.images.map((image: string) => ({
             src: image,
             keyword: product.title,
-          }))
+          })),
         )
         .reduce((acc, curr) => acc.concat(curr), []);
       setRandomImages(getRandomImages(images, 10));

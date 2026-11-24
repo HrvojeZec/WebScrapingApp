@@ -8,9 +8,7 @@ interface NotificationProps {
 export function SmartShop({ showLogo }: NotificationProps) {
   return (
     <div className={classes.logoWrapper}>
-      {showLogo && (
-        <BrandShopee size={48} strokeWidth={2} className={classes.logo} />
-      )}
+      {showLogo && <BrandShopee size={48} strokeWidth={2} className={classes.logo} />}
       <div className={classes.logoName}>
         <p>
           <span className={classes.brandSmart}>Store</span>
@@ -24,8 +22,7 @@ export function SmartShop({ showLogo }: NotificationProps) {
 export function SmartShopText() {
   return (
     <h1>
-      Otkrijte najbolje ponude uz{" "}
-      <span className={classes.upperSmart}>Store</span>
+      Otkrijte najbolje ponude uz <span className={classes.upperSmart}>Store</span>
       <span className={classes.upperShop}>Seeker</span>
     </h1>
   );

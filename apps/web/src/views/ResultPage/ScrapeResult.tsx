@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { CardTitleWithSort } from './CardTitleWithSort';
-import { ProductCard } from './ProductCard';
-import { LoaderGlobal } from '../../components/shared/Loader/Loader';
-import { constants } from '../../config/constants';
-import { Avatar, Flex, Pagination, Select } from '@mantine/core';
-import classes from '../../components/Scrape/Scrape.module.scss';
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { CardTitleWithSort } from "./CardTitleWithSort";
+import { ProductCard } from "./ProductCard";
+import { LoaderGlobal } from "../../components/shared/Loader/Loader";
+import { constants } from "../../config/constants";
+import { Avatar, Flex, Pagination, Select } from "@mantine/core";
+import classes from "../../components/Scrape/Scrape.module.scss";
 import {
   showErrorNotification,
   showLoadingDataNotification,
-} from '../../components/shared/Notification/Notification';
-import { Title, Text, Button, Container, Group } from '@mantine/core';
-import { Link } from 'react-router-dom';
-import { Product } from '../../types/ProductTypes';
+} from "../../components/shared/Notification/Notification";
+import { Title, Text, Button, Container, Group } from "@mantine/core";
+import { Link } from "react-router-dom";
+import { Product } from "../../types/ProductTypes";
 
 interface DataType {
   products: Product[];
@@ -24,7 +24,7 @@ function useCurrentURL() {
   const location = useLocation();
   const params = useParams();
   const searchParams = new URLSearchParams(location.search);
-  const page = parseInt(searchParams.get('page') || '1', 10);
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
   return {
     pathname: location.pathname,
@@ -34,12 +34,12 @@ function useCurrentURL() {
   };
 }
 
-interface StoreSelectItemProps extends React.ComponentPropsWithoutRef<'div'> {
+interface StoreSelectItemProps extends React.ComponentPropsWithoutRef<"div"> {
   label: string;
   logo: string;
 }
 const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
-  const isSvg = logo && logo.startsWith('<svg');
+  const isSvg = logo && logo.startsWith("<svg");
 
   return (
     <Group wrap="nowrap" spacing="xs" {...others}>
@@ -48,11 +48,11 @@ const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
           style={{
             width: 24,
             height: 24,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          dangerouslySetInnerHTML={{ __html: logo || '' }}
+          dangerouslySetInnerHTML={{ __html: logo || "" }}
         />
       ) : logo ? (
         <img
@@ -61,7 +61,7 @@ const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
           style={{
             width: 24,
             height: 24,
-            objectFit: 'contain',
+            objectFit: "contain",
             borderRadius: 4,
           }}
         />
@@ -73,14 +73,14 @@ const StoreSelectItem = ({ label, logo, ...others }: StoreSelectItemProps) => {
 };
 const allStores = [
   {
-    storeId: '664a46c9e9d88f832eb4e589',
-    storeName: 'Mall',
+    storeId: "664a46c9e9d88f832eb4e589",
+    storeName: "Mall",
     logo: `<svg viewBox="0 0 162 75" fill="none" xmlns="http://www.w3.org/2000/svg">...</svg>`,
   },
   {
-    storeId: '664a46c9e9d88f832eb4e58a',
-    storeName: 'Sancta Domenica',
-    logo: 'https://cdn.sancta-domenica.hr/static/version1713185553/frontend/Sanct...',
+    storeId: "664a46c9e9d88f832eb4e58a",
+    storeName: "Sancta Domenica",
+    logo: "https://cdn.sancta-domenica.hr/static/version1713185553/frontend/Sanct...",
   },
 ];
 
@@ -106,7 +106,7 @@ function ScrapeResult() {
 
   const getUrl = () => {
     const searchParams = new URLSearchParams(search);
-    const storeIdToUse = searchParams.get('storeId') || selectedStore;
+    const storeIdToUse = searchParams.get("storeId") || selectedStore;
 
     if (storeIdToUse) {
       return `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}&storeId=${storeIdToUse}`;
@@ -117,14 +117,14 @@ function ScrapeResult() {
       // Ako postoji samo keyword, koristi search API
       return `${constants.apiUrl}/api/products/keyword?keyword=${params.keyword}&page=${page}&pageSize=${productsPerPage}`;
     }
-    return '';
+    return "";
   };
   const fetchData = async (url: string) => {
     try {
       setLoading(true);
       const response = await fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       });
 
       if (!response.ok) {
@@ -141,7 +141,7 @@ function ScrapeResult() {
       setShowProductList(data.products);
     } catch (error) {
       setData({ products: [], totalPages: 1, currentPage: 1 });
-      showErrorNotification({ message: 'Došlo je do greške.' });
+      showErrorNotification({ message: "Došlo je do greške." });
     } finally {
       showLoadingDataNotification(false);
       setLoading(false);
@@ -159,8 +159,8 @@ function ScrapeResult() {
   const handleSortLowToHigh = () => {
     const sortedProducts = [...showProductList].sort(
       (a, b) =>
-        parseFloat(a.price.replace(' €', '').replace('.', '')) -
-        parseFloat(b.price.replace(' €', '').replace('.', '')),
+        parseFloat(a.price.replace(" €", "").replace(".", "")) -
+        parseFloat(b.price.replace(" €", "").replace(".", "")),
     );
 
     setShowProductList(sortedProducts);
@@ -169,8 +169,8 @@ function ScrapeResult() {
   const handleSortHighToLow = () => {
     const reverseSortedProducts = [...showProductList].sort(
       (a, b) =>
-        parseFloat(b.price.replace(' €', '').replace('.', '')) -
-        parseFloat(a.price.replace(' €', '').replace('.', '')),
+        parseFloat(b.price.replace(" €", "").replace(".", "")) -
+        parseFloat(a.price.replace(" €", "").replace(".", "")),
     );
 
     setShowProductList(reverseSortedProducts);
@@ -194,14 +194,11 @@ function ScrapeResult() {
       }
     });
 
-    const storesArray = Array.from(
-      storesMap,
-      ([storeId, { storeName, logo }]) => ({
-        storeId,
-        storeName,
-        logo,
-      }),
-    );
+    const storesArray = Array.from(storesMap, ([storeId, { storeName, logo }]) => ({
+      storeId,
+      storeName,
+      logo,
+    }));
 
     setStoreFilters(storesArray);
   }, [data.products]);
@@ -225,12 +222,12 @@ function ScrapeResult() {
     setSelectedStore(storeId);
 
     const newSearchParams = new URLSearchParams(search);
-    newSearchParams.set('page', '1'); // reset paginacije
+    newSearchParams.set("page", "1"); // reset paginacije
 
     if (storeId) {
-      newSearchParams.set('storeId', storeId);
+      newSearchParams.set("storeId", storeId);
     } else {
-      newSearchParams.delete('storeId');
+      newSearchParams.delete("storeId");
     }
 
     navigate(`${pathname}?${newSearchParams.toString()}`);
@@ -243,14 +240,9 @@ function ScrapeResult() {
         <Container className={classes.root}>
           <div className={classes.label}>Nema pronađenih proizvoda</div>
           <Title className={classes.title}>Ups! Nismo pronašli ništa.</Title>
-          <Text
-            c="dimmed"
-            size="lg"
-            ta="center"
-            className={classes.description}
-          >
-            Nažalost, nismo pronašli nijedan proizvod sa zadanom ključnom
-            riječi. Možda pokušajte s drugom ključnom riječi.
+          <Text c="dimmed" size="lg" ta="center" className={classes.description}>
+            Nažalost, nismo pronašli nijedan proizvod sa zadanom ključnom riječi. Možda pokušajte s
+            drugom ključnom riječi.
           </Text>
           <Group justify="center">
             <Link to="/">
@@ -277,7 +269,7 @@ function ScrapeResult() {
                   onChange={handleStoreChange}
                   itemComponent={StoreSelectItem}
                   data={[
-                    { value: '', label: 'Sve trgovine', logo: '' },
+                    { value: "", label: "Sve trgovine", logo: "" },
                     ...storeFilters.map(({ storeId, storeName, logo }) => ({
                       value: storeId,
                       label: storeName,
@@ -307,12 +299,7 @@ function ScrapeResult() {
             ))}
           </div>
           <div className={classes.paginationWrapper}>
-            <Pagination
-              total={data.totalPages}
-              value={page}
-              onChange={handlePageChange}
-              mt="sm"
-            />
+            <Pagination total={data.totalPages} value={page} onChange={handlePageChange} mt="sm" />
           </div>
         </>
       )}

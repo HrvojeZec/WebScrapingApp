@@ -1,14 +1,12 @@
-const { mallScraping } = require('../../controller/scrape/scrapeMALL');
-const { ekupiScraping } = require('../../controller/scrape/scrapeEkupi');
+const { mallScraping } = require("../../controller/scrape/scrapeMALL");
+const { ekupiScraping } = require("../../controller/scrape/scrapeEkupi");
 
-const {
-  sanctaDomenicaScraping,
-} = require('../../controller/scrape/scrapeSanctaDomenica');
-import { log } from 'console';
-import { Product, IProduct } from '../../model/productModel';
-import { Stores, IStore } from '../../model/storesModel';
-import { Keyword } from '../../types/params';
-import mongoose from 'mongoose';
+const { sanctaDomenicaScraping } = require("../../controller/scrape/scrapeSanctaDomenica");
+import { log } from "console";
+import { Product, IProduct } from "../../model/productModel";
+import { Stores, IStore } from "../../model/storesModel";
+import { Keyword } from "../../types/params";
+import mongoose from "mongoose";
 
 const updateProductsPrice = async (
   existingProducts: IProduct[],
@@ -18,8 +16,7 @@ const updateProductsPrice = async (
   for (const newProduct of allNewProducts) {
     const existingProduct = existingProducts.find(
       (product: IProduct) =>
-        product.productId === newProduct.productId &&
-        product.storeId === newProduct.storeId,
+        product.productId === newProduct.productId && product.storeId === newProduct.storeId,
     );
     console.log(existingProduct);
 
@@ -39,15 +36,10 @@ const updateProductsPrice = async (
   }
 };
 
-const addNewProducts = async (
-  allNewProducts: IProduct[],
-  existingProducts: IProduct[],
-) => {
+const addNewProducts = async (allNewProducts: IProduct[], existingProducts: IProduct[]) => {
   const filteredProducts = allNewProducts.filter(
     (newProduct: IProduct) =>
-      !existingProducts.some(
-        (product: IProduct) => product.productId === newProduct.productId,
-      ),
+      !existingProducts.some((product: IProduct) => product.productId === newProduct.productId),
   );
 
   if (filteredProducts.length > 0) {
@@ -73,30 +65,28 @@ const executeService = async (keyword: Keyword, newScrapingJob: any) => {
   const errors = [];
 
   const isArrayEmpty = results.every(
-    (result) => result.status === 'fulfilled' && result.value.length === 0,
+    (result) => result.status === "fulfilled" && result.value.length === 0,
   );
-  console.log('isArrayEmpty', isArrayEmpty);
+  console.log("isArrayEmpty", isArrayEmpty);
   if (isArrayEmpty) {
     throw { status: 404 };
   }
 
   // Prikupljanje svih novih proizvoda
   for (const [index, result] of results.entries()) {
-    if (result.status === 'rejected') {
+    if (result.status === "rejected") {
       errors.push({
         functionName: `Function${index + 1}`,
         reason: result.reason,
       });
     } else {
-      const newProducts = Array.isArray(result.value)
-        ? result.value
-        : result.value.data;
+      const newProducts = Array.isArray(result.value) ? result.value : result.value.data;
       if (Array.isArray(newProducts)) {
         allNewProducts.push(...newProducts);
       } else {
         errors.push({
           functionName: `Function${index + 1}`,
-          reason: 'Invalid data format',
+          reason: "Invalid data format",
         });
       }
     }
@@ -137,7 +127,7 @@ const executeService = async (keyword: Keyword, newScrapingJob: any) => {
   }
 
   // Dodaj proizvoda (ako su novi)
-  console.log('broj scrapanih proizvoda: ', productsWithStoreAttributes.length);
+  console.log("broj scrapanih proizvoda: ", productsWithStoreAttributes.length);
 
   return productsWithStoreAttributes;
 };
