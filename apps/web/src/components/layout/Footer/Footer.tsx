@@ -1,10 +1,6 @@
 import classes from "./Footer.module.scss";
 import { SmartShop } from "../../shared/BrandLogo/SmartShop";
-import {
-  BrandFacebook,
-  BrandTwitter,
-  BrandInstagram,
-} from "tabler-icons-react";
+import { BrandFacebook, BrandTwitter, BrandInstagram } from "tabler-icons-react";
 function Footer() {
   return (
     <div className={classes.footer} data-aos="fade-up">

@@ -1,5 +1,5 @@
-import { Scrape } from '../../model/scrapeModel';
-import mongoose from 'mongoose';
+import { Scrape } from "../../model/scrapeModel";
+import mongoose from "mongoose";
 
 const findScrapeByID = async (scrapeId: mongoose.Types.ObjectId) => {
   const objectId = new mongoose.Types.ObjectId(scrapeId);

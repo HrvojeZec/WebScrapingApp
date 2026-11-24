@@ -57,9 +57,7 @@ export function ContactPage() {
     <div className={classes.contact} data-aos="fade-up">
       <div className={classes.contactWrapper}>
         <h1>Kontaktirajte nas</h1>
-        <p>
-          Unesite ime trgovine koju biste željeli pretraživati u budućnosti:
-        </p>
+        <p>Unesite ime trgovine koju biste željeli pretraživati u budućnosti:</p>
 
         <form
           className={classes.contactInput}
@@ -79,10 +77,7 @@ export function ContactPage() {
                 variant="filled"
                 onClick={handleActionIconSubmit}
               >
-                <IconArrowRight
-                  style={{ width: rem(18), height: rem(18) }}
-                  stroke={1.5}
-                />
+                <IconArrowRight style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
               </ActionIcon>
             }
           />

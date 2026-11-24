@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The client and server now live in npm workspaces, `apps/web` and `apps/api`, with one lockfile
   at the repository root (#5)
+- The codebase is formatted with Prettier, and all files use LF line endings (#8)
 - The README describes the project and the ongoing refactor instead of scraper selector notes (#6)
 
 ### Fixed

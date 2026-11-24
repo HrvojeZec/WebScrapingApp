@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { constants } from "../config/constants";
 import { Product } from "../types/ProductTypes";
 
@@ -18,16 +12,12 @@ interface ProductContextType {
   error: string | null;
 }
 
-const ProductsContext = createContext<ProductContextType | undefined>(
-  undefined
-);
+const ProductsContext = createContext<ProductContextType | undefined>(undefined);
 
 export function useProductsData(): ProductContextType {
   const context = useContext(ProductsContext);
   if (context === undefined) {
-    throw new Error(
-      "useProductsData must be used within a ProductsContextProvider"
-    );
+    throw new Error("useProductsData must be used within a ProductsContextProvider");
   }
   return context;
 }
@@ -48,9 +38,12 @@ export function GetRandomProductsProvider(props: PropsWithChildren<Props>) {
 
   useEffect(() => {
     fetchRandomProducts();
-    const interval = setInterval(() => {
-      fetchRandomProducts();
-    }, 5 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        fetchRandomProducts();
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, []);
@@ -61,9 +54,5 @@ export function GetRandomProductsProvider(props: PropsWithChildren<Props>) {
     error,
   };
   console.log("RandomProducts value:", value);
-  return (
-    <ProductsContext.Provider value={value}>
-      {props.children}
-    </ProductsContext.Provider>
-  );
+  return <ProductsContext.Provider value={value}>{props.children}</ProductsContext.Provider>;
 }

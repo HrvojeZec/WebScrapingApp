@@ -9,7 +9,6 @@ interface IScrape {
   endTime?: Date;
 }
 
-
 const scrapeSchema = new Schema({
   keyword: {
     type: String,
@@ -26,4 +25,4 @@ const scrapeSchema = new Schema({
 
 const Scrape = mongoose.model<IScrape>("Scrape", scrapeSchema);
 
-export {Scrape, IScrape}
+export { Scrape, IScrape };

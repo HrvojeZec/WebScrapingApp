@@ -1,10 +1,4 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { constants } from "../config/constants";
 
 interface Props {
@@ -16,16 +10,12 @@ interface KeywordContextType {
   error: boolean;
   loading: boolean;
 }
-const KeywordsContext = createContext<KeywordContextType | undefined>(
-  undefined
-);
+const KeywordsContext = createContext<KeywordContextType | undefined>(undefined);
 
 export function useKeywordsData(): KeywordContextType {
   const context = useContext(KeywordsContext);
   if (context === undefined) {
-    throw new Error(
-      "useKeywordsContext must be used with GetAllKeywordsProvider"
-    );
+    throw new Error("useKeywordsContext must be used with GetAllKeywordsProvider");
   }
   return context;
 }
@@ -50,9 +40,5 @@ export function GetAllKeywordsProvider(props: PropsWithChildren<Props>) {
     error,
   };
   console.log("allKeywords: ", value);
-  return (
-    <KeywordsContext.Provider value={value}>
-      {props.children}
-    </KeywordsContext.Provider>
-  );
+  return <KeywordsContext.Provider value={value}>{props.children}</KeywordsContext.Provider>;
 }

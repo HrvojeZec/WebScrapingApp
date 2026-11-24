@@ -1,17 +1,17 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { Error } from '../../types/params';
-import { log } from 'console';
-const executeService = require('./scrape-execute-service');
+import express, { NextFunction, Request, Response } from "express";
+import { Error } from "../../types/params";
+import { log } from "console";
+const executeService = require("./scrape-execute-service");
 const {
   CustomInternalServerError,
   CustomNotFound,
   CustomMultiStatus,
-} = require('../../middleware/CustomError');
+} = require("../../middleware/CustomError");
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   const { keyword, newScrapingJob } = req.body;
-  console.log('keyword: ', keyword);
+  console.log("keyword: ", keyword);
 
   try {
     const products = await executeService(keyword, newScrapingJob);
@@ -21,7 +21,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     const err = error as Error;
     if (err.status === 404) {
       const customError = new CustomNotFound(
-        'Nema proizvoda za danu ključnu riječ u obje trgovine.',
+        "Nema proizvoda za danu ključnu riječ u obje trgovine.",
       );
       next(customError);
     } else if (err.products) {
@@ -30,9 +30,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       );
       next(customError);
     } else {
-      const customError = new CustomInternalServerError(
-        `Nešto je pošlo po krivu: ${err.message}`,
-      );
+      const customError = new CustomInternalServerError(`Nešto je pošlo po krivu: ${err.message}`);
       next(customError);
     }
   }
