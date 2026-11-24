@@ -20,7 +20,7 @@ const checkForNoResults = async (page: any) => {
 
 export const mallScraping = async (keyword: string, scrapeId: string, filePath?: string) => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
     ignoreDefaultArgs: ["--disable-extensions"],
   });

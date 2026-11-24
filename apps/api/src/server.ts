@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
 require("dotenv").config();
 
@@ -22,13 +21,11 @@ app.use(
     origin: "http://localhost:5173",
   }),
 );
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-scrapeApp.use(bodyParser.json());
-scrapeApp.use(bodyParser.urlencoded({ extended: true }));
 scrapeApp.use(express.json());
+scrapeApp.use(express.urlencoded({ extended: true }));
 
 scrapeApp.use("/api/execute", scrapeExecuteRouter); // bavi se izvođenjem scrapanja na portu 5001 i salje rezultate u bazu
 app.use("/api/status", scrapeStatusRouter); // bavi se provjerom statusa scrapanja
