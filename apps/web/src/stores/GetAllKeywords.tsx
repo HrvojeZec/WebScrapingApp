@@ -1,23 +1,9 @@
-import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import { constants } from "../config/constants";
+import { KeywordContextType, KeywordsContext } from "./keywords-context";
 
 interface Props {
   children: React.ReactNode;
-}
-
-interface KeywordContextType {
-  data: string[] | null;
-  error: boolean;
-  loading: boolean;
-}
-const KeywordsContext = createContext<KeywordContextType | undefined>(undefined);
-
-export function useKeywordsData(): KeywordContextType {
-  const context = useContext(KeywordsContext);
-  if (context === undefined) {
-    throw new Error("useKeywordsContext must be used with GetAllKeywordsProvider");
-  }
-  return context;
 }
 
 export function GetAllKeywordsProvider(props: PropsWithChildren<Props>) {

@@ -1,25 +1,10 @@
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { constants } from "../config/constants";
 import { Product } from "../types/ProductTypes";
+import { ProductContextType, ProductsContext } from "./products-context";
 
 interface Props {
   children: React.ReactNode;
-}
-
-interface ProductContextType {
-  data: Product[] | null;
-  loading: boolean;
-  error: string | null;
-}
-
-const ProductsContext = createContext<ProductContextType | undefined>(undefined);
-
-export function useProductsData(): ProductContextType {
-  const context = useContext(ProductsContext);
-  if (context === undefined) {
-    throw new Error("useProductsData must be used within a ProductsContextProvider");
-  }
-  return context;
 }
 
 export function GetRandomProductsProvider(props: PropsWithChildren<Props>) {

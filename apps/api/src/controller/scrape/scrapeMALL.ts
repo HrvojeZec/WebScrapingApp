@@ -1,14 +1,14 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import type { Page } from "puppeteer";
 import { Url } from "../../constants/url";
 import { toMallUrl } from "./mallUrl";
 import { Stores } from "../../model/storesModel";
 import fs from "fs";
-import path from "path";
 
 puppeteer.use(StealthPlugin());
 
-const checkForNoResults = async (page: any) => {
+const checkForNoResults = async (page: Page) => {
   const noResults = await page.$(".category__right__empty");
 
   if (noResults) {
@@ -29,7 +29,7 @@ export const mallScraping = async (keyword: string, scrapeId: string, filePath?:
   const store = await Stores.findOne({ storeName: "Mall" });
   const storeId = store ? store._id : "defaultStoreId"; // Fallback if store is not found
 
-  let prevHeight: any = -1;
+  let prevHeight: unknown = -1;
   const maxScrolls: number = 100;
   let scrollCount: number = 0;
   const isLocalFile = !!filePath;
@@ -140,8 +140,8 @@ export const mallScraping = async (keyword: string, scrapeId: string, filePath?:
         (element as HTMLElement).innerText.trim(),
       );
 
-      const description = await product.evaluate((element: any) => {
-        const brief = element.querySelector(".pb-brief__brief");
+      const description = await product.evaluate((element) => {
+        const brief = element.querySelector<HTMLElement>(".pb-brief__brief");
         if (!brief) return "";
 
         const p = brief.querySelector("p");
@@ -207,8 +207,4 @@ export const mallScraping = async (keyword: string, scrapeId: string, filePath?:
   await browser.close();
   const data = rawData.filter((item) => item !== null);
   return data;
-};
-
-module.exports = {
-  mallScraping,
 };

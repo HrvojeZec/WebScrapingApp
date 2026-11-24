@@ -1,6 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
-function globalErrorhandler(error: any, req: Request, res: Response) {
+interface HttpError {
+  statusCode?: number;
+  status?: string;
+  message?: string;
+}
+
+function globalErrorhandler(error: HttpError, req: Request, res: Response) {
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
 
@@ -10,4 +16,4 @@ function globalErrorhandler(error: any, req: Request, res: Response) {
   });
 }
 
-module.exports = globalErrorhandler;
+export default globalErrorhandler;

@@ -2,8 +2,8 @@ import express, { NextFunction, Request, Response } from "express";
 import axios from "axios";
 import { env } from "../../config";
 import { parseKeyword } from "../scrapeExecute/keyword";
-const { CustomInternalServerError } = require("../../middleware/CustomError");
-const { createNewScrape, endScrapeStatus } = require("./scrape-service");
+import { CustomInternalServerError } from "../../middleware/CustomError";
+import { createNewScrape, endScrapeStatus } from "./scrape-service";
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +17,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     const response = await createNewScrape(keyword);
 
     res.status(200).json(response.newScrapingJob._id);
-    const scrapeJob = response.newScrapingJob || response.updatedScrape;
+    const scrapeJob = response.newScrapingJob;
 
     await axios.post(
       env.EXECUTE_URL,
@@ -43,4 +43,4 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-module.exports = router;
+export default router;

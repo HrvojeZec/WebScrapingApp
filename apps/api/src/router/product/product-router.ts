@@ -1,17 +1,16 @@
-import { log } from "console";
-import express, { NextFunction, Request, Response } from "express";
-const {
+import express from "express";
+import {
   findProductsByKeyword,
   findRandomProducts,
   findAllKeywords,
   paginationHandler,
   findProductsByKeywordAndStoreID,
-} = require("../product/product-service");
-const {
+} from "../product/product-service";
+import {
   CustomBadRequest,
   CustomInternalServerError,
   CustomNotFound,
-} = require("../../middleware/CustomError");
+} from "../../middleware/CustomError";
 const router = express.Router();
 // Get products by keyword
 router.get("/keyword", async (req, res, next) => {
@@ -24,7 +23,7 @@ router.get("/keyword", async (req, res, next) => {
   console.log(storeId);
 
   try {
-    const paginationData = await paginationHandler(keyword, page, pageSize);
+    const paginationData = await paginationHandler(keyword, Number(page), Number(pageSize));
     let products;
     if (storeId) {
       console.log("findProductsByKeywordAndStoreID");
@@ -54,7 +53,7 @@ router.get("/keyword", async (req, res, next) => {
       totalPages: paginationData.totalPages,
       currentPage: page,
     });
-  } catch (error) {
+  } catch {
     const err = new CustomInternalServerError("Došlo je do pogreške prilikom pretrage proizvoda.");
     return next(err);
   }
@@ -65,7 +64,7 @@ router.get("/randomProducts", async (req, res, next) => {
   try {
     const products = await findRandomProducts();
     return res.status(200).json(products);
-  } catch (error) {
+  } catch {
     const err = new CustomInternalServerError(
       "Došlo je do pogreške prilikom dohvata nasumičnih proizvoda.",
     );
@@ -78,10 +77,10 @@ router.get("/allKeywords", async (req, res, next) => {
     const response = await findAllKeywords();
 
     return res.status(200).json(response);
-  } catch (error) {
+  } catch {
     const err = new CustomInternalServerError("Došlo je do greške prilikom dohvaćanja keyowrds-a.");
     return next(err);
   }
 });
 
-module.exports = router;
+export default router;

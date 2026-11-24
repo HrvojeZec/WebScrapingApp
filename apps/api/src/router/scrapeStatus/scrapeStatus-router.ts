@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-const findScrapeByID = require("./scrapeStatus-service");
+import findScrapeByID from "./scrapeStatus-service";
+import { CustomNotFound } from "../../middleware/CustomError";
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ router.get("/:scrapeId", async (req: Request, res: Response, next: NextFunction)
 
   try {
     const response = await findScrapeByID(scrapeId);
+    if (!response) return next(new CustomNotFound("Scraping nije pronađen."));
 
     if (response.status === "started") {
       return res.status(200).json({
@@ -28,4 +30,4 @@ router.get("/:scrapeId", async (req: Request, res: Response, next: NextFunction)
   }
 });
 
-module.exports = router;
+export default router;

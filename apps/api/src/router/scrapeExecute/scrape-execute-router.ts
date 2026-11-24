@@ -1,13 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Error } from "../../types/params";
-import { log } from "console";
 import { parseKeyword } from "./keyword";
-const executeService = require("./scrape-execute-service");
-const {
+import executeService from "./scrape-execute-service";
+import {
   CustomInternalServerError,
   CustomNotFound,
   CustomMultiStatus,
-} = require("../../middleware/CustomError");
+} from "../../middleware/CustomError";
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
@@ -40,4 +39,4 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-module.exports = router;
+export default router;

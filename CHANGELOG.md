@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (#10)
 - Puppeteer 25, mongodb-memory-server 11 with MongoDB 8.0.13 for tests (the version on Atlas) and
   rimraf 6; scrapers run headless (#15)
+- The API uses ES module `import` and `export` throughout, `npm run lint` passes with no errors,
+  and lint-staged runs ESLint on staged files (#12)
 
 ### Removed
 
