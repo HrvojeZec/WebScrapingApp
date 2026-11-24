@@ -11,12 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `@storeseeker/shared` package (`packages/shared`) with the zod schemas, DTO types, statuses,
   API error codes and limits that the API and the web app share (#16)
+- API foundation on Express 5: JSON errors `{ error: { code, message } }` without stack traces,
+  request validation with zod, helmet security headers, structured logs with pino, a 10 kB limit
+  on JSON bodies, 415 for bodies that are not JSON, 403 for requests from other origins, and
+  `GET /api/health` with the database status (#17)
 
 ### Changed
 
 - Search keywords are normalized (Unicode NFC, trimmed, single spaces, lowercase) and validated
   the same way in the API and the web app: 2 to 60 characters, letters including Croatian
   diacritics, digits, spaces and `- + . /` (#16)
+- `npm run dev -w @storeseeker/api` runs the API with `tsx watch` instead of tsc and nodemon,
+  and the API package is MIT licensed like the repository (#17)
+
+### Removed
+
+- The internal scrape executor on port 5001, the `/api/scrape` and `/api/status` routes, and
+  the `PORT_STATUS` and `EXECUTE_URL` variables. Scraping returns with the job queue (#17)
+
+### Fixed
+
+- The API answered errors with Express's HTML page, or with a 500 for unknown routes, because the
+  error handler had three parameters instead of four (#76)
 
 ## [0.2.0] - 2026-11-24
 

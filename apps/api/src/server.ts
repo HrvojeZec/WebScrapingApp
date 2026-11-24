@@ -1,54 +1,41 @@
 import "dotenv/config";
-import { env } from "./config";
-import express from "express";
-import cors from "cors";
 import mongoose from "mongoose";
-
-import scrapeRoute from "./router/scrape/scrape-router";
-import scrapeExecuteRouter from "./router/scrapeExecute/scrape-execute-router";
-import scrapeStatusRouter from "./router/scrapeStatus/scrapeStatus-router";
-import productRouter from "./router/product/product-router";
-import globalErrorhandler from "./controller/error/errorController";
+import { createApp } from "./app";
+import { env } from "./config";
+import { createLogger } from "./http/logger";
 import { createStoreData } from "./router/store/stores-service";
 
-const app = express();
-const scrapeApp = express();
-
-app.use(cors({ origin: env.CLIENT_URL }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-scrapeApp.use(express.json());
-scrapeApp.use(express.urlencoded({ extended: true }));
-
-scrapeApp.use("/api/execute", scrapeExecuteRouter); // bavi se izvođenjem scrapanja na portu 5001 i salje rezultate u bazu
-app.use("/api/status", scrapeStatusRouter); // bavi se provjerom statusa scrapanja
-app.use("/api/scrape", scrapeRoute); // pokreće scrapanje i vraća scrapeId
-app.use("/api/products", productRouter);
-app.use(globalErrorhandler);
+const logger = createLogger(env.LOG_LEVEL);
+const SHUTDOWN_TIMEOUT_MS = 10_000;
 
 async function start() {
   // Connect first, so the API never accepts requests it cannot serve
   try {
     await mongoose.connect(env.MONGODB_URI);
   } catch (error) {
-    console.error("Could not connect to MongoDB:", error instanceof Error ? error.message : error);
+    logger.fatal({ err: error }, "could not connect to MongoDB");
     process.exit(1);
   }
-  console.log("Database is connected");
+  logger.info("database connected");
   await createStoreData();
 
-  app.listen(env.PORT, () => {
-    console.log(`Server listening on port ${env.PORT}`);
+  const server = createApp({ clientUrl: env.CLIENT_URL, logger }).listen(env.PORT, () => {
+    logger.info({ port: env.PORT }, "API listening");
   });
 
-  // The executor has no authentication, so only processes on this machine may reach it
-  scrapeApp.listen(env.PORT_STATUS, "127.0.0.1", () => {
-    console.log(`Executor listening on 127.0.0.1:${env.PORT_STATUS}`);
-  });
+  const shutdown = (signal: NodeJS.Signals) => {
+    logger.info({ signal }, "shutting down");
+    // A hanging connection must not keep the process alive forever
+    setTimeout(() => process.exit(1), SHUTDOWN_TIMEOUT_MS).unref();
+    server.close(() => {
+      mongoose.disconnect().finally(() => process.exit(0));
+    });
+  };
+  process.once("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
 }
 
-start().catch((error) => {
-  console.error("Startup failed:", error);
+start().catch((error: unknown) => {
+  logger.fatal({ err: error }, "startup failed");
   process.exit(1);
 });
