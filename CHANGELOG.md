@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   URI, CORS origin and ports are no longer hardcoded, it exits with a list of missing or invalid
   variables, and it connects to the database before it accepts requests. The web app reads the
   API URL from `VITE_API_URL` (#11)
+- The web app builds on case-sensitive file systems such as Linux: five stylesheets imported
+  `Variables.module.scss`, but the file is `variables.module.scss` (#14)
 
 ### Security
 
