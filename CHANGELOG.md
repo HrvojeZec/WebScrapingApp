@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   request validation with zod, helmet security headers, structured logs with pino, a 10 kB limit
   on JSON bodies, 415 for bodies that are not JSON, 403 for requests from other origins, and
   `GET /api/health` with the database status (#17)
+- Data model for the new API: stores, products with prices in cents, a price history that gets a
+  new point only when the price changes, keyword results, a keyword cache and scrape jobs that
+  expire after 30 days. Stores are created on startup, and `npm run store:set` switches a store
+  off or on (#18)
 
 ### Changed
 
@@ -28,11 +32,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The internal scrape executor on port 5001, the `/api/scrape` and `/api/status` routes, and
   the `PORT_STATUS` and `EXECUTE_URL` variables. Scraping returns with the job queue (#17)
+- The old product, scrape and store models, the `/api/products` routes, the Sancta Domenica
+  store and its logo, and the old Puppeteer scrapers. The web app shows no products until it is
+  rebuilt on the new API (#18)
 
 ### Fixed
 
 - The API answered errors with Express's HTML page, or with a 500 for unknown routes, because the
   error handler had three parameters instead of four (#76)
+- `npm start` failed since v0.1.0, because the build did not copy the store logos the API read
+  at startup (#18)
 
 ## [0.2.0] - 2026-11-24
 
