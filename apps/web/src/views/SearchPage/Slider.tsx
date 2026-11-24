@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import classes from "../../components/Search/Search.module.scss";
-import { useProductsData } from "../../stores/GetRandomProducts";
+import { useProductsData } from "../../stores/products-context";
 
 interface Images {
   src: string;
@@ -18,14 +18,12 @@ export function SliderComponent() {
 
   useEffect(() => {
     if (products && products.length > 0) {
-      const images = products
-        .map((product: any) =>
-          product.images.map((image: string) => ({
-            src: image,
-            keyword: product.title,
-          })),
-        )
-        .reduce((acc, curr) => acc.concat(curr), []);
+      const images = products.flatMap((product) =>
+        (product.images ?? []).map((image) => ({
+          src: image,
+          keyword: product.title ?? "",
+        })),
+      );
       setRandomImages(getRandomImages(images, 10));
     }
   }, [products]);

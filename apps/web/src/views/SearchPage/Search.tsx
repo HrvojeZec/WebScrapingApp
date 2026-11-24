@@ -6,7 +6,7 @@ import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
 import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
 import { Autocomplete, Button, Tooltip } from "@mantine/core";
-import { useKeywordsData } from "../../stores/GetAllKeywords";
+import { useKeywordsData } from "../../stores/keywords-context";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
@@ -20,6 +20,7 @@ function Search() {
     if (scrapeId) {
       monitoringScrapeStatus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- legacy flow, replaced in v0.3 (#26)
   }, [scrapeId]);
   useEffect(() => {
     let errorMessage = "";
@@ -106,7 +107,7 @@ function Search() {
 
         /*         navigate('rezultati/' + encodeURIComponent(keyword)); */
       }
-    } catch (error) {
+    } catch {
       const message = "Došlo je do pogreške prilikom učitavanja podataka iz baze podataka.";
       setError(message);
     }

@@ -1,8 +1,10 @@
 import React, { PropsWithChildren } from "react";
 import { LoaderGlobal } from "../components/shared/Loader/Loader";
 import { NotFoundTitle } from "../components/shared/Error/NotFoundTitle";
-import { useProductsData, GetRandomProductsProvider } from "./GetRandomProducts";
-import { GetAllKeywordsProvider, useKeywordsData } from "./GetAllKeywords";
+import { GetRandomProductsProvider } from "./GetRandomProducts";
+import { GetAllKeywordsProvider } from "./GetAllKeywords";
+import { useProductsData } from "./products-context";
+import { useKeywordsData } from "./keywords-context";
 
 interface Props {
   children: React.ReactNode;

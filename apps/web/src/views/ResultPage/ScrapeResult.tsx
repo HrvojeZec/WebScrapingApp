@@ -139,7 +139,7 @@ function ScrapeResult() {
       const data: DataType = await response.json();
       setData(data);
       setShowProductList(data.products);
-    } catch (error) {
+    } catch {
       setData({ products: [], totalPages: 1, currentPage: 1 });
       showErrorNotification({ message: "Došlo je do greške." });
     } finally {
@@ -154,6 +154,7 @@ function ScrapeResult() {
     if (url) {
       fetchData(url);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- legacy flow, replaced in v0.3 (#26)
   }, [params.keyword, page, productsPerPage, selectedStore]);
 
   const handleSortLowToHigh = () => {
