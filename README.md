@@ -39,8 +39,8 @@ npm run dev:api   # API on http://localhost:5000
 npm run dev:web   # web app on http://localhost:5173
 ```
 
-The API needs a MongoDB connection. Configuration through a documented `.env.example` arrives in
-v0.2.0 ([#11](https://github.com/HrvojeZec/WebScrapingApp/issues/11)).
+The API needs a MongoDB connection: copy `apps/api/.env.example` to `apps/api/.env` and set
+`MONGODB_URI`. `GET http://localhost:5000/api/health` then reports `{"status":"ok","db":"up"}`.
 
 ## License
 
