@@ -5,7 +5,6 @@ package-lock.json
 playwright-report
 test-results
 **/__fixtures__/**
-apps/api/__tests__/mockData
 # Local-only files, excluded from git
 docs/plan
 .superpowers
