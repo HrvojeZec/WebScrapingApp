@@ -32,28 +32,39 @@ export function robotsFromResponse(
 
 type Entry = { result: Promise<RobotsResult>; expiresAt: number };
 
-export function createRobotsCache(
-  clock: Clock,
-  load: (origin: string, signal?: AbortSignal) => Promise<RobotsResult>,
-) {
+export function createRobotsCache(clock: Clock, load: (origin: string) => Promise<RobotsResult>) {
   const entries = new Map<string, Entry>();
 
   return {
     async rulesFor(origin: string, signal?: AbortSignal): Promise<RobotsRules> {
       const cached = entries.get(origin);
-      if (cached && clock.now() < cached.expiresAt) return (await cached.result).rules;
-
-      // Concurrent callers share one fetch; the real expiry is set once it is known
-      const entry: Entry = { result: load(origin, signal), expiresAt: Infinity };
-      entries.set(origin, entry);
-      try {
-        const result = await entry.result;
-        entry.expiresAt = clock.now() + result.ttlMs;
-        return result.rules;
-      } catch (error) {
-        entries.delete(origin);
-        throw error;
+      if (cached && clock.now() < cached.expiresAt) {
+        return (await abortable(cached.result, signal)).rules;
       }
+
+      // Concurrent callers share one fetch, so it runs without any one caller's signal
+      // (its own 15 s timeout bounds it); each caller can still stop waiting for it
+      const entry: Entry = { result: load(origin), expiresAt: Infinity };
+      entries.set(origin, entry);
+      entry.result.then(
+        (result) => {
+          entry.expiresAt = clock.now() + result.ttlMs;
+        },
+        () => {
+          entries.delete(origin);
+        },
+      );
+      return (await abortable(entry.result, signal)).rules;
     },
   };
+}
+
+function abortable<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return promise;
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) return reject(signal.reason);
+    const onAbort = () => reject(signal.reason);
+    signal.addEventListener("abort", onAbort, { once: true });
+    promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", onAbort));
+  });
 }

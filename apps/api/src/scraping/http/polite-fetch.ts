@@ -80,6 +80,8 @@ export function createPoliteFetch({
   /** One request in the queue. The timeout uses the injected clock, so tests can drive it. */
   async function attempt(url: string, signal?: AbortSignal): Promise<Attempt> {
     await queue.waitTurn(new URL(url).origin, signal);
+    // An abort between the queue and the listener below would otherwise go unnoticed
+    signal?.throwIfAborted();
 
     const request = new AbortController();
     const stopTimer = new AbortController();
@@ -127,9 +129,9 @@ export function createPoliteFetch({
     }
   }
 
-  const robots = createRobotsCache(clock, async (origin, signal) => {
+  const robots = createRobotsCache(clock, async (origin) => {
     // No retries: an unreachable robots.txt already means "try again in 10 minutes"
-    const result = await attempt(`${origin}/robots.txt`, signal);
+    const result = await attempt(`${origin}/robots.txt`);
     return robotsFromResponse(
       origin,
       result.kind === "response" ? { status: result.status, body: result.body ?? "" } : null,
@@ -161,6 +163,10 @@ export function createPoliteFetch({
       const { status } = result;
       if (new URL(result.url).origin !== origin) {
         return { kind: "error", status, message: "redirected off-site" };
+      }
+      // Mall sends searches on to category pages, which robots.txt must allow as well
+      if (result.url !== url && !rules.isAllowed(result.url)) {
+        return { kind: "blocked", status: 0, reason: "robots" };
       }
       if (status === 429) {
         const retryAfterMs = parseRetryAfter(result.headers.get("retry-after"), clock.now());
@@ -194,7 +200,8 @@ function parseRetryAfter(header: string | null, nowMs: number): number {
   let ms = DEFAULT_RETRY_AFTER_MS;
   if (header && /^\d+$/.test(header.trim())) {
     ms = Number(header.trim()) * 1000;
-  } else if (header && !Number.isNaN(Date.parse(header))) {
+  } else if (header && /[a-z]/i.test(header) && !Number.isNaN(Date.parse(header))) {
+    // An HTTP date always names the weekday and month; Date.parse would also take "-5" as 2001
     ms = Date.parse(header) - nowMs;
   }
   return Math.min(Math.max(ms, 0), MAX_RETRY_AFTER_MS);

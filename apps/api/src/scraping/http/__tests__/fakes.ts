@@ -62,14 +62,14 @@ export function createFakeClock(start = Date.parse("2026-11-24T10:00:00Z")) {
 }
 
 export type FakeCall = { url: string; at: number; headers: Headers };
-type Handler = (url: string) => Response | Promise<Response>;
+type Handler = (url: string, init?: RequestInit) => Response | Promise<Response>;
 
 export function createFakeFetch(clock: Clock, handler: Handler) {
   const calls: FakeCall[] = [];
   const fetchImpl = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
     calls.push({ url, at: clock.now(), headers: new Headers(init?.headers) });
-    return handler(url);
+    return handler(url, init);
   }) as typeof fetch;
   return {
     fetch: fetchImpl,
@@ -81,7 +81,7 @@ export function createFakeFetch(clock: Clock, handler: Handler) {
 
 /** Serves robots.txt with the given response (404 by default, which allows everything). */
 export function withRobots(page: Handler, robots: Handler = () => status(404)): Handler {
-  return (url) => (url.endsWith("/robots.txt") ? robots(url) : page(url));
+  return (url, init) => (url.endsWith("/robots.txt") ? robots(url, init) : page(url, init));
 }
 
 export function html(body: string, init: ResponseInit = {}): Response {

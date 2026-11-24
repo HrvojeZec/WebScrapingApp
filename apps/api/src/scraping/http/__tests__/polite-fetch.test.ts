@@ -181,6 +181,14 @@ describe("createPoliteFetch", () => {
       expect(await fake.run(polite.get(MALL))).toMatchObject({ retryAfterMs: 90_000 });
     });
 
+    test("waits 60 s when Retry-After is neither seconds nor an HTTP date", async () => {
+      for (const value of ["-5", "1.5", "soon"]) {
+        expect(await setup(() => status(429, { "retry-after": value })).get(MALL)).toMatchObject({
+          retryAfterMs: 60_000,
+        });
+      }
+    });
+
     test("waits 60 s without Retry-After and at most 1 h", async () => {
       expect(await setup(() => status(429)).get(MALL)).toMatchObject({ retryAfterMs: 60_000 });
       expect(await setup(() => status(429, { "retry-after": "86400" })).get(MALL)).toMatchObject({
@@ -262,6 +270,18 @@ describe("createPoliteFetch", () => {
       const { get } = setup(() => html("x".repeat(5 * MB)));
 
       expect(await get(MALL)).toMatchObject({ kind: "ok" });
+    });
+
+    test("a body that stops arriving fails with timeout after 15 s", async () => {
+      const stalled = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode("<html>"));
+        },
+      });
+      const { get, http, clock } = setup(() => new Response(stalled, { status: 200 }));
+
+      expect(await get(MALL)).toEqual({ kind: "error", message: "timeout" });
+      expect(clock.now() - http.pageCalls()[0].at).toBe(15_000);
     });
 
     test("a Content-Length over 5 MB is rejected without reading the body", async () => {
