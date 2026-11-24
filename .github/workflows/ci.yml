@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Pushes to develop and master keep running, so every merged commit gets a full result
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   # No job starts a browser, so Puppeteer's Chrome download is not needed
@@ -63,11 +64,11 @@ jobs:
       - run: npm ci
 
       # mongodb-memory-server downloads mongod on the first test run (npm 11 skips its postinstall).
-      # The MongoDB version is pinned in apps/api/package.json, so that file is part of the key.
+      # The binary depends only on the MongoDB version, which is pinned in apps/api/package.json.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/mongodb-binaries
-          key: mongodb-${{ runner.os }}-${{ hashFiles('package-lock.json', 'apps/api/package.json') }}
+          key: mongodb-${{ runner.os }}-${{ hashFiles('apps/api/package.json') }}
 
       - run: npm run test:integration -w @storeseeker/api
 

@@ -1,9 +1,10 @@
 name: Pull request
 
-# Uses `pull_request` rather than `pull_request_target`: no secrets are needed, and GitHub blocks
-# `pull_request_target` in public repositories by default. For same-repository PRs the token gets
-# the write permissions requested below; for Dependabot PRs it is read-only, so jobs that write
-# skip bots (Dependabot sets its own labels and assignees in .github/dependabot.yml).
+# Uses `pull_request` rather than `pull_request_target`: no secrets are needed, and
+# `pull_request_target` would run with write access in the base repository's context. For
+# same-repository PRs the token gets the write permissions requested below; for fork and Dependabot
+# PRs it is read-only, so jobs that write skip them (Dependabot sets its own labels and assignees
+# in .github/dependabot.yml).
 on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
@@ -29,7 +30,9 @@ jobs:
 
   label:
     name: Label by branch name
-    if: github.event.pull_request.user.type != 'Bot'
+    if: >-
+      github.event.pull_request.user.type != 'Bot' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -40,7 +43,9 @@ jobs:
 
   assign:
     name: Assign author
-    if: github.event.action == 'opened' && github.event.pull_request.user.type != 'Bot'
+    if: >-
+      github.event.action == 'opened' && github.event.pull_request.user.type != 'Bot' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
