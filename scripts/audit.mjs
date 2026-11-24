@@ -66,13 +66,21 @@ function runNpmAudit(args) {
     shell: true,
     maxBuffer: 64 * 1024 * 1024,
   });
+  let report;
   try {
-    return JSON.parse(result.stdout);
+    report = JSON.parse(result.stdout);
   } catch {
-    // Not a report (e.g. the registry is unreachable): fail rather than pass silently
-    console.error(result.stderr || result.stdout || "npm audit produced no output");
+    report = undefined;
+  }
+  // Not a report: fail rather than pass silently. An unreachable registry still prints valid JSON,
+  // `{ "message": ..., "error": {...} }`, with no `vulnerabilities` key.
+  if (!report || report.error || typeof report.vulnerabilities !== "object") {
+    console.error(
+      report?.message || result.stderr || result.stdout || "npm audit produced no output",
+    );
     process.exit(1);
   }
+  return report;
 }
 
 function main() {
