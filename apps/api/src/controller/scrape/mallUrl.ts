@@ -5,7 +5,7 @@ export function toMallUrl(value: string): string | null {
   if (!value) return null;
   try {
     const url = new URL(value, MALL_ORIGIN);
-    return url.hostname === "www.mall.hr" ? url.href : null;
+    return url.origin === MALL_ORIGIN && !url.username && !url.password ? url.href : null;
   } catch {
     return null;
   }

@@ -17,6 +17,12 @@ describe("toMallUrl", () => {
     expect(toMallUrl("//evil.example/x.jpg")).toBeNull();
   });
 
+  test("rejects plain http, a custom port and embedded credentials", () => {
+    expect(toMallUrl("http://www.mall.hr/i/1")).toBeNull();
+    expect(toMallUrl("https://www.mall.hr:8080/i/1")).toBeNull();
+    expect(toMallUrl("https://user:pw@www.mall.hr/i/1")).toBeNull();
+  });
+
   test("rejects an empty value", () => {
     expect(toMallUrl("")).toBeNull();
   });
