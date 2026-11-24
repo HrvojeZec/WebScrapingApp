@@ -20,10 +20,9 @@ describe("loadEnv", () => {
     expect(loadEnv({ MONGODB_URI: VALID_URI })).toEqual({
       NODE_ENV: "development",
       PORT: 5000,
-      PORT_STATUS: 5001,
       MONGODB_URI: VALID_URI,
       CLIENT_URL: "http://localhost:5173",
-      EXECUTE_URL: "http://127.0.0.1:5001/api/execute",
+      LOG_LEVEL: "info",
     });
   });
 
@@ -32,10 +31,15 @@ describe("loadEnv", () => {
     expect(() => loadEnv({ MONGODB_URI: VALID_URI, PORT: "abc" })).toThrow(/PORT/);
   });
 
-  test("derives the executor URL from PORT_STATUS", () => {
-    expect(loadEnv({ MONGODB_URI: VALID_URI, PORT_STATUS: "6001" }).EXECUTE_URL).toBe(
-      "http://127.0.0.1:6001/api/execute",
-    );
+  test("accepts a pino log level and rejects anything else", () => {
+    expect(loadEnv({ MONGODB_URI: VALID_URI, LOG_LEVEL: "silent" }).LOG_LEVEL).toBe("silent");
+    expect(() => loadEnv({ MONGODB_URI: VALID_URI, LOG_LEVEL: "verbose" })).toThrow(/LOG_LEVEL/);
+  });
+
+  test("ignores the removed executor variables", () => {
+    const env = loadEnv({ MONGODB_URI: VALID_URI, PORT_STATUS: "5001", EXECUTE_URL: "x" });
+    expect(env).not.toHaveProperty("PORT_STATUS");
+    expect(env).not.toHaveProperty("EXECUTE_URL");
   });
 
   test("starts the error message with a summary line", () => {
@@ -49,11 +53,6 @@ describe("loadEnv", () => {
 
   test("rejects ports outside 1-65535", () => {
     expect(() => loadEnv({ MONGODB_URI: VALID_URI, PORT: "70000" })).toThrow(/PORT/);
-  });
-
-  test("keeps an explicit EXECUTE_URL", () => {
-    const url = "http://127.0.0.1:7000/api/execute";
-    expect(loadEnv({ MONGODB_URI: VALID_URI, EXECUTE_URL: url }).EXECUTE_URL).toBe(url);
   });
 
   test("normalizes CLIENT_URL to an origin, because CORS compares it exactly", () => {
