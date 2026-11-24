@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Error } from "../../types/params";
 import { log } from "console";
+import { parseKeyword } from "./keyword";
 const executeService = require("./scrape-execute-service");
 const {
   CustomInternalServerError,
@@ -10,8 +11,11 @@ const {
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  const { keyword, newScrapingJob } = req.body;
-  console.log("keyword: ", keyword);
+  const { newScrapingJob } = req.body;
+  const keyword = parseKeyword(req.body.keyword);
+  if (keyword === null) {
+    return res.status(400).json({ error: "Ključna riječ mora biti neprazan tekst." });
+  }
 
   try {
     const products = await executeService(keyword, newScrapingJob);

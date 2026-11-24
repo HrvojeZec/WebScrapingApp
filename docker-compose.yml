@@ -24,21 +24,6 @@ services:
       - 5000:5000
     depends_on:
       - mongo
-  scrape-status-service:
-    build:
-      context: ./apps/api
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    env_file: ./apps/api/.env
-    volumes:
-      - ./apps/api:/app
-      - /app/node_modules
-    networks:
-      - scrape-app
-    ports:
-      - 5001:5001
-    depends_on:
-      - mongo
   frontend:
     build:
       context: ./apps/web

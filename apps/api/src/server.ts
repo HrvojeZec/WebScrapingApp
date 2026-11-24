@@ -40,8 +40,9 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-scrapeApp.listen(statusPORT, () => {
-  console.log(`Server listening on port ${statusPORT}`);
+// The executor has no authentication, so only processes on this machine may reach it
+scrapeApp.listen(Number(statusPORT), "127.0.0.1", () => {
+  console.log(`Executor listening on 127.0.0.1:${statusPORT}`);
 });
 
 mongoose
