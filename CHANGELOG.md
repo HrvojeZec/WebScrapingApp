@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-24
+
 ### Added
 
 - MIT license, security policy, pull request template and this changelog (#6)
@@ -80,5 +82,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Baseline tag before the refactor, on the code as of August 2025: the original thesis project with
 Mall and Sancta Domenica scrapers, an Express and MongoDB API and a React client.
 
-[Unreleased]: https://github.com/HrvojeZec/WebScrapingApp/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/HrvojeZec/WebScrapingApp/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/HrvojeZec/WebScrapingApp/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/HrvojeZec/WebScrapingApp/releases/tag/v0.1.0
