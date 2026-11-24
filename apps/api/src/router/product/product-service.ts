@@ -1,7 +1,6 @@
 import { Stores } from "../../model/storesModel";
 import { Product } from "../../model/productModel";
 import mongoose from "mongoose";
-import { log } from "console";
 
 export const paginationHandler = async (keyword: string, page: number, pageSize: number) => {
   const existingProducts = await Product.find({ keyword });
@@ -84,12 +83,4 @@ export const findProductsByKeywordAndStoreID = async (
   console.log(result);
 
   return result;
-};
-
-module.exports = {
-  findAllKeywords,
-  findProductsByKeyword,
-  findRandomProducts,
-  paginationHandler,
-  findProductsByKeywordAndStoreID,
 };

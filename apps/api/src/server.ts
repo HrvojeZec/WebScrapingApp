@@ -4,12 +4,12 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 
-const scrapeRoute = require("./router/scrape/scrape-router");
-const scrapeExecuteRouter = require("./router/scrapeExecute/scrape-execute-router");
-const scrapeStatusRouter = require("./router/scrapeStatus/scrapeStatus-router");
-const productRouter = require("./router/product/product-router");
-const globalErrorhandler = require("./controller/error/errorController");
-const { createStoreData } = require("./router/store/stores-service");
+import scrapeRoute from "./router/scrape/scrape-router";
+import scrapeExecuteRouter from "./router/scrapeExecute/scrape-execute-router";
+import scrapeStatusRouter from "./router/scrapeStatus/scrapeStatus-router";
+import productRouter from "./router/product/product-router";
+import globalErrorhandler from "./controller/error/errorController";
+import { createStoreData } from "./router/store/stores-service";
 
 const app = express();
 const scrapeApp = express();

@@ -1,11 +1,9 @@
-import { log } from "console";
 import { Scrape } from "../../model/scrapeModel";
-import { Keyword } from "../../types/params";
-const activeScrape = require("../scrapeStatus/scrapeStatus-service");
+import findScrapeByID from "../scrapeStatus/scrapeStatus-service";
 import mongoose from "mongoose";
 
-const createNewScrape = async (keyword: Keyword) => {
-  let existingScrape = await Scrape.findOne({
+export const createNewScrape = async (keyword: string) => {
+  const existingScrape = await Scrape.findOne({
     status: "started",
   }).exec();
 
@@ -30,11 +28,10 @@ const createNewScrape = async (keyword: Keyword) => {
   }
 };
 
-const endScrapeStatus = async (scrapeId: mongoose.Types.ObjectId) => {
-  const ScrapingJob = await activeScrape(scrapeId);
+export const endScrapeStatus = async (scrapeId: mongoose.Types.ObjectId) => {
+  const ScrapingJob = await findScrapeByID(scrapeId);
+  if (!ScrapingJob) throw new Error(`Scrape ${scrapeId} not found`);
   ScrapingJob.status = "finished";
   ScrapingJob.endTime = new Date();
   await ScrapingJob.save();
 };
-
-module.exports = { createNewScrape, endScrapeStatus };

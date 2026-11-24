@@ -1,51 +1,49 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import type { ElementHandle, Page } from "puppeteer";
 import { Url } from "../../constants/url";
 import { Stores } from "../../model/storesModel";
 import fs from "fs";
-import path from "path";
 
 puppeteer.use(StealthPlugin());
-const scrapeProducts = async (page: any, keyword: string, storeId: string, scrapeId: string) => {
+const scrapeProducts = async (page: Page, keyword: string, storeId: string, scrapeId: string) => {
   const products = await page.$$(".product-items .product-item");
 
   const data = await Promise.all(
-    products.map(async (product: any) => {
-      const title = await product.$eval("a.product-item-link", (element: HTMLElement) =>
-        element.innerText.trim(),
+    products.map(async (product: ElementHandle) => {
+      const title = await product.$eval("a.product-item-link", (element) =>
+        (element as HTMLElement).innerText.trim(),
       );
-      const description = await product.$eval(".product-item-description", (element: HTMLElement) =>
-        element.innerText.trim(),
+      const description = await product.$eval(".product-item-description", (element) =>
+        (element as HTMLElement).innerText.trim(),
       );
       let price;
       try {
-        price = await product.$eval(
-          ".special-price .price-wrapper .price",
-          (element: HTMLElement) => element.innerText.trim(),
+        price = await product.$eval(".special-price .price-wrapper .price", (element) =>
+          (element as HTMLElement).innerText.trim(),
         );
       } catch {
-        price = await product.$eval(".price-box .price", (element: HTMLElement) =>
-          element.innerText.trim(),
+        price = await product.$eval(".price-box .price", (element) =>
+          (element as HTMLElement).innerText.trim(),
         );
       }
 
       let oldPrice;
       try {
-        oldPrice = await product.$eval(".old-price .price-wrapper .price", (element: HTMLElement) =>
-          element.innerText.trim(),
+        oldPrice = await product.$eval(".old-price .price-wrapper .price", (element) =>
+          (element as HTMLElement).innerText.trim(),
         );
       } catch {
         oldPrice = null;
       }
-      const link = await product.$eval(".product-item-link", (element: HTMLElement) =>
+      const link = await product.$eval(".product-item-link", (element) =>
         element.getAttribute("href"),
       );
-      const image = await product.$eval(
-        ".product-item-photo-wrapper img[src]",
-        (element: HTMLElement) => element.getAttribute("src"),
+      const image = await product.$eval(".product-item-photo-wrapper img[src]", (element) =>
+        element.getAttribute("src"),
       );
-      const productId = await product.evaluate((element: any) =>
-        element.querySelector(".price-box").getAttribute("data-product-id"),
+      const productId = await product.evaluate((element) =>
+        element.querySelector(".price-box")!.getAttribute("data-product-id"),
       );
 
       return {
@@ -93,7 +91,7 @@ export const sanctaDomenicaScraping = async (
     await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 
-  let data: any[] = [];
+  let data: Awaited<ReturnType<typeof scrapeProducts>> = [];
   data = data.concat(await scrapeProducts(page, keyword, storeId, scrapeId));
 
   // Ako koristimo lokalni HTML fajl, ne treba nam paginacija
@@ -121,7 +119,4 @@ export const sanctaDomenicaScraping = async (
   await browser.close();
 
   return data;
-};
-module.exports = {
-  sanctaDomenicaScraping,
 };

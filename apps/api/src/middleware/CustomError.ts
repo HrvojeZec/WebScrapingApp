@@ -3,7 +3,7 @@ import { HttpStatus } from "../constants/httpStauts";
 class CustomError extends Error {
   public name: string;
   public statusCode: number;
-  public data: any;
+  public data: unknown;
 
   constructor({
     message,
@@ -14,7 +14,7 @@ class CustomError extends Error {
     message: string;
     name: string;
     statusCode: number;
-    data?: any;
+    data?: unknown;
   }) {
     super(message);
     this.name = name;
@@ -24,7 +24,7 @@ class CustomError extends Error {
   }
 }
 class CustomBadRequest extends CustomError {
-  constructor(message = "Bad request", data?: any) {
+  constructor(message = "Bad request", data?: unknown) {
     super({
       message,
       name: "HttpBadRequest",
@@ -35,7 +35,7 @@ class CustomBadRequest extends CustomError {
 }
 
 class CustomNotFound extends CustomError {
-  constructor(message = "Not Found", data?: any) {
+  constructor(message = "Not Found", data?: unknown) {
     super({
       message,
       name: "HttpNotFound",
@@ -46,7 +46,7 @@ class CustomNotFound extends CustomError {
 }
 
 class CustomInternalServerError extends CustomError {
-  constructor(message = "Internal server error", data?: any) {
+  constructor(message = "Internal server error", data?: unknown) {
     super({
       message,
       name: "HttpInternalServerError",
@@ -57,7 +57,7 @@ class CustomInternalServerError extends CustomError {
 }
 
 class CustomMultiStatus extends CustomError {
-  constructor(message = "Multi-Status", data?: any) {
+  constructor(message = "Multi-Status", data?: unknown) {
     super({
       message,
       name: "HttpMultiStatus",

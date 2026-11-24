@@ -1,54 +1,15 @@
-const { mallScraping } = require("../../controller/scrape/scrapeMALL");
-const { ekupiScraping } = require("../../controller/scrape/scrapeEkupi");
-
-const { sanctaDomenicaScraping } = require("../../controller/scrape/scrapeSanctaDomenica");
-import { log } from "console";
-import { Product, IProduct } from "../../model/productModel";
+import { mallScraping } from "../../controller/scrape/scrapeMALL";
+import { sanctaDomenicaScraping } from "../../controller/scrape/scrapeSanctaDomenica";
+import { Product } from "../../model/productModel";
 import { Stores, IStore } from "../../model/storesModel";
-import { Keyword } from "../../types/params";
-import mongoose from "mongoose";
 
-const updateProductsPrice = async (
-  existingProducts: IProduct[],
-  allNewProducts: IProduct[],
-  scrapeId: mongoose.Types.ObjectId,
-) => {
-  for (const newProduct of allNewProducts) {
-    const existingProduct = existingProducts.find(
-      (product: IProduct) =>
-        product.productId === newProduct.productId && product.storeId === newProduct.storeId,
-    );
-    console.log(existingProduct);
+type ScrapedProduct = Awaited<
+  ReturnType<typeof mallScraping | typeof sanctaDomenicaScraping>
+>[number];
 
-    if (existingProduct && existingProduct.price !== newProduct.price) {
-      await Product.updateOne(
-        { _id: existingProduct._id },
-        {
-          $set: {
-            price: newProduct.price,
-            oldPrice: existingProduct.price,
-            scrapeId: scrapeId,
-            updateAt: new Date(),
-          },
-        },
-      );
-    }
-  }
-};
-
-const addNewProducts = async (allNewProducts: IProduct[], existingProducts: IProduct[]) => {
-  const filteredProducts = allNewProducts.filter(
-    (newProduct: IProduct) =>
-      !existingProducts.some((product: IProduct) => product.productId === newProduct.productId),
-  );
-
-  if (filteredProducts.length > 0) {
-    await Product.insertMany(filteredProducts);
-  }
-};
-
-const executeService = async (keyword: Keyword, newScrapingJob: any) => {
-  const scrapeId: mongoose.Types.ObjectId = newScrapingJob._id;
+// newScrapingJob arrives as JSON from the public API, so its _id is a string
+const executeService = async (keyword: string, newScrapingJob: { _id: string }) => {
+  const scrapeId = newScrapingJob._id;
 
   const mallDataPromise = mallScraping(keyword, scrapeId);
   const sanctaDomenicaDataPromise = sanctaDomenicaScraping(keyword, scrapeId);
@@ -61,7 +22,7 @@ const executeService = async (keyword: Keyword, newScrapingJob: any) => {
   const results = await Promise.allSettled(promises);
   console.log(results);
 
-  const allNewProducts: IProduct[] = [];
+  const allNewProducts: ScrapedProduct[] = [];
   const errors = [];
 
   const isArrayEmpty = results.every(
@@ -80,30 +41,10 @@ const executeService = async (keyword: Keyword, newScrapingJob: any) => {
         reason: result.reason,
       });
     } else {
-      const newProducts = Array.isArray(result.value) ? result.value : result.value.data;
-      if (Array.isArray(newProducts)) {
-        allNewProducts.push(...newProducts);
-      } else {
-        errors.push({
-          functionName: `Function${index + 1}`,
-          reason: "Invalid data format",
-        });
-      }
+      allNewProducts.push(...result.value);
     }
   }
 
-  /*   if (allNewProducts.length > 0) {
-    const existingProducts: IProduct[] = await Product.find();
-    if (existingProducts.length === 0) {
-      // Ako nema postojećih proizvoda, dodaj sve nove
-      await Product.insertMany(allNewProducts);
-    } else {
-      // Ažuriraj cijene postojećih proizvoda
-      await updateProductsPrice(existingProducts, allNewProducts, scrapeId);
-      // Dodaj novih proizvoda koji još ne postoje
-      await addNewProducts(allNewProducts, existingProducts);
-    }
-  } */
   if (allNewProducts.length > 0) {
     await Product.deleteMany({ keyword });
     await Product.insertMany(allNewProducts);
@@ -132,4 +73,4 @@ const executeService = async (keyword: Keyword, newScrapingJob: any) => {
   return productsWithStoreAttributes;
 };
 
-module.exports = executeService;
+export default executeService;
