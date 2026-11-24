@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `@storeseeker/shared` package (`packages/shared`) with the zod schemas, DTO types, statuses,
+  API error codes and limits that the API and the web app share (#16)
+
+### Changed
+
+- Search keywords are normalized (Unicode NFC, trimmed, single spaces, lowercase) and validated
+  the same way in the API and the web app: 2 to 60 characters, letters including Croatian
+  diacritics, digits, spaces and `- + . /` (#16)
+
 ## [0.2.0] - 2026-11-24
 
 ### Added
