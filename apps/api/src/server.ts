@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { createApp } from "./app";
 import { env } from "./config";
 import { createLogger } from "./http/logger";
-import { createStoreData } from "./router/store/stores-service";
+import { ensureStores } from "./db/stores";
 
 const logger = createLogger(env.LOG_LEVEL);
 const SHUTDOWN_TIMEOUT_MS = 10_000;
@@ -17,7 +17,7 @@ async function start() {
     process.exit(1);
   }
   logger.info("database connected");
-  await createStoreData();
+  await ensureStores();
 
   const server = createApp({ clientUrl: env.CLIENT_URL, logger }).listen(env.PORT, () => {
     logger.info({ port: env.PORT }, "API listening");
