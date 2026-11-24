@@ -1,14 +1,16 @@
 import express, { NextFunction, Request, Response } from "express";
 import axios from "axios";
+import { parseKeyword } from "../scrapeExecute/keyword";
 const { CustomInternalServerError } = require("../../middleware/CustomError");
 const { createNewScrape, endScrapeStatus } = require("./scrape-service");
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  const { keyword } = req.body || {};
-
-  if (!keyword) {
-    return res.status(400).json({ error: "Ključna riječ je obavezna." });
+  // Validate before creating the job: the executor rejects a non-string keyword, and the job would
+  // then stay "started" forever
+  const keyword = parseKeyword((req.body || {}).keyword);
+  if (keyword === null) {
+    return res.status(400).json({ error: "Ključna riječ mora biti neprazan tekst." });
   }
   try {
     const response = await createNewScrape(keyword);
@@ -17,7 +19,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     const scrapeJob = response.newScrapingJob || response.updatedScrape;
 
     await axios.post(
-      "http://localhost:5001/api/execute",
+      `http://127.0.0.1:${process.env.PORT_STATUS}/api/execute`,
       {
         keyword: keyword,
         newScrapingJob: scrapeJob,

@@ -36,7 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   products, including all of them through a query operator in the body), `POST /api/storeData/add`,
   the unbounded `GET /api/products` and `GET /api/products/scrapeId`, which passed the query string
   to the database (#13)
-- The internal scrape executor listens on 127.0.0.1 only and rejects a keyword that is not a
+- The internal scrape executor listens on 127.0.0.1 only, and both it and `POST /api/scrape`
+  reject a keyword that is not a
   non-empty string (#13)
 - The Mall scraper checks the host of image URLs instead of their prefix (#13)
 
