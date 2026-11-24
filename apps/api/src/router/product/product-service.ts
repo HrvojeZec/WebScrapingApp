@@ -1,7 +1,6 @@
 import { Stores } from "../../model/storesModel";
 import { Product } from "../../model/productModel";
 import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
 import { log } from "console";
 
 export const paginationHandler = async (keyword: string, page: number, pageSize: number) => {
@@ -54,7 +53,7 @@ export const findProductsByKeywordAndStoreID = async (
 ) => {
   console.log("storeId u  findProductsByKeywordAndStoreID :", storeId);
 
-  const objectStoreId = new ObjectId(storeId);
+  const objectStoreId = new mongoose.Types.ObjectId(storeId);
   console.log(objectStoreId);
   /*   const existingProducts = await Product.find({ objectStoreId }); */
   const existingProducts = await Product.find({

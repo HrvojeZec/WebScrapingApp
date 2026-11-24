@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
 
 export interface StoreName {
   storeName: string;
@@ -15,5 +15,5 @@ export interface Keyword {
 }
 
 export interface ScrapeId {
-  scrapeId: ObjectId;
+  scrapeId: Types.ObjectId;
 }
