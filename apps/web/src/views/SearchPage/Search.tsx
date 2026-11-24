@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
 import { Autocomplete, Button, Tooltip } from "@mantine/core";
 import { useKeywordsData } from "../../stores/keywords-context";
+import { keywordSchema } from "@storeseeker/shared";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
@@ -23,16 +24,12 @@ function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- legacy flow, replaced in v0.3 (#26)
   }, [scrapeId]);
   useEffect(() => {
-    let errorMessage = "";
-    if (keyword.length > 20) {
-      errorMessage = "Previše slova, smanjite do 20.";
-    } else if (/,/.test(keyword)) {
-      errorMessage = "Napišite samo jedan proizvod bez nabrajanja.";
-    } else if (/[^A-Za-z0-9\s]/.test(keyword)) {
-      errorMessage = "Koristite samo alfanumeričke znakove.";
-    }
+    const result = keywordSchema.safeParse(keyword);
+    // An empty field is not an error yet: the user has not typed anything
+    const errorMessage =
+      result.success || keyword.trim() === "" ? "" : (result.error.issues[0]?.message ?? "");
     setError(errorMessage);
-    setDisabledButton(keyword.length < 1 || errorMessage !== "");
+    setDisabledButton(!result.success);
   }, [keyword]);
 
   const checkScrapeStatus = async () => {
