@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   production dependencies that fails on high or critical advisories. Pull request titles are
   validated as Conventional Commits, labels follow the branch name, and Dependabot opens weekly
   updates against `develop` (#14)
+- Dependabot also skips major upgrades of `@vitejs/plugin-react`, `@eslint/js` and
+  `slick-carousel`, which move together with Vite 8, ESLint 10 and the v0.3 carousel rework (#14)
 
 ### Changed
 
