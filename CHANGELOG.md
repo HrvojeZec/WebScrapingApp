@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - MIT license, security policy, pull request template and this changelog (#6)
+- Shared tooling at the repository root: one ESLint 9 and Prettier config, husky hooks with
+  lint-staged and commitlint, and Node 26 and npm 11 pinned through `.nvmrc`, `engines` and
+  `.npmrc` (#7)
 
 ### Changed
 
