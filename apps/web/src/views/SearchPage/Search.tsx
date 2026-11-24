@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
 import { Autocomplete, Button, Tooltip } from "@mantine/core";
 import { useKeywordsData } from "../../stores/keywords-context";
-import { keywordSchema } from "@storeseeker/shared";
+import { keywordSchema, normalizeKeyword } from "@storeseeker/shared";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
@@ -64,7 +64,7 @@ function Search() {
         clearInterval(intervalId);
         showLoadingDataNotification(false);
         if (scrapeId != null) {
-          navigate("/rezultati/" + encodeURIComponent(keyword));
+          navigate("/rezultati/" + encodeURIComponent(normalizeKeyword(keyword)));
         }
       }
     }, 5000);
@@ -86,7 +86,8 @@ function Search() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          keyword: keyword,
+          // The API stores the scrape under the normalized keyword, so the result page must ask for that
+          keyword: normalizeKeyword(keyword),
         }),
       });
       if (!response.ok) {
