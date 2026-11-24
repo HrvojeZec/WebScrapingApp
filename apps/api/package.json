@@ -1,0 +1,47 @@
+{
+  "name": "@storeseeker/api",
+  "version": "0.2.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "node ../../scripts/vitest.mjs run --project unit",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "prestart": "npm run build",
+    "start": "node dist/server.js",
+    "predev": "npm run build",
+    "dev": "concurrently \"npx tsc -w\"  \"nodemon dist/server.js\"",
+    "typecheck": "tsc --noEmit",
+    "test:integration": "node ../../scripts/vitest.mjs run --project integration"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.10",
+    "express": "^4.22.3",
+    "mongoose": "^8.24.10",
+    "puppeteer": "^25.18.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^26.6.6",
+    "concurrently": "^10.0.7",
+    "mongodb-memory-server": "^11.3.0",
+    "nodemon": "^3.1.0",
+    "rimraf": "^6.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2",
+    "vitest": "^5.1.0"
+  },
+  "description": "",
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "8.0.13"
+    }
+  }
+}

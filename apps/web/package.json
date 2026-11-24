@@ -1,0 +1,42 @@
+{
+  "name": "@storeseeker/web",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@mantine/carousel": "^7.9.2",
+    "@mantine/core": "^7.9.1",
+    "@mantine/form": "^7.9.2",
+    "@mantine/hooks": "^7.9.2",
+    "@mantine/notifications": "^7.9.2",
+    "@tabler/icons-react": "^3.4.0",
+    "aos": "^2.3.4",
+    "dayjs": "^1.11.11",
+    "embla-carousel-react": "^7.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.30.6",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1",
+    "tabler-icons-react": "^1.56.0"
+  },
+  "devDependencies": {
+    "@types/aos": "^3.0.7",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-slick": "^0.23.13",
+    "@vitejs/plugin-react": "^4.2.1",
+    "postcss": "^8.4.38",
+    "postcss-preset-mantine": "^1.15.0",
+    "postcss-simple-vars": "^7.0.1",
+    "sass": "^1.77.2",
+    "typescript": "^5.5.3",
+    "vite": "^5.2.0"
+  }
+}
