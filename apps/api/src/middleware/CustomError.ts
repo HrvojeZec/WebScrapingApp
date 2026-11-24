@@ -1,4 +1,4 @@
-const HttpStatus = require("../constants/httpStauts");
+import { HttpStatus } from "../constants/httpStauts";
 
 class CustomError extends Error {
   public name: string;
@@ -66,7 +66,7 @@ class CustomMultiStatus extends CustomError {
     });
   }
 }
-module.exports = {
+export {
   CustomError,
   CustomBadRequest,
   CustomNotFound,

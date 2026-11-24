@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "test": "jest",
-    "build": "rimraf dist && npx tsc",
+    "test": "node ../../scripts/vitest.mjs run --project unit",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "prestart": "npm run build",
     "start": "node dist/server.js",
     "predev": "npm run build",
     "dev": "concurrently \"npx tsc -w\"  \"nodemon dist/server.js\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:integration": "node ../../scripts/vitest.mjs run --project integration"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.22.3",
-    "mongodb-memory-server": "^11.3.0",
     "mongoose": "^8.24.10",
     "puppeteer": "^25.17.0",
     "puppeteer-extra": "^3.3.6",
@@ -28,15 +28,14 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.14",
     "@types/node": "^26.6.6",
     "concurrently": "^8.2.2",
-    "jest": "^29.7.0",
+    "mongodb-memory-server": "^11.3.0",
     "nodemon": "^3.1.0",
     "rimraf": "^6.1.4",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vitest": "^5.1.0"
   },
   "description": "",
   "config": {
