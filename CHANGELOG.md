@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lint-staged and commitlint, and Node 26 and npm 11 pinned through `.nvmrc`, `engines` and
   `.npmrc` (#7)
 - `.env.example` files for the API and the web app (#11)
+- CI on GitHub Actions for pull requests and pushes to `develop` and `master`: lint, format,
+  typecheck, unit tests and build, API integration tests against MongoDB 8.0.13, and an audit of
+  production dependencies that fails on high or critical advisories. Pull request titles are
+  validated as Conventional Commits, labels follow the branch name, and Dependabot opens weekly
+  updates against `develop` (#14)
 
 ### Changed
 
@@ -30,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- The old workflow, which ran on Node 18 against the removed `Server/` folder (#14)
 - The store suggestion form on the home page, which wrote to an unauthenticated endpoint (#13)
 - Unused or redundant packages: `fs`, `path`, `node-fetch`, `body-parser`, a direct `mongodb`,
   `@types/mocha` and `@tabler/icons` (#15)
