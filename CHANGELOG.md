@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shared tooling at the repository root: one ESLint 9 and Prettier config, husky hooks with
   lint-staged and commitlint, and Node 26 and npm 11 pinned through `.nvmrc`, `engines` and
   `.npmrc` (#7)
+- `.env.example` files for the API and the web app (#11)
 
 ### Changed
 
@@ -42,6 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of falling back to a system font (#9)
 - API errors such as "no products found" return their status code (404, 400) instead of 500, and
   the store and product test suites run again (#10)
+- The API reads its configuration from the environment and validates it at startup: the database
+  URI, CORS origin and ports are no longer hardcoded, it exits with a list of missing or invalid
+  variables, and it connects to the database before it accepts requests. The web app reads the
+  API URL from `VITE_API_URL` (#11)
 
 ### Security
 
