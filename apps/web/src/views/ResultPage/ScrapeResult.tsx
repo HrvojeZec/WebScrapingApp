@@ -13,6 +13,7 @@ import {
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { Product } from "../../types/ProductTypes";
+import { IconCheck } from "@tabler/icons-react";
 
 interface DataType {
   products: Product[];
@@ -37,8 +38,9 @@ function useCurrentURL() {
 interface StoreSelectItemProps {
   label: string;
   logo: string;
+  checked?: boolean;
 }
-const StoreSelectItem = ({ label, logo }: StoreSelectItemProps) => {
+const StoreSelectItem = ({ label, logo, checked }: StoreSelectItemProps) => {
   const isSvg = logo && logo.startsWith("<svg");
 
   return (
@@ -68,6 +70,7 @@ const StoreSelectItem = ({ label, logo }: StoreSelectItemProps) => {
       ) : null}
 
       <Text>{label}</Text>
+      {checked && <IconCheck size={16} aria-hidden />}
     </Group>
   );
 };
@@ -145,13 +148,13 @@ function ScrapeResult() {
     }
   };
 
-  // useEffect koji poziva fetchData kada se keyword ili scrapeId promijene
+  // useEffect koji poziva fetchData kada se keyword promijeni
   useEffect(() => {
     const url = getUrl();
     if (url) {
       fetchData(url);
     }
-  }, [params.keyword, params.scrapeId, page, productsPerPage, selectedStore]);
+  }, [params.keyword, page, productsPerPage, selectedStore]);
 
   const handleSortLowToHigh = () => {
     const sortedProducts = [...showProductList].sort(
@@ -266,9 +269,10 @@ function ScrapeResult() {
                   placeholder="Odaberi trgovinu"
                   value={selectedStore}
                   onChange={handleStoreChange}
-                  renderOption={({ option }) => (
+                  renderOption={({ option, checked }) => (
                     <StoreSelectItem
                       label={option.label}
+                      checked={checked}
                       logo={storeLogos.get(option.value) ?? ""}
                     />
                   )}
