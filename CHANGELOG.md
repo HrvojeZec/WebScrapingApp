@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   at the repository root (#5)
 - The codebase is formatted with Prettier, and all files use LF line endings (#8)
 - The README describes the project and the ongoing refactor instead of scraper selector notes (#6)
+- API tests run on Vitest, split into unit and integration projects, next to the code they test
+  (#10)
 - Puppeteer 25, mongodb-memory-server 11 with MongoDB 8.0.13 for tests (the version on Atlas) and
   rimraf 6; scrapers run headless (#15)
 
@@ -38,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The web build type-checks again (it used to run `tsc` without project references and hid 10
   type errors), the store filter uses Mantine 7's `renderOption`, and the Inter font loads instead
   of falling back to a system font (#9)
+- API errors such as "no products found" return their status code (404, 400) instead of 500, and
+  the store and product test suites run again (#10)
 
 ### Security
 
