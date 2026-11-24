@@ -14,7 +14,9 @@
     "pretypecheck": "npm run build -w @storeseeker/shared",
     "typecheck": "tsc --noEmit",
     "pretest:integration": "npm run build -w @storeseeker/shared",
-    "test:integration": "node ../../scripts/vitest.mjs run --project integration"
+    "test:integration": "node ../../scripts/vitest.mjs run --project integration",
+    "prestore:set": "npm run build -w @storeseeker/shared",
+    "store:set": "tsx src/scripts/set-store.ts"
   },
   "keywords": [],
   "author": "",
