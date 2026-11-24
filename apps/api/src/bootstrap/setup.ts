@@ -1,5 +1,6 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+
 const mallLogo = fs.readFileSync(path.resolve(__dirname, "../assets/mallLogo.svg"), "utf8");
 const SanctaDomenicaLogo = fs.readFileSync(
   path.resolve(__dirname, "../assets/sanctaDomenicaLogo.svg"),
@@ -16,5 +17,3 @@ export const StoresData = [
     logo: SanctaDomenicaLogo,
   },
 ];
-
-module.exports = { StoresData };

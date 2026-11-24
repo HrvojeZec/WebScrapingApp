@@ -1,17 +1,14 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from "vitest";
 import {
   findAllKeywords,
   findProductsByKeyword,
   findRandomProducts,
   paginationHandler,
-} from "../src/router/product/product-service";
-import {
-  connectMemoryMongoDB,
-  clearDatabase,
-  disconnectMemoryMongoDB,
-} from "./test-utils/setup-mongodb";
-import { Product } from "../src/model/productModel";
-import { testStoreData, testProductData } from "./test-data/productData";
-import { Stores } from "../src/model/storesModel";
+} from "../product-service";
+import { connectMemoryMongoDB, clearDatabase, disconnectMemoryMongoDB } from "../../../test/mongo";
+import { Product } from "../../../model/productModel";
+import { testStoreData, testProductData } from "../../../test/product-data";
+import { Stores } from "../../../model/storesModel";
 
 beforeAll(async () => {
   await connectMemoryMongoDB();
@@ -52,9 +49,11 @@ describe("findProductsByKeyword function", () => {
 });
 
 describe("findRandomProducts function", () => {
-  test("should find 10 random products", async () => {
+  test("returns at most 10 distinct random products", async () => {
     const products = await findRandomProducts();
 
-    expect(products.length).toBe(10);
+    // The fixture has fewer than 10 products, so all of them come back once
+    expect(products.length).toBe(Math.min(10, testProductData.length));
+    expect(new Set(products.map((product) => String(product._id))).size).toBe(products.length);
   });
 });

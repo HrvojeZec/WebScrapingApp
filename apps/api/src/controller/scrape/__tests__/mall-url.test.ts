@@ -1,4 +1,5 @@
-import { toMallUrl } from "../src/controller/scrape/mallUrl";
+import { describe, expect, test } from "vitest";
+import { toMallUrl } from "../mallUrl";
 
 describe("toMallUrl", () => {
   test("resolves a relative path against mall.hr", () => {

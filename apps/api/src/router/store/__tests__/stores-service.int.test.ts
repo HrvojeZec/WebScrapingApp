@@ -1,11 +1,8 @@
-import {
-  connectMemoryMongoDB,
-  disconnectMemoryMongoDB,
-  clearDatabase,
-} from "./test-utils/setup-mongodb";
-import { createStoreData } from "../src/router/store/stores-service";
-import { Stores } from "../src/model/storesModel";
-import { StoresData } from "../src/boostrap/setup";
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
+import { connectMemoryMongoDB, disconnectMemoryMongoDB, clearDatabase } from "../../../test/mongo";
+import { createStoreData } from "../stores-service";
+import { Stores } from "../../../model/storesModel";
+import { StoresData } from "../../../bootstrap/setup";
 
 beforeAll(async () => {
   await connectMemoryMongoDB();

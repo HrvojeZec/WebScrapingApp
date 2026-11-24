@@ -1,4 +1,5 @@
-import { parseKeyword } from "../src/router/scrapeExecute/keyword";
+import { describe, expect, test } from "vitest";
+import { parseKeyword } from "../keyword";
 
 describe("parseKeyword", () => {
   test("returns the trimmed keyword for a non-empty string", () => {
