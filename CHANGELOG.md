@@ -35,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Building the web app from the repository root no longer fails on Windows because of an unused
   inline style in `index.html` (#5)
+- The web build type-checks again (it used to run `tsc` without project references and hid 10
+  type errors), the store filter uses Mantine 7's `renderOption`, and the Inter font loads instead
+  of falling back to a system font (#9)
 
 ### Security
 
