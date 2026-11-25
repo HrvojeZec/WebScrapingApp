@@ -20,7 +20,9 @@
     "preseed": "npm run build -w @storeseeker/shared",
     "seed": "tsx src/scripts/seed.ts",
     "prescrape:live-check": "npm run build -w @storeseeker/shared",
-    "scrape:live-check": "tsx src/scripts/live-check.ts"
+    "scrape:live-check": "tsx src/scripts/live-check.ts",
+    "preworker": "npm run build -w @storeseeker/shared",
+    "worker": "tsx src/worker.ts"
   },
   "keywords": [],
   "author": "",
