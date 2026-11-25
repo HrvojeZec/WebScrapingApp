@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { CardTitleWithSort } from "./CardTitleWithSort";
 import { ProductCard } from "./ProductCard";
 import { LoaderGlobal } from "../../components/shared/Loader/Loader";
@@ -11,7 +11,7 @@ import {
   showLoadingDataNotification,
 } from "../../components/shared/Notification/Notification";
 import { Title, Text, Button, Container, Group } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Product } from "../../types/ProductTypes";
 import { IconCheck } from "@tabler/icons-react";
 

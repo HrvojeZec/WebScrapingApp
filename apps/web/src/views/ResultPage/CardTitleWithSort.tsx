@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { ArrowsSort } from "tabler-icons-react";
+import { IconArrowsSort } from "@tabler/icons-react";
 import classes from "../../components/CardTitleWithSort/CardTitleWithSort.module.scss";
 import { HoverCard, Group, Flex, UnstyledButton, Divider } from "@mantine/core";
 
@@ -12,7 +12,7 @@ interface CardTitleWithSortProps {
 
 const SortIcon = forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref} {...props}>
-    <ArrowsSort size={30} strokeWidth={1.5} color={"black"} />
+    <IconArrowsSort size={30} strokeWidth={1.5} color={"black"} />
   </div>
 ));
 export function CardTitleWithSort({

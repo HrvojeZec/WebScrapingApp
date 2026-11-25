@@ -1,22 +1,5 @@
-/* Imported once from main.tsx. Kept out of the SCSS variables partial, which other modules
-   pull in with @use: Vite then resolved these relative URLs against each importing module. */
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/Inter-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/Inter-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/Inter-ExtraBold.ttf") format("truetype");
-  font-weight: 800;
-  font-display: swap;
-}
+/* Self-hosted through @fontsource, so the page never asks a font CDN for anything. */
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+@import "@fontsource/ibm-plex-sans-condensed/700.css";

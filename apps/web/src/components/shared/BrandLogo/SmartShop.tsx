@@ -1,4 +1,4 @@
-import { BrandShopee } from "tabler-icons-react";
+import { IconBrandShopee } from "@tabler/icons-react";
 import classes from "./Brand.module.scss";
 
 interface NotificationProps {
@@ -8,7 +8,7 @@ interface NotificationProps {
 export function SmartShop({ showLogo }: NotificationProps) {
   return (
     <div className={classes.logoWrapper}>
-      {showLogo && <BrandShopee size={48} strokeWidth={2} className={classes.logo} />}
+      {showLogo && <IconBrandShopee size={48} strokeWidth={2} className={classes.logo} />}
       <div className={classes.logoName}>
         <p>
           <span className={classes.brandSmart}>Store</span>
