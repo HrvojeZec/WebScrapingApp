@@ -17,6 +17,8 @@ export const LIMITS = {
   scrapePollIntervalMs: 1_500,
   pageSizeDefault: 24,
   pageSizeMax: 48,
+  pageMax: 100,
+  priceFilterMaxEuros: 100_000,
   searchTermMinLength: 2,
   searchTermMaxLength: 60,
   historyDaysDefault: 90,
@@ -24,6 +26,7 @@ export const LIMITS = {
   lowestPriceWindowDays: 30,
   suggestionsMax: 8,
   similarProductsMax: 4,
+  dealsDefault: 12,
   dealsMax: 24,
   limitTimeZone: "Europe/Zagreb",
 } as const;

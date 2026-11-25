@@ -3,6 +3,7 @@ import { CATEGORY_SLUGS, categorySlugSchema, type CategorySlug } from "./categor
 import { LIMITS } from "./limits.js";
 import {
   PRODUCT_SORTS,
+  type CrawlStatus,
   type JobKind,
   type JobSource,
   type JobStatus,
@@ -57,27 +58,75 @@ export type ScrapeJobDto = {
 export type CreateScrapeResponse =
   { fresh: true; lastCrawledAt: string } | { fresh: false; job: ScrapeJobDto };
 
-const storeListSchema = z
-  .string()
-  .transform((value) => value.split(",").map((slug) => slug.trim()))
-  .pipe(z.array(storeSlugSchema))
-  .transform((slugs) => [...new Set(slugs)]);
+/** A comma list, a repeated parameter (?store=a&store=b) or both; repeated values count once. */
+function slugListSchema<T extends string>(slug: z.ZodType<T, string>) {
+  return z
+    .union([z.string(), z.array(z.string())])
+    .transform((value) =>
+      (Array.isArray(value) ? value : [value]).flatMap((part) =>
+        part.split(",").map((item) => item.trim()),
+      ),
+    )
+    .pipe(z.array(slug))
+    .transform((slugs) => [...new Set(slugs)]);
+}
 
-export const productsQuerySchema = z.object({
-  q: searchTermSchema.optional(),
-  store: storeListSchema.optional(),
-  sort: z.enum(PRODUCT_SORTS).default("relevance"),
-  page: z.coerce.number().int().min(1).max(100).default(1),
-  pageSize: z.coerce.number().int().min(1).max(LIMITS.pageSizeMax).default(LIMITS.pageSizeDefault),
-});
+// A cleared form field sends "max=", and Number("") is 0: that would hide every product
+const priceEurosSchema = z.preprocess(
+  (value) => (value === "" ? undefined : value),
+  z.coerce.number().int().min(0).max(LIMITS.priceFilterMaxEuros).optional(),
+);
+
+export const productsQuerySchema = z
+  .object({
+    q: searchTermSchema.optional(),
+    category: slugListSchema(categorySlugSchema).optional(),
+    store: slugListSchema(storeSlugSchema).optional(),
+    min: priceEurosSchema,
+    max: priceEurosSchema,
+    // Only "true" and "false": zod's default would also read "yes", "on" and "1"
+    discounted: z.stringbool({ truthy: ["true"], falsy: ["false"] }).default(false),
+    sort: z.enum(PRODUCT_SORTS).default("relevance"),
+    page: z.coerce.number().int().min(1).max(LIMITS.pageMax).default(1),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(LIMITS.pageSizeMax)
+      .default(LIMITS.pageSizeDefault),
+  })
+  .refine((query) => query.min === undefined || query.max === undefined || query.min <= query.max, {
+    message: "Najniža cijena ne može biti veća od najviše.",
+    path: ["min"],
+  });
 export type ProductsQuery = z.infer<typeof productsQuerySchema>;
 
+export const historyQuerySchema = z.object({
+  days: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(LIMITS.historyDaysMax)
+    .default(LIMITS.historyDaysDefault),
+});
+export type HistoryQuery = z.infer<typeof historyQuerySchema>;
+
 export const dealsQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(LIMITS.dealsMax).default(12),
+  limit: z.coerce.number().int().min(1).max(LIMITS.dealsMax).default(LIMITS.dealsDefault),
 });
 export type DealsQuery = z.infer<typeof dealsQuerySchema>;
 
-export type StoreDto = { slug: StoreSlug; name: string; baseUrl: string };
+export const suggestionsQuerySchema = z.object({ q: searchTermSchema });
+export type SuggestionsQuery = z.infer<typeof suggestionsQuerySchema>;
+
+/** lastCrawledAt: the last ok or partial crawl; lastRunStatus: the last crawl of any outcome. */
+export type StoreDto = {
+  slug: StoreSlug;
+  name: string;
+  baseUrl: string;
+  lastCrawledAt: string | null;
+  lastRunStatus: CrawlStatus | null;
+};
 
 export type ProductDto = {
   id: string;
@@ -91,7 +140,33 @@ export type ProductDto = {
   discountPercent: number;
   currency: "EUR";
   available: boolean;
+  categories: CategorySlug[];
   lastSeenAt: string;
+};
+
+export type FacetCount<T extends string> = { value: T; count: number };
+
+/** Each facet counts with every filter but its own, so picking a store keeps the other stores. */
+export type ProductsPageDto = {
+  items: ProductDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+  facets: { stores: FacetCount<StoreSlug>[]; categories: FacetCount<CategorySlug>[] };
+};
+
+/** inflatedDiscount: null when the price is not a sale, or there is no price from before it. */
+export type PriceInsightDto = {
+  lowest30dCents: number;
+  historySince: string;
+  inflatedDiscount: boolean | null;
+};
+
+export type ProductDetailDto = {
+  product: ProductDto;
+  insight: PriceInsightDto;
+  sameProducts: ProductDto[];
+  similarProducts: ProductDto[];
 };
 
 export type PricePointDto = {
@@ -100,29 +175,13 @@ export type PricePointDto = {
   observedAt: string;
 };
 
-export type ProductDetailDto = {
-  product: ProductDto;
-  history: PricePointDto[];
-  lowest30dCents: number | null;
-  sameProducts: ProductDto[];
-  similarProducts: ProductDto[];
-};
+/** Ascending; the first point may be older than the window: the price valid at its start. */
+export type PriceHistoryDto = { points: PricePointDto[] };
 
-export type ProductsPageDto = {
-  items: ProductDto[];
-  total: number;
-  page: number;
-  pageSize: number;
-  q: string | null;
-  lastScrapedAt: string | null;
-};
+export type DealDto = { product: ProductDto; inflatedDiscount: boolean | null };
+export type DealsDto = { items: DealDto[] };
 
-export type DealDto = {
-  product: ProductDto;
-  kind: "drop" | "sale";
-  previousPriceCents: number | null;
-  dropPercent: number;
-};
+export type SuggestionsDto = { suggestions: string[] };
 
 /** demo: the database was filled by the seed with made-up stores, so the web shows a notice. */
 export type MetaDto = { demo: boolean; seededAt: string | null };
