@@ -41,7 +41,7 @@ describe("LIMITS", () => {
   test("match the limits of the completion design", () => {
     expect(LIMITS).toMatchObject({
       requestIntervalMs: 5000,
-      pagesPerCategory: 10,
+      pagesPerCategory: 30,
       categoryCrawlTimeoutMs: 5 * 60 * 1000,
       refreshCooldownMs: 30 * 60 * 1000,
       refreshesPerIpPerHour: 3,

@@ -35,6 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lowest price in the 30 days before the sale (#82)
 - Rate limit on the whole API: 1,000 requests per IP every 15 minutes, then 429 `rate_limited`
   with `resetAt` and the standard `RateLimit` headers (#82)
+- Harvey Norman adapter: the category listings of phones, laptops, TVs, tablets and headphones
+  are read from plain HTML with cheerio, with prices from Magento's machine-readable price
+  attributes. `npm run scrape:live-check` fetches one listing page by hand (never in tests or CI)
+  and can save it as a test fixture. `docs/data-sources.md` records why the shop's terms and
+  robots.txt allow this, and which fields are stored (#83)
 
 ### Changed
 
@@ -48,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `harveynorman` (#81)
 - The API no longer creates the stores on startup, so it never adds a real shop to the demo
   database. `npm run store:set` creates them and refuses to write to the demo database (#82)
+- A category crawl may read up to 30 pages instead of 10, because Harvey Norman shows 10 products
+  per page and its biggest category has 20 pages (#83)
 
 ### Removed
 
