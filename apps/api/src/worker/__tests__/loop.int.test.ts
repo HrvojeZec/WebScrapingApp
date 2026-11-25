@@ -1,5 +1,6 @@
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { ScheduleState } from "../../db/models/schedule-state";
+import { WorkerStatus } from "../../db/models/worker-status";
 import { ScrapeJob } from "../../db/models/scrape-job";
 import { Store } from "../../db/models/store";
 import { createLogger } from "../../http/logger";
@@ -55,5 +56,39 @@ describe("startWorker", () => {
     const requeued = await ScrapeJob.findById(job!._id).lean();
     expect(requeued?.status).toBe("queued");
     expect(requeued?.perStore[0]?.status).toBe("pending");
+  });
+
+  test("one failed heartbeat during a job does not stop the next ones", async () => {
+    await ScrapeJob.deleteMany({});
+    await enqueueCategoriesJob({ source: "request", categories: ["mobiteli"], now: new Date() });
+    const phones = pageUrl("phones");
+    const { source } = fakeSource({ [phones]: "hang" });
+
+    const realUpdate = WorkerStatus.updateOne.bind(WorkerStatus);
+    let writes = 0;
+    const spy = vi.spyOn(WorkerStatus, "updateOne").mockImplementation(((
+      ...args: Parameters<typeof realUpdate>
+    ) => {
+      writes += 1;
+      // The loop's own heartbeat is write 1; the first heartbeat during the job fails
+      if (writes === 2) return Promise.reject(new Error("network blip")) as never;
+      return realUpdate(...args);
+    }) as typeof WorkerStatus.updateOne);
+
+    const worker = startWorker({
+      sources: { http: source },
+      adapters: { harveynorman: fakeAdapter({ mobiteli: [phones] }) },
+      clock: systemClock,
+      pollMs: 10,
+      heartbeatMs: 20,
+      logger: createLogger("silent"),
+    });
+    try {
+      await waitFor(async () => writes >= 4);
+    } finally {
+      await worker.stop();
+      spy.mockRestore();
+    }
+    expect(writes).toBeGreaterThanOrEqual(4);
   });
 });

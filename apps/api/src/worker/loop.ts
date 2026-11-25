@@ -14,15 +14,19 @@ function isAbort(signal: AbortSignal, error: unknown): boolean {
   return signal.aborted && (error === signal.reason || (error as Error)?.name === "AbortError");
 }
 
-// Keeps the worker "online" while one long job runs
+// Keeps the worker "online" while one long job runs; only the end of the job stops it
 async function heartbeatsDuring(deps: WorkerDeps, signal: AbortSignal): Promise<void> {
-  try {
-    for (;;) {
+  for (;;) {
+    try {
       await deps.clock.sleep(deps.heartbeatMs ?? DEFAULT_HEARTBEAT_MS, signal);
-      await recordHeartbeat(new Date(deps.clock.now()));
+    } catch {
+      return;
     }
-  } catch {
-    // Ends when the job ends
+    try {
+      await recordHeartbeat(new Date(deps.clock.now()));
+    } catch (error) {
+      deps.logger?.warn({ err: error }, "heartbeat failed");
+    }
   }
 }
 
