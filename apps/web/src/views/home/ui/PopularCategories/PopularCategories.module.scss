@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 3);
+}
+
+.label {
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-sm);
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--ss-space-step) * 2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

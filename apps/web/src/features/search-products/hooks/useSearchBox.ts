@@ -36,7 +36,8 @@ export function useSearchBox() {
     }
     setError(null);
     recent.add(parsed.data);
-    navigate(`${ROUTES.search}?${new URLSearchParams({ q: parsed.data })}`);
+    // The URL keeps the letter case, so the results heading shows the term as it was typed
+    navigate(ROUTES.searchWith({ q: term.trim().replace(/\s+/g, " ") }));
   };
 
   const setValue = (next: string) => {

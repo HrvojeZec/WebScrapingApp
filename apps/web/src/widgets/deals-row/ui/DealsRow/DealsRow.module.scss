@@ -1,0 +1,56 @@
+.section {
+  padding-block: calc(var(--ss-space-step) * 10);
+  background-color: var(--ss-color-shelf);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 4);
+  margin-bottom: calc(var(--ss-space-step) * 6);
+}
+
+.heading {
+  font-size: var(--ss-font-size-xxl);
+}
+
+.all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ss-space-step);
+  color: var(--ss-color-ink);
+  font-weight: 600;
+}
+
+.allIcon {
+  width: calc(var(--ss-space-step) * 4);
+  height: calc(var(--ss-space-step) * 4);
+}
+
+.grid {
+  align-items: stretch;
+}
+
+.discount {
+  display: inline-block;
+  border-radius: var(--ss-radius-field);
+  background-color: var(--ss-color-tag);
+  padding: var(--ss-space-step) calc(var(--ss-space-step) * 2);
+  color: var(--ss-color-ink);
+  font-family: var(--font-price);
+  font-size: var(--ss-font-size-lg);
+  font-weight: 700;
+  line-height: 1;
+}
+
+// Roughly a card: 4:3 image, store, title, price and the button
+.skeleton {
+  aspect-ratio: 3 / 4.4;
+  border-radius: var(--ss-radius-card);
+}
+
+.empty {
+  color: var(--ss-color-muted);
+}

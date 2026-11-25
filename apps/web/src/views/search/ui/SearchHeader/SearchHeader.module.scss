@@ -1,0 +1,35 @@
+.root {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 3);
+  padding-top: calc(var(--ss-space-step) * 8);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(var(--ss-space-step) * 4);
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: calc(var(--ss-space-step) * 1) calc(var(--ss-space-step) * 4);
+  min-width: 0;
+}
+
+// A long term wraps instead of running off a phone screen (finding L2)
+.heading {
+  font-size: var(--ss-font-size-xxl);
+  overflow-wrap: anywhere;
+}
+
+.count {
+  color: var(--ss-color-muted);
+}
+
+.sort {
+  flex-shrink: 0;
+}

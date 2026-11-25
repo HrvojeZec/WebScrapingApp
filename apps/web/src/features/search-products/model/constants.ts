@@ -1,6 +1,3 @@
-/** Suggestions come from product names, which change only when the worker crawls */
-export const SUGGESTIONS_STALE_MS = 5 * 60 * 1000;
-
 /** The option value that clears the recent searches instead of searching */
 export const CLEAR_RECENT_OPTION = "storeseeker:clear-recent";
 

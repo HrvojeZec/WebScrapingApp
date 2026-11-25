@@ -1,0 +1,35 @@
+.root {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 8);
+}
+
+.grid {
+  align-items: stretch;
+  transition: opacity var(--mantine-transition-duration, 150ms) ease;
+}
+
+// The previous page stays while sorting or paging, dimmed so the change is visible
+.busy {
+  opacity: 0.55;
+}
+
+// Roughly a card: 4:3 image, store, title, price and the button
+.skeleton {
+  aspect-ratio: 3 / 4.4;
+  border-radius: var(--ss-radius-card);
+}
+
+// Passes the row height on to the card, so cards in a row stay the same height
+.cell {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}

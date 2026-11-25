@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, formatDateTime, formatDiscount, formatPrice } from "../format";
+import {
+  formatCount,
+  formatDate,
+  formatDateTime,
+  formatDiscount,
+  formatPrice,
+  formatTime,
+} from "../format";
 
 // Intl puts a no-break space before € and %, so a price never wraps away from its currency
 const NBSP = " ";
@@ -51,5 +58,19 @@ describe("formatDiscount", () => {
   it("never shows a minus zero", () => {
     expect(formatDiscount(0)).toBe(`0${NBSP}%`);
     expect(formatDiscount(0.4)).toBe(`0${NBSP}%`);
+  });
+});
+
+describe("formatTime", () => {
+  it("gives hours and minutes in Zagreb time", () => {
+    expect(formatTime("2026-11-25T16:40:00Z")).toBe("17:40");
+    expect(formatTime("2026-07-01T06:05:00Z")).toBe("08:05");
+  });
+});
+
+describe("formatCount", () => {
+  it("groups thousands with a dot", () => {
+    expect(formatCount(42)).toBe("42");
+    expect(formatCount(1021)).toBe("1.021");
   });
 });

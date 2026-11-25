@@ -12,6 +12,7 @@ const discountFormat = new Intl.NumberFormat(LOCALE, {
   signDisplay: "exceptZero",
   maximumFractionDigits: 0,
 });
+const countFormat = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 });
 const dateFormat = new Intl.DateTimeFormat(LOCALE, {
   day: "numeric",
   month: "numeric",
@@ -52,4 +53,14 @@ export function formatDateTime(value: string | Date): string {
 /** A discount of `12` percent → `−12 %` */
 export function formatDiscount(percent: number): string {
   return discountFormat.format(-Math.abs(percent) / PERCENT);
+}
+
+/** `2026-11-25T16:40:00Z` → `17:40` */
+export function formatTime(value: string | Date): string {
+  return timeFormat.format(new Date(value));
+}
+
+/** `1021` → `1.021` */
+export function formatCount(count: number): string {
+  return countFormat.format(count);
 }

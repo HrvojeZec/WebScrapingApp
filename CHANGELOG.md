@@ -74,6 +74,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   navigation. One HTTP client and TanStack Query read the API; a dead API shows "Poslužitelj
   trenutno ne odgovara" instead of a 404. ESLint keeps `fetch` in the client, queries in hooks
   and numbers in named constants (#44)
+- Home page and search page on the new API. The home page has the search box, category
+  shortcuts, today's biggest discounts (real sales first) and how it works. The search page reads
+  the whole search from the URL (a broken parameter is dropped, the rest stays), answers from the
+  database with and without diacritics, sorts the whole result from a labelled menu, pages with
+  scroll to top, shows when each store was last crawled and has "Osvježi cijene", which queues a
+  crawl of the result's categories and shows the queue position and status per store. Product
+  cards have equal height, the price in the same place and open the store in a new tab (#26)
 
 ### Changed
 
@@ -108,6 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   limits per IP, user and in total (#81)
 - The scroll animations (AOS), the image slider (react-slick), the product image carousel,
   dayjs and the duplicate `tabler-icons-react` package from the web app (#25)
+- The old home and results pages, their data contexts, the `/rezultati/:keyword` route and
+  `@mantine/form` from the web app (#26)
 
 ### Fixed
 

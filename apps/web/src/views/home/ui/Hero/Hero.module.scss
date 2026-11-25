@@ -1,0 +1,26 @@
+.hero {
+  padding-block: calc(var(--ss-space-step) * 12) calc(var(--ss-space-step) * 10);
+}
+
+.inner {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--ss-space-step) * 4);
+}
+
+.heading {
+  font-size: var(--ss-font-size-xxxl);
+  line-height: 1.15;
+}
+
+.lead {
+  max-width: 40rem;
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-lg);
+}
+
+.search {
+  width: 100%;
+  max-width: 48rem;
+  margin-top: calc(var(--ss-space-step) * 2);
+}
