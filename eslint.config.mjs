@@ -19,16 +19,6 @@ const ENTITY_DEPS = {
 
 const WEB_SRC = "apps/web/src";
 
-/** Pre-FSD code that breaks the slice conventions until Task 6 (#26) replaces it. */
-const LEGACY_WEB_FILES = [
-  `${WEB_SRC}/views/search/**`,
-  `${WEB_SRC}/views/result/**`,
-  `${WEB_SRC}/entities/product/model/**`,
-  `${WEB_SRC}/shared/ui/BrandLogo/**`,
-  `${WEB_SRC}/shared/ui/Loader/**`,
-  `${WEB_SRC}/shared/ui/Notification/**`,
-];
-
 const REACT_QUERY_HOOKS = ["useQuery", "useMutation", "useInfiniteQuery", "useSuspenseQuery"];
 
 /**
@@ -38,7 +28,7 @@ const REACT_QUERY_HOOKS = ["useQuery", "useMutation", "useInfiniteQuery", "useSu
 const sliceConventions = [
   {
     files: [`${WEB_SRC}/**/*.{ts,tsx}`],
-    ignores: [`${WEB_SRC}/shared/api/**`, ...LEGACY_WEB_FILES],
+    ignores: [`${WEB_SRC}/shared/api/**`],
     rules: {
       "no-restricted-globals": [
         "error",
@@ -48,7 +38,6 @@ const sliceConventions = [
   },
   {
     files: [`${WEB_SRC}/**/ui/**/*.{ts,tsx}`, `${WEB_SRC}/views/*/*View.tsx`],
-    ignores: LEGACY_WEB_FILES,
     rules: {
       "no-restricted-syntax": [
         "error",
@@ -66,7 +55,6 @@ const sliceConventions = [
       `${WEB_SRC}/**/constants/**`,
       `${WEB_SRC}/**/model/constants.ts`,
       `${WEB_SRC}/shared/theme/**`,
-      ...LEGACY_WEB_FILES,
     ],
     rules: {
       "@typescript-eslint/no-magic-numbers": [
