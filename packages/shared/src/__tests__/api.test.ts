@@ -44,6 +44,12 @@ describe("productsQuerySchema", () => {
     expect(productsQuerySchema.parse({ discounted: "false" }).discounted).toBe(false);
   });
 
+  test("an empty price field means no limit, not 0 €", () => {
+    const query = productsQuerySchema.parse({ min: "", max: "" });
+    expect(query.min).toBeUndefined();
+    expect(query.max).toBeUndefined();
+  });
+
   test.each([
     { min: "200", max: "100" },
     { min: "-1" },

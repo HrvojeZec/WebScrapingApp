@@ -71,15 +71,19 @@ function slugListSchema<T extends string>(slug: z.ZodType<T, string>) {
     .transform((slugs) => [...new Set(slugs)]);
 }
 
-const priceEurosSchema = z.coerce.number().int().min(0).max(LIMITS.priceFilterMaxEuros);
+// A cleared form field sends "max=", and Number("") is 0: that would hide every product
+const priceEurosSchema = z.preprocess(
+  (value) => (value === "" ? undefined : value),
+  z.coerce.number().int().min(0).max(LIMITS.priceFilterMaxEuros).optional(),
+);
 
 export const productsQuerySchema = z
   .object({
     q: searchTermSchema.optional(),
     category: slugListSchema(categorySlugSchema).optional(),
     store: slugListSchema(storeSlugSchema).optional(),
-    min: priceEurosSchema.optional(),
-    max: priceEurosSchema.optional(),
+    min: priceEurosSchema,
+    max: priceEurosSchema,
     // Only "true" and "false": zod's default would also read "yes", "on" and "1"
     discounted: z.stringbool({ truthy: ["true"], falsy: ["false"] }).default(false),
     sort: z.enum(PRODUCT_SORTS).default("relevance"),
