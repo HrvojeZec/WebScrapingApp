@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "pretypecheck": "npm run build -w @storeseeker/shared",
     "typecheck": "tsc -b",
+    "pretest": "npm run build -w @storeseeker/shared",
     "test": "node ../../scripts/vitest.mjs run"
   },
   "dependencies": {
