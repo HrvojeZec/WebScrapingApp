@@ -13,6 +13,16 @@ export const LAYERS = /** @type {const} */ (["views", "widgets", "features", "en
 const higherLayers = (layer) => ["app", ...LAYERS.slice(0, LAYERS.indexOf(layer))];
 
 /**
+ * Relative imports that climb up to src and into a layer, which the `@/` patterns would miss.
+ *
+ * @param {string[]} layers
+ */
+const relativeIntoLayers = (layers) => ({
+  regex: `^(\\.\\./)+(${layers.join("|")})/`,
+  message: "Import other slices and layers through @/, so the layer rules can check them.",
+});
+
+/**
  * @param {string[]} entities
  * @param {Record<string, string[]>} entityDeps
  */
@@ -47,7 +57,9 @@ export function layerImportRules({ srcDir, slices, entityDeps }) {
     const layerSlices = slices[layer] ?? [];
     for (const slice of layerSlices) {
       const allowed = layer === "entities" ? [slice, ...entityDeps[slice]] : [slice];
+      /** @type {({ group: string[], message: string } | { regex: string, message: string })[]} */
       const patterns = [
+        relativeIntoLayers(["app", ...LAYERS, "shared"]),
         {
           group: higherLayers(layer).map((name) => `@/${name}/*`),
           message: `${layer} may only import from the layers below it.`,
@@ -77,6 +89,7 @@ export function layerImportRules({ srcDir, slices, entityDeps }) {
         "error",
         {
           patterns: [
+            relativeIntoLayers(["app", ...LAYERS]),
             {
               group: ["app", ...LAYERS].map((name) => `@/${name}/*`),
               message: "shared must not depend on the layers above it; move the code up.",

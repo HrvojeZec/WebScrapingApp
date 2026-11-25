@@ -1,4 +1,7 @@
-import { fileURLToPath } from "node:url";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { ESLint, type Linter } from "eslint";
 import tseslint from "typescript-eslint";
 import { describe, expect, it } from "vitest";
@@ -112,6 +115,33 @@ describe("layerImportRules", () => {
     expect(messages).toHaveLength(1);
   });
 
+  it("stops a relative import from climbing into another layer", async () => {
+    const fromView = await lint(
+      eslint,
+      'import x from "../../../widgets/app-shell/ui/Header";\nexport default x;\n',
+      `${srcDir}/views/home/ui/a.ts`,
+    );
+    const fromShared = await lint(
+      eslint,
+      'import x from "../../entities/store/x";\nexport default x;\n',
+      `${srcDir}/shared/ui/a.ts`,
+    );
+
+    expect(fromView).toHaveLength(1);
+    expect(fromView[0]!.message).toContain("through @/");
+    expect(fromShared).toHaveLength(1);
+  });
+
+  it("lets a slice import its own files relatively", async () => {
+    const messages = await lint(
+      eslint,
+      'import x from "../model/x";\nimport y from "./y";\nexport { x, y };\n',
+      `${srcDir}/features/a/ui/a.ts`,
+    );
+
+    expect(messages).toEqual([]);
+  });
+
   it("reports an entity missing from the dependency table", () => {
     expect(() =>
       layerImportRules({
@@ -134,10 +164,24 @@ describe("layerImportRules", () => {
 });
 
 describe("readSlices", () => {
-  it("gives an empty list for a layer folder that does not exist", () => {
-    const slices = readSlices(new URL("../../src/", import.meta.url));
+  it("lists the slice folders of each layer, and none for a missing layer folder", () => {
+    const src = mkdtempSync(join(tmpdir(), "layer-rules-"));
+    try {
+      mkdirSync(join(src, "entities", "product"), { recursive: true });
+      mkdirSync(join(src, "entities", "store"));
+      writeFileSync(join(src, "entities", "notes.md"), "");
+      mkdirSync(join(src, "views", "home"), { recursive: true });
 
-    expect(slices.features).toEqual([]);
-    expect(slices.entities).toContain("product");
+      const slices = readSlices(pathToFileURL(`${src}/`));
+
+      expect(slices).toEqual({
+        views: ["home"],
+        widgets: [],
+        features: [],
+        entities: ["product", "store"],
+      });
+    } finally {
+      rmSync(src, { recursive: true, force: true });
+    }
   });
 });
