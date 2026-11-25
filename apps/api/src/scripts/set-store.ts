@@ -2,6 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import { shopSlugSchema } from "@storeseeker/shared";
 import { env } from "../config";
+import { Meta } from "../db/models/meta";
 import { ensureStores, setStoreEnabled } from "../db/stores";
 
 const USAGE = "Usage: npm run store:set -w @storeseeker/api -- <harveynorman> <on|off>";
@@ -15,9 +16,14 @@ async function main() {
     return;
   }
 
-  await mongoose.connect(env.MONGODB_URI);
+  await mongoose.connect(env.MONGODB_URI, { dbName: env.MONGODB_DB_NAME });
   try {
-    // A fresh database has no stores until the API first starts
+    if (await Meta.exists({ _id: "dataset", demo: true })) {
+      console.error("store:set does not write to the demo database.");
+      process.exitCode = 1;
+      return;
+    }
+    // The API no longer adds the shops, so a fresh database gets them here
     await ensureStores();
     await setStoreEnabled(slug.data, stateArg === "on");
     console.log(`Store "${slug.data}" is now ${stateArg}.`);

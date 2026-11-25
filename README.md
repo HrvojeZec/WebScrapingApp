@@ -42,6 +42,19 @@ npm run dev:web   # web app on http://localhost:5173
 The API needs a MongoDB connection: copy `apps/api/.env.example` to `apps/api/.env` and set
 `MONGODB_URI`. `GET http://localhost:5000/api/health` then reports `{"status":"ok","db":"up"}`.
 
+### Demo data
+
+To try the app without scraping a real shop, fill the separate `storeseeker-demo` database with
+made-up stores and 60 days of price history, then point the API at it:
+
+```bash
+npm run seed -w @storeseeker/api            # writes only to storeseeker-demo
+MONGODB_DB_NAME=storeseeker-demo npm run dev:api
+```
+
+You can also set `MONGODB_DB_NAME` in `apps/api/.env`. `GET http://localhost:5000/api/meta` then
+reports `{"demo":true,...}`. Running the seed again replaces the demo data.
+
 ## License
 
 [MIT](LICENSE)
