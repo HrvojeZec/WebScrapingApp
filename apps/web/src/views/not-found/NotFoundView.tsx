@@ -12,6 +12,7 @@ export function NotFoundView() {
     <Container>
       <EmptyState
         title={NOT_FOUND_TEXT.title}
+        titleOrder={1}
         action={
           <Button component={Link} to={ROUTES.home}>
             {NOT_FOUND_TEXT.homeLink}

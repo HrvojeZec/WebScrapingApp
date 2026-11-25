@@ -12,7 +12,7 @@ export function RouteError() {
 
   return (
     <Container>
-      <ErrorState error={error} onRetry={() => window.location.reload()} />
+      <ErrorState error={error} onRetry={() => window.location.reload()} titleOrder={1} />
     </Container>
   );
 }

@@ -25,7 +25,7 @@ const DataProviderInner = (props: PropsWithChildren<Props>) => {
   if (productsError || keywordsError) {
     return (
       <Container>
-        <ErrorState error={LEGACY_FETCH_ERROR} />
+        <ErrorState error={LEGACY_FETCH_ERROR} titleOrder={1} />
       </Container>
     );
   }
