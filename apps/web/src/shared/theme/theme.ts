@@ -6,11 +6,19 @@ import {
   type MantineColorsTuple,
 } from "@mantine/core";
 import { BASE_SHADE, colorScale } from "@/shared/lib/color-scale";
+import { cssEasing, secondsToMs } from "@/shared/lib/motion";
+import { MOTION } from "./motion";
 import { COLORS, FONT_SIZES, FONTS, RADII, SPACING_STEP } from "./tokens";
 import classes from "./theme.module.scss";
 
 const scale = (hex: string) => colorScale(hex) as unknown as MantineColorsTuple;
 const space = (steps: number) => rem(SPACING_STEP * steps);
+
+const transitionProps = {
+  duration: secondsToMs(MOTION.duration.base),
+  timingFunction: cssEasing(MOTION.ease),
+};
+const quickTransitionProps = { ...transitionProps, duration: secondsToMs(MOTION.duration.fast) };
 
 export const theme = createTheme({
   colors: {
@@ -20,6 +28,8 @@ export const theme = createTheme({
     rise: scale(COLORS.rise),
     brand: scale(COLORS.brand),
   },
+  // Mantine's own transitions stop when the OS asks for reduced motion, as motion's do
+  respectReducedMotion: true,
   primaryColor: "ink",
   primaryShade: BASE_SHADE,
   black: COLORS.ink,
@@ -53,6 +63,14 @@ export const theme = createTheme({
       defaultProps: { radius: "md", withBorder: true, shadow: "none" },
       classNames: { root: classes.card },
     }),
+    // Plain objects instead of `Modal.extend(...)`: importing a component here would bundle it
+    // on every page, even where it is never shown
+    Modal: { defaultProps: { transitionProps } },
+    Drawer: { defaultProps: { transitionProps } },
+    Menu: { defaultProps: { transitionProps: quickTransitionProps } },
+    Popover: { defaultProps: { transitionProps: quickTransitionProps } },
+    Tooltip: { defaultProps: { transitionProps: quickTransitionProps } },
+    Notifications: { defaultProps: { transitionDuration: secondsToMs(MOTION.duration.base) } },
   },
 });
 

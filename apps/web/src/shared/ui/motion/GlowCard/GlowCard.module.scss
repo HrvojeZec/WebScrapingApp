@@ -1,0 +1,22 @@
+// SpotlightCard brings its own padding, radius, surface and shadow; the card follows the design
+// system instead: paper, a 1 px `line` border and no shadow. Two classes beat its one.
+.card:global(.spotlight-card) {
+  padding: 0;
+  border-radius: var(--ss-radius-card);
+  background-color: var(--ss-color-paper);
+  box-shadow: none;
+}
+
+.card :global(.spotlight-card__border) {
+  background: var(--ss-color-line);
+}
+
+// Keeps the box rules of .spotlight-card, so content such as an edge-to-edge image is clipped to
+// the same rounded corners with reduced motion
+.still {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ss-color-line);
+  border-radius: var(--ss-radius-card);
+  background-color: var(--ss-color-paper);
+}

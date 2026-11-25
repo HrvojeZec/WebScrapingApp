@@ -63,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Croatian price and date formats in Zagreb time, a price tag styled as a shelf label, a store
   badge and a product image with a placeholder. A test keeps every text color pair above WCAG AA,
   and `docs/design-system.md` describes the system. The page language is Croatian (#42)
+- Motion system for the web app with `motion`: duration and easing tokens shared with Mantine's
+  dialogs, menus and notifications, a fade between pages, and React Bits effects (BlurText,
+  ShinyText, SpotlightCard, CountUp) behind the app's own components. Every animation stops when
+  the system asks for reduced motion. React Bits licenses are in `THIRD_PARTY_NOTICES.md` (#43)
 
 ### Changed
 
