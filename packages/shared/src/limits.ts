@@ -2,8 +2,9 @@ const MINUTE_MS = 60_000;
 
 export const LIMITS = {
   requestIntervalMs: 5_000,
-  // A crawl counts as complete only when it reaches the last page, so this must cover a category
-  pagesPerCategory: 10,
+  // A crawl counts as complete only when it reaches the last page, so this must cover a category.
+  // Harvey Norman shows 10 products per page; its biggest category had 20 pages on 25.11.2026
+  pagesPerCategory: 30,
   categoryCrawlTimeoutMs: 5 * MINUTE_MS,
   refreshCooldownMs: 30 * MINUTE_MS,
   refreshesPerIpPerHour: 3,
