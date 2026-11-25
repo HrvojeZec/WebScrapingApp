@@ -5,6 +5,7 @@ import { Product } from "../../db/models/product";
 import { ScrapeJob } from "../../db/models/scrape-job";
 import { Store } from "../../db/models/store";
 import { systemClock } from "../../scraping/http/clock";
+import type { PageSource } from "../../scraping/page-source";
 import { clearDatabase, connectMemoryMongoDB, disconnectMemoryMongoDB } from "../../test/mongo";
 import { claimNextJob, enqueueCategoriesJob } from "../queue";
 import { runCategoriesJob } from "../run-categories-job";
@@ -136,5 +137,37 @@ describe("runCategoriesJob", () => {
     const saved = await ScrapeJob.findById(job._id).lean();
     expect(saved?.perStore[0]).toMatchObject({ status: "error", error: "store disabled" });
     expect(calls).toEqual([]);
+  });
+
+  test("a stop that comes between two categories ends the job before the next one", async () => {
+    await enqueueCategoriesJob({
+      source: "request",
+      categories: ["mobiteli", "laptopi"],
+      now: new Date(),
+    });
+    const job = (await claimNextJob(new Date()))!;
+    const controller = new AbortController();
+    const calls: string[] = [];
+    // The stop arrives while the first category's page is already on its way back
+    const source: PageSource = {
+      get(url) {
+        calls.push(url);
+        controller.abort(new Error("worker stopped"));
+        return Promise.resolve({
+          kind: "ok",
+          status: 200,
+          url,
+          html: JSON.stringify({ items: [product("1")], next: null }),
+        });
+      },
+    };
+    await expect(
+      runCategoriesJob(
+        job,
+        { sources: { http: source }, adapters: { harveynorman: adapter }, clock: systemClock },
+        controller.signal,
+      ),
+    ).rejects.toThrow("worker stopped");
+    expect(calls).toEqual([PHONES]);
   });
 });

@@ -39,6 +39,9 @@ async function crawlWithTimeout(
   category: CategorySlug,
   signal: AbortSignal,
 ): Promise<CategoryCrawl> {
+  // The abort event fires only once: a stop that came during the previous category's save is
+  // seen only here
+  signal.throwIfAborted();
   const controller = new AbortController();
   const stopWithJob = () => controller.abort(signal.reason);
   signal.addEventListener("abort", stopWithJob, { once: true });
