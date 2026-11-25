@@ -61,10 +61,16 @@
   text-decoration: underline;
 }
 
+// Room for the old price line on every card, so the price itself sits at the same height in a
+// row whether the product is on sale or not
 .price {
   display: grid;
+  align-content: start;
   gap: var(--ss-space-step);
   margin-top: auto;
+  min-height: calc(
+    var(--ss-font-size-xl) + var(--ss-space-step) * 2.5 + var(--ss-font-size-sm) * 1.55
+  );
 }
 
 .unavailable {
