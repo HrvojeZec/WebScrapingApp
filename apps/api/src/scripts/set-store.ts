@@ -1,14 +1,14 @@
 import "dotenv/config";
 import mongoose from "mongoose";
-import { storeSlugSchema } from "@storeseeker/shared";
+import { shopSlugSchema } from "@storeseeker/shared";
 import { env } from "../config";
 import { ensureStores, setStoreEnabled } from "../db/stores";
 
-const USAGE = "Usage: npm run store:set -w @storeseeker/api -- <mall|bigbang> <on|off>";
+const USAGE = "Usage: npm run store:set -w @storeseeker/api -- <harveynorman> <on|off>";
 
 async function main() {
   const [slugArg, stateArg] = process.argv.slice(2);
-  const slug = storeSlugSchema.safeParse(slugArg);
+  const slug = shopSlugSchema.safeParse(slugArg);
   if (!slug.success || (stateArg !== "on" && stateArg !== "off")) {
     console.error(USAGE);
     process.exitCode = 1;

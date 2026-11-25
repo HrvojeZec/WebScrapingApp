@@ -164,7 +164,7 @@ export function createPoliteFetch({
       if (new URL(result.url).origin !== origin) {
         return { kind: "error", status, message: "redirected off-site" };
       }
-      // Mall sends searches on to category pages, which robots.txt must allow as well
+      // A store can redirect one listing to another page, which robots.txt must allow as well
       if (result.url !== url && !rules.isAllowed(result.url)) {
         return { kind: "blocked", status: 0, reason: "robots" };
       }

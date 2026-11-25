@@ -5,8 +5,6 @@ const storeSchema = new Schema({
   slug: { type: String, enum: STORE_SLUGS, required: true, unique: true },
   name: { type: String, required: true },
   baseUrl: { type: String, required: true },
-  // A static file in the web app, so no SVG markup is stored or injected into the page
-  logoPath: { type: String, required: true },
   enabled: { type: Boolean, required: true, default: true },
 });
 

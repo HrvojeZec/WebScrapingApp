@@ -3,8 +3,8 @@ import { createPoliteFetch } from "../polite-fetch";
 import { botUserAgent } from "../user-agent";
 import { createFakeClock, createFakeFetch, html, redirectedTo, status, withRobots } from "./fakes";
 
-const SEARCH = "https://www.mall.hr/trazenje?s=iphone";
-const CATEGORY = "https://www.mall.hr/mobilni-telefoni?s=iphone";
+const SEARCH = "https://www.shop.example/trazenje?s=iphone";
+const CATEGORY = "https://www.shop.example/mobilni-telefoni?s=iphone";
 const HOUR = 3_600_000;
 
 type Handler = (url: string) => Response | Promise<Response>;
@@ -24,7 +24,7 @@ describe("robots.txt", () => {
   test("a same-origin redirect to a disallowed path is blocked", async () => {
     const { get } = setup(
       () => html("User-agent: *\nDisallow: /private\n"),
-      () => redirectedTo("https://www.mall.hr/private/x", html("secret")),
+      () => redirectedTo("https://www.shop.example/private/x", html("secret")),
     );
 
     expect(await get(SEARCH)).toEqual({ kind: "blocked", status: 0, reason: "robots" });

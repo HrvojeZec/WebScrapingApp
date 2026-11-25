@@ -49,25 +49,25 @@ describe("error handling", () => {
 
   test("an AppError keeps its status and code", async () => {
     const testApp = appWith((a) =>
-      a.get("/busy", () => {
-        throw new AppError(409, "job_in_progress", "x");
+      a.get("/no-shops", () => {
+        throw new AppError(503, "no_shops", "x");
       }),
     );
-    const res = await request(testApp).get("/busy");
-    expect(res.status).toBe(409);
-    expect(res.body).toEqual({ error: { code: "job_in_progress", message: "x" } });
+    const res = await request(testApp).get("/no-shops");
+    expect(res.status).toBe(503);
+    expect(res.body).toEqual({ error: { code: "no_shops", message: "x" } });
   });
 
   test("an AppError carries resetAt for limit errors", async () => {
     const resetAt = "2026-11-24T23:00:00.000Z";
     const testApp = appWith((a) =>
       a.get("/limit", () => {
-        throw new AppError(429, "daily_limit", "Limit.", { resetAt });
+        throw new AppError(429, "rate_limited", "Limit.", { resetAt });
       }),
     );
     const res = await request(testApp).get("/limit");
     expect(res.status).toBe(429);
-    expect(res.body).toEqual({ error: { code: "daily_limit", message: "Limit.", resetAt } });
+    expect(res.body).toEqual({ error: { code: "rate_limited", message: "Limit.", resetAt } });
   });
 });
 
@@ -121,7 +121,7 @@ describe("request guards", () => {
   test("a JSON body over 10 kB returns 413", async () => {
     const res = await request(app)
       .post("/api/unknown")
-      .send({ keyword: "x".repeat(11 * 1024) });
+      .send({ text: "x".repeat(11 * 1024) });
     expect(res.status).toBe(413);
     expect(res.body.error.code).toBe("payload_too_large");
   });
