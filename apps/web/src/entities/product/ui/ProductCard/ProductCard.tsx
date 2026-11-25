@@ -61,6 +61,7 @@ export function ProductCard({ product, headingOrder = 3, badge }: Props) {
           fullWidth
           rightSection={<IconExternalLink aria-hidden className={classes.icon} />}
           className={classes.toStore}
+          classNames={{ label: classes.toStoreLabel }}
         >
           {PRODUCT_CARD_TEXT.toStore}
           <VisuallyHidden>{PRODUCT_CARD_TEXT.newTab}</VisuallyHidden>

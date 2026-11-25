@@ -76,6 +76,17 @@
 .toStore {
   position: relative;
   z-index: 2;
+  height: auto;
+  min-height: calc(var(--ss-space-step) * 9);
+  padding-block: calc(var(--ss-space-step) * 1.5);
+}
+
+// Two cards in a row on a phone leave no room for the label on one line: it wraps, never cuts
+// (finding L3)
+.toStoreLabel {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
 }
 
 .icon {
