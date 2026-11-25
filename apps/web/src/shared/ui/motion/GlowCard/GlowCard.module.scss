@@ -11,7 +11,11 @@
   background: var(--ss-color-line);
 }
 
+// Keeps the box rules of .spotlight-card, so content such as an edge-to-edge image is clipped to
+// the same rounded corners with reduced motion
 .still {
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--ss-color-line);
   border-radius: var(--ss-radius-card);
   background-color: var(--ss-color-paper);
