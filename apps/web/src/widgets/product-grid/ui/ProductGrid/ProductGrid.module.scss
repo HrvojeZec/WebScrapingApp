@@ -19,6 +19,16 @@
   border-radius: var(--ss-radius-card);
 }
 
+// Passes the row height on to the card, so cards in a row stay the same height
+.cell {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    flex: 1;
+  }
+}
+
 .pagination {
   display: flex;
   justify-content: center;

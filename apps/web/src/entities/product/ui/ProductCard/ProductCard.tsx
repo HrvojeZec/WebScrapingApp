@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Link } from "react-router";
 import type { ProductDto } from "@storeseeker/shared";
 import { productImageLayoutId } from "@/shared/lib/motion";
+import { MOTION } from "@/shared/theme/motion";
 import { GlowCard } from "@/shared/ui/motion/GlowCard/GlowCard";
 import { PriceTag } from "@/shared/ui/PriceTag/PriceTag";
 import { ProductImage } from "@/shared/ui/ProductImage/ProductImage";
@@ -28,7 +29,11 @@ export function ProductCard({ product, headingOrder = 3, badge }: Props) {
 
   return (
     <GlowCard className={classes.card}>
-      <motion.div layoutId={productImageLayoutId(product.id)} className={classes.media}>
+      <motion.div
+        layoutId={productImageLayoutId(product.id)}
+        transition={{ duration: MOTION.duration.slow, ease: MOTION.ease }}
+        className={classes.media}
+      >
         {/* The name is right below, so the photo adds nothing for a screen reader */}
         <ProductImage src={product.imageUrl} alt="" />
       </motion.div>

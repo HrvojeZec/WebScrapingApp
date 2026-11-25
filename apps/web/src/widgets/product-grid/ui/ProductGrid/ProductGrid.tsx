@@ -1,7 +1,9 @@
 import { Pagination, SimpleGrid, Skeleton } from "@mantine/core";
+import { motion } from "motion/react";
 import type { ProductDto } from "@storeseeker/shared";
 import { ProductCard } from "@/entities/product/ui/ProductCard/ProductCard";
 import { UI } from "@/shared/constants/ui";
+import { MOTION } from "@/shared/theme/motion";
 import { pageCount } from "../../lib/page-count";
 import { GRID_TEXT, SKELETON_CARDS } from "../../model/constants";
 import classes from "./ProductGrid.module.scss";
@@ -34,7 +36,16 @@ export function ProductGrid({ items, total, page, pageSize, onPageChange, loadin
               <Skeleton key={index} className={classes.skeleton} />
             ))
           : items.map((product) => (
-              <ProductCard key={product.id} product={product} headingOrder={2} />
+              // The whole card moves to its new place on a new sort, so the image (layoutId)
+              // never flies on its own; MotionConfig turns this off with reduced motion
+              <motion.div
+                key={product.id}
+                layout="position"
+                transition={{ duration: MOTION.duration.slow, ease: MOTION.ease }}
+                className={classes.cell}
+              >
+                <ProductCard product={product} headingOrder={2} />
+              </motion.div>
             ))}
       </SimpleGrid>
       {!loading && pages > 1 && (
