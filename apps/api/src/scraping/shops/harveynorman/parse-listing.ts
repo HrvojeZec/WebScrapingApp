@@ -4,6 +4,7 @@ import type { ParsedProduct } from "../../types";
 import type { ListingPage } from "../types";
 
 const PRODUCT_ID = /^product-item-info_(\d+)$/;
+const LISTING_CARD = ".products.wrapper .product-item";
 
 function absolute(href: string | undefined, pageUrl: string): string | null {
   if (!href) return null;
@@ -28,16 +29,21 @@ function priceOf(wrapper: PriceWrapper): number | null {
 export function parseListing(html: string, pageUrl: string): ListingPage {
   const $ = cheerio.load(html);
   const items: ParsedProduct[] = [];
+  const seen = new Set<string>();
 
-  $(".product-item").each((_, element) => {
+  // Only the listing itself: Magento can show other product cards (recently viewed, compare)
+  $(LISTING_CARD).each((_, element) => {
     const card = $(element);
-    const externalId = PRODUCT_ID.exec(card.find(".product-item-info").attr("id") ?? "")?.[1];
+    const externalId = PRODUCT_ID.exec(
+      card.find(".product-item-info").first().attr("id") ?? "",
+    )?.[1];
     const link = card.find("a.product-item-link").first();
     const title = link.text().replace(/\s+/g, " ").trim();
     const url = absolute(link.attr("href"), pageUrl);
     const priceCents = priceOf(card.find('[data-price-type="finalPrice"]').first());
     // A card the layout changed under is skipped, so one odd card does not lose the whole page
-    if (!externalId || !title || !url || priceCents === null) return;
+    if (!externalId || !title || !url || priceCents === null || seen.has(externalId)) return;
+    seen.add(externalId);
 
     const oldPriceCents = priceOf(card.find('[data-price-type="oldPrice"]').first());
     items.push({

@@ -68,6 +68,29 @@ describe("Harvey Norman parseListing", () => {
     expect(items.map((item) => item.externalId)).not.toContain("1489997");
   });
 
+  test("ignores product cards outside the listing, such as a sidebar widget", () => {
+    const $ = cheerio.load(fixture("mobiteli-p1"));
+    $("body").append(
+      `<div class="sidebar"><ol><li class="item product product-item">
+        <div class="product-item-info" id="product-item-info_999">
+          <a class="product-item-link" href="/recently-viewed">Recently viewed</a>
+          <span data-price-type="finalPrice" data-price-amount="9.99"></span>
+        </div></li></ol></div>`,
+    );
+    const { items } = parseListing($.html(), PAGE_URL);
+    expect(items).toHaveLength(10);
+    expect(items.map((item) => item.externalId)).not.toContain("999");
+  });
+
+  test("a card listed twice on a page is read once", () => {
+    const $ = cheerio.load(fixture("mobiteli-p1"));
+    const list = $(".products.wrapper .product-items");
+    list.append(list.children(".product-item").first().clone());
+    const { items } = parseListing($.html(), PAGE_URL);
+    expect(items).toHaveLength(10);
+    expect(new Set(items.map((item) => item.externalId)).size).toBe(10);
+  });
+
   test("an empty page has no items and no next page", () => {
     expect(parseListing("", PAGE_URL)).toEqual({ items: [], nextPageUrl: null });
   });
