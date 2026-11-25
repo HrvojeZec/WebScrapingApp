@@ -13,6 +13,8 @@ import { layerImportRules, readSlices } from "./apps/web/scripts/layer-rules.mjs
 const ENTITY_DEPS = {
   meta: [],
   product: [],
+  "scrape-job": ["store"],
+  store: [],
 };
 
 const WEB_SRC = "apps/web/src";

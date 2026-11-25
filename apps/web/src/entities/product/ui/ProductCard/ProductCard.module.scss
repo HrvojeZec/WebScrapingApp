@@ -1,0 +1,84 @@
+// A column whose price block starts at the same height in every card of a row (finding L4)
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  // The title link covers the whole card; the focus ring goes around the card instead
+  &:has(.link:focus-visible) {
+    outline: 2px solid var(--ss-color-ink);
+    outline-offset: 2px;
+  }
+}
+
+.media {
+  padding: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 2) 0;
+}
+
+.badge {
+  position: absolute;
+  top: calc(var(--ss-space-step) * 4);
+  left: calc(var(--ss-space-step) * 4);
+  pointer-events: none;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(var(--ss-space-step) * 2);
+  padding: calc(var(--ss-space-step) * 3);
+}
+
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin: 0;
+  font-size: var(--ss-font-size-md);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+
+  // Stretched over the card, so a click anywhere opens the product page
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+}
+
+.card:hover .link {
+  text-decoration: underline;
+}
+
+.price {
+  display: grid;
+  gap: var(--ss-space-step);
+  margin-top: auto;
+}
+
+.unavailable {
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-sm);
+}
+
+// Above the stretched link, so it opens the store and not the product page
+.toStore {
+  position: relative;
+  z-index: 2;
+}
+
+.icon {
+  width: calc(var(--ss-space-step) * 4);
+  height: calc(var(--ss-space-step) * 4);
+}
