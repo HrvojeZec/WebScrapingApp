@@ -18,7 +18,9 @@
     "prestore:set": "npm run build -w @storeseeker/shared",
     "store:set": "tsx src/scripts/set-store.ts",
     "preseed": "npm run build -w @storeseeker/shared",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "prescrape:live-check": "npm run build -w @storeseeker/shared",
+    "scrape:live-check": "tsx src/scripts/live-check.ts"
   },
   "keywords": [],
   "author": "",
