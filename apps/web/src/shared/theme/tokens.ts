@@ -26,6 +26,15 @@ export const COLORS = {
 
 export type ColorName = keyof typeof COLORS;
 
+/**
+ * How far each of Mantine's ten shades moves from the token toward white (shades 0 to 5) or
+ * black (shades 7 to 9); the token itself is shade 6.
+ */
+export const SHADE_MIX = {
+  tints: [0.92, 0.82, 0.68, 0.52, 0.36, 0.18],
+  shades: [0.16, 0.32, 0.48],
+} as const;
+
 /** Foreground and background pairs used for text; each must pass WCAG AA (4.5:1). */
 export const TEXT_PAIRS: readonly (readonly [ColorName, ColorName])[] = [
   ["ink", "paper"],
@@ -48,6 +57,12 @@ export const RADII = { field: 6, card: 10 } as const;
 
 /** Every spacing is a multiple of this, in px. */
 export const SPACING_STEP = 4;
+
+/** Page layout in px. */
+export const LAYOUT = {
+  /** Widest the content gets; the default size of Mantine `Container` */
+  contentMaxWidth: 1200,
+} as const;
 
 export const FONTS = {
   ui: '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif',

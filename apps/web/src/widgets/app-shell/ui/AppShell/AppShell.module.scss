@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--ss-color-paper);
+  color: var(--ss-color-ink);
+}
+
+.main {
+  flex: 1;
+  outline: none;
+}
+
+// Off screen until a keyboard user tabs to it
+.skipLink {
+  position: absolute;
+  top: calc(var(--ss-space-step) * 2);
+  left: calc(var(--ss-space-step) * 2);
+  padding: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 3);
+  border-radius: var(--ss-radius-field);
+  background-color: var(--ss-color-paper);
+  color: var(--ss-color-ink);
+  font-weight: 600;
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}

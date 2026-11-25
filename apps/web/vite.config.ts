@@ -14,6 +14,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+      // Mantine sits in apps/web/node_modules and React in the root; without this the dep
+      // optimizer bundles React twice and hooks from @mantine/hooks fail with "Invalid hook call"
+      dedupe: ["react", "react-dom"],
     },
     server: { proxy },
     preview: { proxy },

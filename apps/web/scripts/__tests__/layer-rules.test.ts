@@ -55,6 +55,71 @@ describe("the root ESLint config", () => {
   });
 });
 
+describe("the slice conventions in the root ESLint config", () => {
+  const eslint = new ESLint({ cwd: repoRoot });
+
+  /** The rule ids ESLint reports for `code` at `filePath`, without the layer and React rules. */
+  async function conventionRules(code: string, filePath: string) {
+    const messages = await lint(eslint, code, filePath);
+    return messages
+      .map(({ ruleId }) => ruleId)
+      .filter((ruleId) =>
+        [
+          "no-restricted-globals",
+          "no-restricted-syntax",
+          "@typescript-eslint/no-magic-numbers",
+        ].includes(ruleId ?? ""),
+      );
+  }
+
+  const callFetch = 'export const load = () => fetch("/api/meta");\n';
+  const callUseQuery =
+    'import { useQuery } from "@tanstack/react-query";\nexport const useX = () => useQuery({ queryKey: ["x"] });\n';
+  const magicNumber = "export const scale = (y: number) => 42 * y;\n";
+
+  it("allows fetch only in shared/api", async () => {
+    expect(await conventionRules(callFetch, `${srcDir}/features/a/ui/A/A.tsx`)).toEqual([
+      "no-restricted-globals",
+    ]);
+    expect(await conventionRules(callFetch, `${srcDir}/shared/api/base-api.ts`)).toEqual([]);
+  });
+
+  it("keeps react-query hooks out of components and views", async () => {
+    expect(await conventionRules(callUseQuery, `${srcDir}/entities/x/ui/X/X.tsx`)).toEqual([
+      "no-restricted-syntax",
+    ]);
+    expect(await conventionRules(callUseQuery, `${srcDir}/views/home/HomeView.tsx`)).toEqual([
+      "no-restricted-syntax",
+    ]);
+    expect(await conventionRules(callUseQuery, `${srcDir}/entities/x/hooks/useX.ts`)).toEqual([]);
+  });
+
+  it("keeps the layer rules on component files", async () => {
+    const messages = await lint(
+      eslint,
+      'import x from "@/views/home/HomeView";\nexport default x;\n',
+      `${srcDir}/entities/product/ui/P/P.tsx`,
+    );
+
+    expect(messages.map(({ ruleId }) => ruleId)).toContain("no-restricted-imports");
+  });
+
+  it("wants named constants instead of magic numbers in lib, hooks and api", async () => {
+    expect(await conventionRules(magicNumber, `${srcDir}/entities/x/lib/a.ts`)).toEqual([
+      "@typescript-eslint/no-magic-numbers",
+    ]);
+    expect(await conventionRules(magicNumber, `${srcDir}/shared/api/a.ts`)).toEqual([
+      "@typescript-eslint/no-magic-numbers",
+    ]);
+    expect(await conventionRules(magicNumber, `${srcDir}/entities/x/model/constants.ts`)).toEqual(
+      [],
+    );
+    expect(
+      await conventionRules(magicNumber, `${srcDir}/entities/x/lib/__tests__/a.test.ts`),
+    ).toEqual([]);
+  });
+});
+
 describe("layerImportRules", () => {
   const eslint = eslintWith({
     srcDir,

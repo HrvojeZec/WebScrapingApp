@@ -1,0 +1,62 @@
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--ss-space-step) * 2);
+  width: 100%;
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero .field label {
+  margin-bottom: var(--ss-space-step);
+  font-weight: 600;
+}
+
+// On the ink header the error under the field needs light text to stay readable
+.header :global(.mantine-InputWrapper-error) {
+  color: var(--ss-color-tag);
+}
+
+.submit {
+  flex-shrink: 0;
+}
+
+// The header button sits on ink, so it is the light variant of the primary button
+.header .submit {
+  background-color: var(--ss-color-paper);
+  color: var(--ss-color-ink);
+}
+
+// The hero shows its label, so the button lines up with the field at the bottom
+.hero {
+  align-items: flex-end;
+}
+
+.icon {
+  width: calc(var(--ss-space-step) * 5);
+  height: calc(var(--ss-space-step) * 5);
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 2);
+  color: var(--ss-color-muted);
+}
+
+.clearIcon {
+  width: calc(var(--ss-space-step) * 4);
+  height: calc(var(--ss-space-step) * 4);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

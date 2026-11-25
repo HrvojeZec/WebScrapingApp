@@ -1,10 +1,15 @@
 import React, { PropsWithChildren } from "react";
 import { LoaderGlobal } from "@/shared/ui/Loader/Loader";
-import { NotFoundTitle } from "@/shared/ui/Error/NotFoundTitle";
+import { Container } from "@mantine/core";
+import { ApiError } from "@/shared/api/base-api";
+import { ErrorState } from "@/shared/ui/ErrorState/ErrorState";
 import { GetRandomProductsProvider } from "./GetRandomProducts";
 import { GetAllKeywordsProvider } from "./GetAllKeywords";
 import { useProductsData } from "./products-context";
 import { useKeywordsData } from "./keywords-context";
+
+// The old fetches fail only when the response is no JSON or there is none: the API is down
+const LEGACY_FETCH_ERROR = new ApiError("unavailable", "Legacy fetch failed", null);
 
 interface Props {
   children: React.ReactNode;
@@ -18,7 +23,11 @@ const DataProviderInner = (props: PropsWithChildren<Props>) => {
     return <LoaderGlobal />;
   }
   if (productsError || keywordsError) {
-    return <NotFoundTitle />;
+    return (
+      <Container>
+        <ErrorState error={LEGACY_FETCH_ERROR} titleOrder={1} />
+      </Container>
+    );
   }
   return props.children;
 };

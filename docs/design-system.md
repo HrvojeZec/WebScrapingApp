@@ -79,6 +79,8 @@ shades with the token itself at shade 6.
 - Cards have a 1 px `line` border and no shadow. Shadows are for menus and dialogs only.
 - Every spacing is a multiple of 4 px (`SPACING_STEP`). Mantine spacing: `xs` 8, `sm` 12, `md` 16,
   `lg` 24, `xl` 32.
+- Content is at most 1200 px wide (`LAYOUT.contentMaxWidth`, the default size of Mantine `Container`),
+  centred on the page, with everything inside it left aligned.
 
 ## Components
 
@@ -91,6 +93,9 @@ shades with the token itself at shade 6.
 - **`ProductImage`** (`shared/ui/ProductImage`): the store's photo in a 4:3 frame, so cards in a row
   have the same height. It loads lazily and shows a placeholder when the product has no image or
   the image fails to load. Images are linked from the store, never copied.
+- **`ErrorState`** and **`EmptyState`** (`shared/ui`): a failed request says what happened and what
+  to do (`apiErrorMessage`; a dead API reads "Poslužitelj trenutno ne odgovara..."), with an
+  optional "Pokušaj ponovo". An empty result leads on with a title, a sentence and an action.
 
 ## Motion
 

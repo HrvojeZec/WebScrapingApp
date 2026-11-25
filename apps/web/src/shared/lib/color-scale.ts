@@ -1,15 +1,15 @@
-import { hexToRgb } from "./contrast";
+import { SHADE_MIX } from "@/shared/theme/tokens";
+import { CHANNEL_MAX, hexToRgb } from "./contrast";
 
 /** Mantine's default primary shade in the light scheme; the token sits there unchanged. */
 export const BASE_SHADE = 6;
 
-// How far each shade moves toward white (before the base) or black (after it)
-const TINTS = [0.92, 0.82, 0.68, 0.52, 0.36, 0.18];
-const SHADES = [0.16, 0.32, 0.48];
+const HEX_RADIX = 16;
+const HEX_DIGITS_PER_CHANNEL = 2;
 
 const toHex = (channels: number[]) =>
   `#${channels
-    .map((channel) => Math.round(channel).toString(16).padStart(2, "0"))
+    .map((channel) => Math.round(channel).toString(HEX_RADIX).padStart(HEX_DIGITS_PER_CHANNEL, "0"))
     .join("")
     .toUpperCase()}`;
 
@@ -19,8 +19,8 @@ export function colorScale(hex: string): string[] {
   const mix = (target: number, amount: number) =>
     toHex(rgb.map((channel) => channel + (target - channel) * amount));
   return [
-    ...TINTS.map((amount) => mix(255, amount)),
+    ...SHADE_MIX.tints.map((amount) => mix(CHANNEL_MAX, amount)),
     toHex(rgb),
-    ...SHADES.map((amount) => mix(0, amount)),
+    ...SHADE_MIX.shades.map((amount) => mix(0, amount)),
   ];
 }
