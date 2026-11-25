@@ -55,6 +55,11 @@ MONGODB_DB_NAME=storeseeker-demo npm run dev:api
 You can also set `MONGODB_DB_NAME` in `apps/api/.env`. `GET http://localhost:5000/api/meta` then
 reports `{"demo":true,...}`. Running the seed again replaces the demo data.
 
+## Data sources
+
+Which shops are read, why their terms and robots.txt allow it, and which fields are stored:
+[docs/data-sources.md](docs/data-sources.md).
+
 ## License
 
 [MIT](LICENSE)
