@@ -7,6 +7,11 @@ const envSchema = z.object({
   MONGODB_URI: z
     .string({ error: "is required" })
     .regex(/^mongodb(\+srv)?:\/\//, "must start with mongodb:// or mongodb+srv://"),
+  // Overrides the database in the URI, e.g. storeseeker-demo for the seeded demo data
+  MONGODB_DB_NAME: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{1,38}$/, "must be 1-38 letters, digits, _ or -")
+    .optional(),
   // cors() compares the origin as an exact string, so "http://localhost:5173/" would block every request
   CLIENT_URL: z
     .url()

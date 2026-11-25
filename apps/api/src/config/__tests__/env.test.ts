@@ -55,6 +55,16 @@ describe("loadEnv", () => {
     expect(() => loadEnv({ MONGODB_URI: VALID_URI, PORT: "70000" })).toThrow(/PORT/);
   });
 
+  test("MONGODB_DB_NAME is optional and must be a plain database name", () => {
+    expect(loadEnv({ MONGODB_URI: VALID_URI }).MONGODB_DB_NAME).toBeUndefined();
+    expect(
+      loadEnv({ MONGODB_URI: VALID_URI, MONGODB_DB_NAME: "storeseeker-demo" }).MONGODB_DB_NAME,
+    ).toBe("storeseeker-demo");
+    expect(() => loadEnv({ MONGODB_URI: VALID_URI, MONGODB_DB_NAME: "a/b" })).toThrow(
+      /MONGODB_DB_NAME/,
+    );
+  });
+
   test("normalizes CLIENT_URL to an origin, because CORS compares it exactly", () => {
     expect(
       loadEnv({ MONGODB_URI: VALID_URI, CLIENT_URL: "http://localhost:5173/" }).CLIENT_URL,

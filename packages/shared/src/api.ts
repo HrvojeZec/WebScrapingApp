@@ -74,6 +74,9 @@ export type DealDto = {
   dropPercent: number;
 };
 
+/** demo: the database was filled by the seed with made-up stores, so the web shows a notice. */
+export type MetaDto = { demo: boolean; seededAt: string | null };
+
 export type HealthDto = {
   status: "ok" | "degraded";
   db: "up" | "down";

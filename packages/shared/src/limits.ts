@@ -10,6 +10,8 @@ export const LIMITS = {
   wishlistMax: 20,
   priceChecksPerDay: 2,
   loginAttempts: { max: 10, windowMs: 15 * MINUTE_MS },
+  // Per IP over all of /api; high enough for the web polling a refresh every scrapePollIntervalMs
+  apiRequests: { max: 1_000, windowMs: 15 * MINUTE_MS },
   workerOfflineAfterMs: 2 * MINUTE_MS,
   scrapePollIntervalMs: 1_500,
   pageSizeDefault: 24,

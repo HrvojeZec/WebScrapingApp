@@ -28,6 +28,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   category marks products the store no longer lists anywhere as unavailable. Scrape jobs now crawl
   categories, by request or by schedule, and each crawl of a store category is logged for 90 days
   (#81)
+- Demo data without the internet: `npm run seed` fills the separate `storeseeker-demo` database
+  with three made-up stores, 60 days of price history, real and inflated sales and unavailable
+  products. `MONGODB_DB_NAME` picks the database the API serves, and `GET /api/meta` tells the web
+  app when it shows demo data. A sale counts as inflated when its regular price is higher than the
+  lowest price in the 30 days before the sale (#82)
+- Rate limit on the whole API: 1,000 requests per IP every 15 minutes, then 429 `rate_limited`
+  with `resetAt` and the standard `RateLimit` headers (#82)
 
 ### Changed
 
@@ -39,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harvey Norman is the first shop, next to three demo stores for the seed, and the polite HTTP
   client waits 5 seconds between two requests to the same store. `npm run store:set` takes
   `harveynorman` (#81)
+- The API no longer creates the stores on startup, so it never adds a real shop to the demo
+  database. `npm run store:set` creates them and refuses to write to the demo database (#82)
 
 ### Removed
 
