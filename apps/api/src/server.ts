@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import { createApp } from "./app";
 import { env } from "./config";
 import { createLogger } from "./http/logger";
-import { ensureStores } from "./db/stores";
 
 const logger = createLogger(env.LOG_LEVEL);
 const SHUTDOWN_TIMEOUT_MS = 10_000;
@@ -11,13 +10,13 @@ const SHUTDOWN_TIMEOUT_MS = 10_000;
 async function start() {
   // Connect first, so the API never accepts requests it cannot serve
   try {
-    await mongoose.connect(env.MONGODB_URI);
+    await mongoose.connect(env.MONGODB_URI, { dbName: env.MONGODB_DB_NAME });
   } catch (error) {
     logger.fatal({ err: error }, "could not connect to MongoDB");
     process.exit(1);
   }
-  logger.info("database connected");
-  await ensureStores();
+  // No ensureStores here: over the demo database the API must not add real shops
+  logger.info({ db: mongoose.connection.name }, "database connected");
 
   const server = createApp({ clientUrl: env.CLIENT_URL, logger }).listen(env.PORT, () => {
     logger.info({ port: env.PORT }, "API listening");
