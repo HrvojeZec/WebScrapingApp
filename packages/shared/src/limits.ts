@@ -1,25 +1,26 @@
-const HOUR_MS = 3_600_000;
 const MINUTE_MS = 60_000;
 
 export const LIMITS = {
-  keywordCacheTtlMs: 6 * HOUR_MS,
-  dailyScrapesPerIp: 5,
-  dailyScrapesPerUser: 20,
-  dailyScrapesGlobal: 300,
-  concurrentJobsPerRequester: 1,
-  pagesPerStore: 2,
-  requestIntervalMs: 2_000,
+  requestIntervalMs: 5_000,
+  // A crawl counts as complete only when it reaches the last page, so this must cover a category
+  pagesPerCategory: 10,
+  categoryCrawlTimeoutMs: 5 * MINUTE_MS,
+  refreshCooldownMs: 30 * MINUTE_MS,
+  refreshesPerIpPerHour: 3,
   wishlistMax: 20,
   priceChecksPerDay: 2,
   loginAttempts: { max: 10, windowMs: 15 * MINUTE_MS },
-  jobTimeoutMs: 90_000,
-  // Without it a job waits forever while the worker is off and blocks the requester's next search
-  jobQueueTimeoutMs: 15 * MINUTE_MS,
   workerOfflineAfterMs: 2 * MINUTE_MS,
   scrapePollIntervalMs: 1_500,
   pageSizeDefault: 24,
   pageSizeMax: 48,
-  keywordMinLength: 2,
-  keywordMaxLength: 60,
+  searchTermMinLength: 2,
+  searchTermMaxLength: 60,
+  historyDaysDefault: 90,
+  historyDaysMax: 365,
+  lowestPriceWindowDays: 30,
+  suggestionsMax: 8,
+  similarProductsMax: 4,
+  dealsMax: 24,
   limitTimeZone: "Europe/Zagreb",
 } as const;

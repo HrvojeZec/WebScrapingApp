@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   store every 2 seconds, robots.txt checked before every page, retries with backoff on 5xx and
   network errors, a pause on 429, and no parsing of block pages, off-site redirects or bodies over
   5 MB (#19)
+- Data model for crawling store categories: products keep the categories a store lists them in
+  and a search text without diacritics, so `slusalice` finds "Slušalice". A complete crawl of a
+  category marks products the store no longer lists anywhere as unavailable. Scrape jobs now crawl
+  categories, by request or by schedule, and each crawl of a store category is logged for 90 days
+  (#81)
 
 ### Changed
 
@@ -31,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   diacritics, digits, spaces and `- + . /` (#16)
 - `npm run dev -w @storeseeker/api` runs the API with `tsx watch` instead of tsc and nodemon,
   and the API package is MIT licensed like the repository (#17)
+- Harvey Norman is the first shop, next to three demo stores for the seed, and the polite HTTP
+  client waits 5 seconds between two requests to the same store. `npm run store:set` takes
+  `harveynorman` (#81)
 
 ### Removed
 
@@ -39,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The old product, scrape and store models, the `/api/products` routes, the Sancta Domenica
   store and its logo, and the old Puppeteer scrapers. The web app shows no products until it is
   rebuilt on the new API (#18)
+- Mall and Big Bang, store logos, keyword results and the keyword cache, and the daily scrape
+  limits per IP, user and in total (#81)
 
 ### Fixed
 

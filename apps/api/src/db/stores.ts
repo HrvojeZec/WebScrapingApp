@@ -1,19 +1,15 @@
 import type { StoreSlug } from "@storeseeker/shared";
 import { Store, type StoreFields } from "./models/store";
 
-const STORES: Omit<StoreFields, "enabled">[] = [
-  { slug: "mall", name: "Mall", baseUrl: "https://www.mall.hr", logoPath: "/stores/mall.svg" },
-  {
-    slug: "bigbang",
-    name: "Big Bang",
-    baseUrl: "https://www.bigbang.hr",
-    logoPath: "/stores/bigbang.svg",
-  },
+type StoreSeed = Omit<StoreFields, "enabled">;
+
+export const STORES: StoreSeed[] = [
+  { slug: "harveynorman", name: "Harvey Norman", baseUrl: "https://www.harveynorman.hr" },
 ];
 
-export async function ensureStores(): Promise<void> {
+export async function ensureStores(stores: StoreSeed[] = STORES): Promise<void> {
   await Store.bulkWrite(
-    STORES.map((store) => ({
+    stores.map((store) => ({
       updateOne: {
         filter: { slug: store.slug },
         // enabled only on insert: a store switched off by hand must stay off after a restart
