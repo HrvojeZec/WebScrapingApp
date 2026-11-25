@@ -40,6 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   attributes. `npm run scrape:live-check` fetches one listing page by hand (never in tests or CI)
   and can save it as a test fixture. `docs/data-sources.md` records why the shop's terms and
   robots.txt allow this, and which fields are stored (#83)
+- Scrape worker (`npm run worker`), the only process that requests shop pages. It crawls every
+  category at 7:00 and 19:00 and runs queued jobs one at a time, a user's request first. Each
+  category has a page limit and a timeout, a blocked shop is left alone for the rest of the job,
+  and only a complete crawl marks unlisted products as unavailable. A heartbeat tells whether
+  the worker is online, Ctrl+C puts the current job back in the queue, and the worker refuses
+  the demo database (#23)
 
 ### Changed
 

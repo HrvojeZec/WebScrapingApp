@@ -59,12 +59,12 @@ The listing is plain HTML (Magento), so no browser is needed. It shows 10 produc
 lists only products that can be bought, so a product is available while a complete crawl lists it.
 The listing has no EAN.
 
-| Category   | Listing URLs                                                           | Pages on 25.11.2026                                                  |
-| ---------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Mobiteli   | `/mobiteli/smartphone/mobiteli`, `/mobiteli/apple-smartphone/mobiteli` | under 24 (the parent `/mobiteli/smartphone` had 24 with accessories) |
-| Laptopi    | `/informatika/laptopi`                                                 | 8                                                                    |
-| Televizori | `/televizori-i-audio/televizori` (includes projectors)                 | 20                                                                   |
-| Tableti    | `/informatika/tableti-i-e-citaci/tableti`                              | 3                                                                    |
-| Slušalice  | `/mobiteli/slusalice`                                                  | 2                                                                    |
+| Category   | Listing URLs                                                           | Pages on 25.11.2026               |
+| ---------- | ---------------------------------------------------------------------- | --------------------------------- |
+| Mobiteli   | `/mobiteli/smartphone/mobiteli`, `/mobiteli/apple-smartphone/mobiteli` | 14 for both listings (104 phones) |
+| Laptopi    | `/informatika/laptopi`                                                 | 8                                 |
+| Televizori | `/televizori-i-audio/televizori` (includes projectors)                 | 20                                |
+| Tableti    | `/informatika/tableti-i-e-citaci/tableti`                              | 3                                 |
+| Slušalice  | `/mobiteli/slusalice`                                                  | 2                                 |
 
-A full crawl is about 60 requests, so about 5 minutes at one request every 5 seconds.
+A full crawl was 47 pages and 422 products in 4 minutes on 25.11.2026, at one request every 5 seconds.
