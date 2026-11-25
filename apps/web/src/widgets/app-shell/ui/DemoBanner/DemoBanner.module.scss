@@ -1,0 +1,19 @@
+.banner {
+  border-bottom: 1px solid var(--ss-color-line);
+  background-color: var(--ss-color-shelf);
+  color: var(--ss-color-ink);
+  font-size: var(--ss-font-size-sm);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 2);
+  padding-block: calc(var(--ss-space-step) * 2);
+}
+
+.icon {
+  flex-shrink: 0;
+  width: calc(var(--ss-space-step) * 5);
+  height: calc(var(--ss-space-step) * 5);
+}

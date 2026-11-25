@@ -8,7 +8,7 @@ import {
 import { BASE_SHADE, colorScale } from "@/shared/lib/color-scale";
 import { cssEasing, secondsToMs } from "@/shared/lib/motion";
 import { MOTION } from "./motion";
-import { COLORS, FONT_SIZES, FONTS, RADII, SPACING_STEP } from "./tokens";
+import { COLORS, FONT_SIZES, FONTS, LAYOUT, RADII, SPACING_STEP } from "./tokens";
 import classes from "./theme.module.scss";
 
 const scale = (hex: string) => colorScale(hex) as unknown as MantineColorsTuple;
@@ -59,6 +59,7 @@ export const theme = createTheme({
   spacing: { xs: space(2), sm: space(3), md: space(4), lg: space(6), xl: space(8) },
   components: {
     // Cards have a 1 px border and no shadow; shadows are for menus and dialogs only
+    Container: { defaultProps: { size: rem(LAYOUT.contentMaxWidth) } },
     Card: Card.extend({
       defaultProps: { radius: "md", withBorder: true, shadow: "none" },
       classNames: { root: classes.card },

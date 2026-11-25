@@ -1,0 +1,49 @@
+.header {
+  background-color: var(--ss-color-ink);
+  color: var(--ss-color-paper);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 40rem);
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 6);
+  padding-block: calc(var(--ss-space-step) * 3);
+}
+
+// On phones the search goes below the logo, full width (48em is Mantine's sm breakpoint; Sass
+// compiles before PostCSS, so $mantine-breakpoint-sm is not defined here)
+@media (max-width: 48em) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--ss-space-step) * 3);
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: calc(var(--ss-space-step) * 2);
+  color: inherit;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: calc(var(--ss-space-step) * 9);
+  height: calc(var(--ss-space-step) * 9);
+  color: var(--ss-color-brand);
+}
+
+.logoName {
+  font-size: var(--ss-font-size-lg);
+  font-weight: 700;
+}
+
+.logoAccent {
+  color: var(--ss-color-brand);
+}
+
+.search {
+  min-width: 0;
+}

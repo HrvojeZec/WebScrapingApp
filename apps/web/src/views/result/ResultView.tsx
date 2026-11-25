@@ -1,13 +1,15 @@
+import { useParams } from "react-router";
 import { DataProvider } from "@/entities/product/model/DataProvider";
-import Layout from "@/widgets/app-shell/ui/Layout";
+import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
 import ScrapeResult from "./ui/ScrapeResult";
 
 export function ResultView() {
+  const { keyword } = useParams();
+  useDocumentTitle(keyword);
+
   return (
     <DataProvider>
-      <Layout>
-        <ScrapeResult />
-      </Layout>
+      <ScrapeResult />
     </DataProvider>
   );
 }

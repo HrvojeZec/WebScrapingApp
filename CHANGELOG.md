@@ -67,6 +67,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dialogs, menus and notifications, a fade between pages, and React Bits effects (BlurText,
   ShinyText, SpotlightCard, CountUp) behind the app's own components. Every animation stops when
   the system asks for reduced motion. React Bits licenses are in `THIRD_PARTY_NOTICES.md` (#43)
+- App shell for the web app: a header with the logo and a search box on every page (below the
+  logo on phones) with suggestions from the API, recent searches and validation, an honest footer
+  (what the project is, where prices come from, not affiliated with the shops, the GitHub repo), a
+  "Demo podaci" bar over the demo seed, a 404 page, a title per page and scroll to top on
+  navigation. One HTTP client and TanStack Query read the API; a dead API shows "Poslužitelj
+  trenutno ne odgovara" instead of a 404. ESLint keeps `fetch` in the client, queries in hooks
+  and numbers in named constants (#44)
 
 ### Changed
 

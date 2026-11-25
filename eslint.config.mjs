@@ -23,7 +23,6 @@ const LEGACY_WEB_FILES = [
   `${WEB_SRC}/views/result/**`,
   `${WEB_SRC}/entities/product/model/**`,
   `${WEB_SRC}/shared/ui/BrandLogo/**`,
-  `${WEB_SRC}/shared/ui/Error/**`,
   `${WEB_SRC}/shared/ui/Loader/**`,
   `${WEB_SRC}/shared/ui/Notification/**`,
 ];

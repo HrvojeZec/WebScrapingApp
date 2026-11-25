@@ -58,6 +58,12 @@ export const RADII = { field: 6, card: 10 } as const;
 /** Every spacing is a multiple of this, in px. */
 export const SPACING_STEP = 4;
 
+/** Page layout in px. */
+export const LAYOUT = {
+  /** Widest the content gets; the default size of Mantine `Container` */
+  contentMaxWidth: 1200,
+} as const;
+
 export const FONTS = {
   ui: '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif',
   /** Prices and big numbers only, like a shelf label */
