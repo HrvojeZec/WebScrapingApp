@@ -1,16 +1,23 @@
 import cors from "cors";
 import express, { type Express } from "express";
+import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
+import { LIMITS } from "@storeseeker/shared";
 import { errorHandler, notFoundHandler } from "./http/error-handler";
 import type { Logger } from "./http/logger";
+import { rateLimitedHandler, type ApiRateLimit } from "./http/rate-limit-api";
 import { checkOrigin, requireJson } from "./http/security";
 import { createApiRouter } from "./routes";
 
-export type AppOptions = { clientUrl: string; logger: Logger };
+export type AppOptions = { clientUrl: string; logger: Logger; apiRateLimit?: ApiRateLimit };
 
 // Takes its settings as arguments instead of reading env, so tests can build it without a database
-export function createApp({ clientUrl, logger }: AppOptions): Express {
+export function createApp({
+  clientUrl,
+  logger,
+  apiRateLimit = LIMITS.apiRequests,
+}: AppOptions): Express {
   const app = express();
   app.disable("x-powered-by");
   app.use(helmet());
@@ -27,6 +34,17 @@ export function createApp({ clientUrl, logger }: AppOptions): Express {
         }),
         res: (res: { statusCode: number }) => ({ statusCode: res.statusCode }),
       },
+    }),
+  );
+  // Before body parsing, so a client over the limit costs as little as possible
+  app.use(
+    "/api",
+    rateLimit({
+      windowMs: apiRateLimit.windowMs,
+      limit: apiRateLimit.max,
+      standardHeaders: "draft-8",
+      legacyHeaders: false,
+      handler: rateLimitedHandler,
     }),
   );
   app.use(express.json({ limit: "10kb" }));

@@ -154,3 +154,32 @@ describe("GET /api/health", () => {
     expect(res.body).toEqual({ status: "degraded", db: "down" });
   });
 });
+
+describe("API rate limit", () => {
+  test("a client over the limit gets 429 rate_limited with resetAt", async () => {
+    const limited = createApp({
+      clientUrl: CLIENT_URL,
+      logger,
+      apiRateLimit: { max: 2, windowMs: 60_000 },
+    });
+    await request(limited).get("/api/health");
+    await request(limited).get("/api/health");
+    const res = await request(limited).get("/api/health");
+    expect(res.status).toBe(429);
+    expect(res.body).toEqual({
+      error: { code: "rate_limited", message: expect.any(String), resetAt: expect.any(String) },
+    });
+    expect(Date.parse(res.body.error.resetAt)).toBeGreaterThan(Date.now());
+  });
+
+  test("routes outside /api are not counted", async () => {
+    const limited = createApp({
+      clientUrl: CLIENT_URL,
+      logger,
+      apiRateLimit: { max: 1, windowMs: 60_000 },
+    });
+    await request(limited).get("/unknown");
+    await request(limited).get("/unknown");
+    expect((await request(limited).get("/api/health")).status).toBe(503);
+  });
+});

@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   products. `MONGODB_DB_NAME` picks the database the API serves, and `GET /api/meta` tells the web
   app when it shows demo data. A sale counts as inflated when its regular price is higher than the
   lowest price in the 30 days before the sale (#82)
+- Rate limit on the whole API: 1,000 requests per IP every 15 minutes, then 429 `rate_limited`
+  with `resetAt` and the standard `RateLimit` headers (#82)
 
 ### Changed
 
