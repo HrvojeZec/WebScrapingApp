@@ -1,10 +1,12 @@
 import { Router } from "express";
-import healthRoutes from "./modules/health/health.routes";
+import { createHealthRouter } from "./modules/health/health.routes";
 import metaRoutes from "./modules/meta/meta.routes";
+import { createScrapesRouter, type ScrapesDeps } from "./modules/scrapes/scrapes.routes";
 
-export function createApiRouter(): Router {
+export function createApiRouter(deps: ScrapesDeps): Router {
   const router = Router();
-  router.use(healthRoutes);
+  router.use(createHealthRouter(deps));
   router.use(metaRoutes);
+  router.use(createScrapesRouter(deps));
   return router;
 }
