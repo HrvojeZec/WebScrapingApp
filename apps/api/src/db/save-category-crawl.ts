@@ -106,7 +106,9 @@ export async function saveCategoryCrawl({
     );
   }
 
-  const delisted = complete ? await dropUnseen(storeSlug, category, [...seenIds]) : 0;
+  // An empty listing is far more likely broken markup than a sold-out category
+  const delisted =
+    complete && unique.length > 0 ? await dropUnseen(storeSlug, category, [...seenIds]) : 0;
   return { saved: unique.length, priceChanges, delisted };
 }
 

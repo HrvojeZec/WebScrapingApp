@@ -153,7 +153,7 @@ describe("saveCategoryCrawl", () => {
     await crawl("mobiteli", [parsed("a", { priceCents: 5000 })], SECOND_RUN, {
       storeSlug: "demo-a",
     });
-    await crawl("mobiteli", [], THIRD_RUN, { storeSlug: "demo-a" });
+    await crawl("mobiteli", [parsed("b")], THIRD_RUN, { storeSlug: "demo-a" });
 
     expect(await find("a")).toMatchObject({
       priceCents: 129999,
@@ -161,6 +161,15 @@ describe("saveCategoryCrawl", () => {
       available: true,
     });
     expect((await find("a", "demo-a"))?.available).toBe(false);
+  });
+
+  // An empty listing means changed markup or a broken page, not a sold-out category
+  test("a complete crawl with no products delists nothing", async () => {
+    await crawl("mobiteli", [parsed("q")], FIRST_RUN);
+    const result = await crawl("mobiteli", [], SECOND_RUN);
+
+    expect(result).toEqual({ saved: 0, priceChanges: 0, delisted: 0 });
+    expect(await find("q")).toMatchObject({ categories: ["mobiteli"], available: true });
   });
 
   test("a missing image URL keeps the saved one", async () => {
