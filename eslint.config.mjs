@@ -11,6 +11,7 @@ import { layerImportRules, readSlices } from "./apps/web/scripts/layer-rules.mjs
  * must stay acyclic: an entity that needs another one either depends on it here or moves down.
  */
 const ENTITY_DEPS = {
+  meta: [],
   product: [],
 };
 
