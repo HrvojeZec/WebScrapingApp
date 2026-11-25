@@ -51,6 +51,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   online. A click while a covering job is active returns that job, categories crawled in the last
   30 minutes queue nothing, and each IP may start 3 new jobs an hour (then 429 `rate_limited`
   with `resetAt`). `GET /api/health` now reports the worker too (#23)
+- Search API over the stored products: `GET /api/products` searches titles without diacritics
+  (every word, `galax` finds "Galaxa"), filters by store, category, price in euros and sales,
+  sorts by relevance, price or discount, and counts stores and categories for the filters.
+  `GET /api/products/:id` adds the lowest price in 30 days, whether the sale is inflated, the
+  same product in other stores and similar ones; `/history` returns the price history for a
+  number of days. `GET /api/deals` lists real sales before inflated ones, `GET /api/suggestions`
+  completes a search, and `GET /api/stores` tells when each store was last crawled. Products of
+  a disabled store are never shown (#24)
 
 ### Changed
 
