@@ -1,5 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { isOnSale } from "../price";
+import { isOnSale, shownDiscount } from "../price";
+
+describe("shownDiscount", () => {
+  it("gives the discount in whole percent", () => {
+    expect(shownDiscount(12.6)).toBe(13);
+  });
+
+  it("hides a discount that rounds below one percent", () => {
+    expect(shownDiscount(0)).toBeNull();
+    expect(shownDiscount(0.4)).toBeNull();
+  });
+
+  it("hides a discount that is not a number", () => {
+    expect(shownDiscount(Number.NaN)).toBeNull();
+  });
+});
 
 describe("isOnSale", () => {
   it("is true when the price is below the regular price", () => {

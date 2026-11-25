@@ -8,7 +8,8 @@ const PERCENT = 100;
 const priceFormat = new Intl.NumberFormat(LOCALE, { style: "currency", currency: "EUR" });
 const discountFormat = new Intl.NumberFormat(LOCALE, {
   style: "percent",
-  signDisplay: "always",
+  // The value is never positive; "exceptZero" drops the sign of zero, so 0.4 % never reads "−0 %"
+  signDisplay: "exceptZero",
   maximumFractionDigits: 0,
 });
 const dateFormat = new Intl.DateTimeFormat(LOCALE, {

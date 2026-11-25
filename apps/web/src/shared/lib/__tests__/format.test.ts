@@ -47,4 +47,9 @@ describe("formatDiscount", () => {
   it("rounds to whole percent", () => {
     expect(formatDiscount(12.6)).toBe(`−13${NBSP}%`);
   });
+
+  it("never shows a minus zero", () => {
+    expect(formatDiscount(0)).toBe(`0${NBSP}%`);
+    expect(formatDiscount(0.4)).toBe(`0${NBSP}%`);
+  });
 });

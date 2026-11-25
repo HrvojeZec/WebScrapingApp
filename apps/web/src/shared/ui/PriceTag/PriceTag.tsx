@@ -1,6 +1,6 @@
 import { VisuallyHidden } from "@mantine/core";
 import { formatDiscount, formatPrice } from "@/shared/lib/format";
-import { isOnSale } from "@/shared/lib/price";
+import { isOnSale, shownDiscount } from "@/shared/lib/price";
 import classes from "./PriceTag.module.scss";
 
 interface PriceTagProps {
@@ -14,6 +14,7 @@ interface PriceTagProps {
 /** The price as a shelf label: flat left edge, yellow with the discount and the old price on sale. */
 export function PriceTag({ priceCents, regularPriceCents, discountPercent, size }: PriceTagProps) {
   const onSale = isOnSale(priceCents, regularPriceCents) && regularPriceCents !== null;
+  const discount = onSale ? shownDiscount(discountPercent) : null;
   const className = [classes.root, classes[size], onSale && classes.sale].filter(Boolean).join(" ");
 
   return (
@@ -21,7 +22,7 @@ export function PriceTag({ priceCents, regularPriceCents, discountPercent, size 
       <span className={classes.main}>
         <VisuallyHidden>{onSale ? "Cijena na sniženju: " : "Cijena: "}</VisuallyHidden>
         {formatPrice(priceCents)}
-        {onSale && <span className={classes.discount}>{formatDiscount(discountPercent)}</span>}
+        {discount !== null && <span className={classes.discount}>{formatDiscount(discount)}</span>}
       </span>
       {onSale && (
         <s className={classes.regular}>
