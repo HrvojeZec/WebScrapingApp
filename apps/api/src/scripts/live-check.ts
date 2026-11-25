@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import * as cheerio from "cheerio";
 import { categorySlugSchema, shopSlugSchema, type ShopSlug } from "@storeseeker/shared";
+import { fixtureName } from "../scraping/fixtures/fixture-name";
 import { trimHtml } from "../scraping/fixtures/trim";
 import { createPoliteFetch } from "../scraping/http/polite-fetch";
 import { botUserAgent } from "../scraping/http/user-agent";
@@ -52,6 +53,14 @@ async function main() {
     process.exitCode = 1;
     return;
   }
+  const saveFlag = flagValue(flags, "save");
+  const saveName =
+    saveFlag === undefined ? null : fixtureName(saveFlag, `${category.data}-p${page}`);
+  if (saveFlag !== undefined && saveName === null) {
+    console.error("--save=<name>: use only letters, digits and dashes.");
+    process.exitCode = 1;
+    return;
+  }
 
   const adapter = SHOP_ADAPTERS[shop.data];
   const url = new URL(firstPageUrl);
@@ -65,12 +74,10 @@ async function main() {
   }
   console.log(`200 ${outcome.url} (${Buffer.byteLength(outcome.html)} bytes)`);
 
-  const save = flagValue(flags, "save");
-  if (save) {
-    const name = save === true ? `${category.data}-p${page}` : save;
+  if (saveName !== null) {
     const dir = path.resolve(__dirname, "../scraping/shops", shop.data, "__fixtures__");
     mkdirSync(dir, { recursive: true });
-    const file = path.join(dir, `${name}.html`);
+    const file = path.join(dir, `${saveName}.html`);
     const trimmed = fixtureHtml(outcome.html, shop.data);
     writeFileSync(file, trimmed);
     console.log(`saved ${file} (${Buffer.byteLength(trimmed)} bytes)`);
