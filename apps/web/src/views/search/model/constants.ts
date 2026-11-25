@@ -1,0 +1,16 @@
+export const SEARCH_TEXT = {
+  documentTitle: "Pretraga",
+  allProducts: "Svi proizvodi",
+  onSale: "Proizvodi na sniženju",
+  freshnessLabel: "Kad su cijene osvježene",
+  noResultsTitle: "Nema proizvoda",
+  noResultsTip: "Provjeri pravopis ili probaj općenitiji pojam.",
+  noResultsFiltered: "Uz odabrane filtre nema proizvoda.",
+  clearFilters: "Ukloni filtre",
+  emptyDatabase: "Još nema spremljenih cijena. Pojavit će se nakon prvog obilaska trgovina.",
+  suggestions: "Možda si mislio:",
+  categories: "Pogledaj kategorije:",
+  pastLastPageTitle: "Ova stranica rezultata ne postoji",
+  pastLastPage: "Rezultata je manje nego prije. Vrati se na prvu stranicu.",
+  firstPage: "Na prvu stranicu",
+} as const;

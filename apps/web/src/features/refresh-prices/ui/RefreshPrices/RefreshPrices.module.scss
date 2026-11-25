@@ -1,0 +1,44 @@
+.root {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--ss-space-step) * 2);
+}
+
+.icon {
+  width: calc(var(--ss-space-step) * 4);
+  height: calc(var(--ss-space-step) * 4);
+}
+
+.status {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 2);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.message {
+  font-size: var(--ss-font-size-sm);
+}
+
+.stores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.store {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 2);
+  font-size: var(--ss-font-size-sm);
+}
+
+.error {
+  color: var(--ss-color-rise);
+  font-size: var(--ss-font-size-sm);
+}

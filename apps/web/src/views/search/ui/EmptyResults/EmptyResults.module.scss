@@ -1,0 +1,21 @@
+.links {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 2);
+}
+
+.label {
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--ss-space-step) * 2) calc(var(--ss-space-step) * 4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    color: var(--ss-color-ink);
+  }
+}
