@@ -77,6 +77,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The web app runs on React 19, Mantine 9, react-router 8 in data mode and Vite 8. IBM Plex Sans
   is self-hosted through `@fontsource` instead of the Inter files, and the PostCSS config moved
   next to `vite.config.ts`, where Vite finds it (#25)
+- The web app follows Feature-Sliced Design (`app`, `views`, `widgets`, `features`, `entities`,
+  `shared`) with `@/` imports, and ESLint stops a slice from importing a layer above it or a
+  sibling slice. The web calls a relative `/api`, which Vite proxies to the API in dev and
+  preview (`API_PROXY_TARGET` replaces `VITE_API_URL`). The web has unit tests with Vitest (#84)
 
 ### Removed
 
