@@ -9,3 +9,5 @@ test-results
 docs/plan
 .superpowers
 **/CLAUDE.md
+# Vendored third-party code, kept as published (see THIRD_PARTY_NOTICES.md)
+apps/web/src/shared/vendor

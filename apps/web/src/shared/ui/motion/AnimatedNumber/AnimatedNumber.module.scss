@@ -1,0 +1,14 @@
+.root {
+  display: inline-grid;
+  justify-items: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.ghost,
+.counter {
+  grid-area: 1 / 1;
+}
+
+.ghost {
+  visibility: hidden;
+}

@@ -92,6 +92,28 @@ shades with the token itself at shade 6.
   have the same height. It loads lazily and shows a placeholder when the product has no image or
   the image fails to load. Images are linked from the store, never copied.
 
+## Motion
+
+Tokens live in `shared/theme/motion.ts` (`MOTION`), in seconds:
+
+| Token            | Value                        | Use                                                     |
+| ---------------- | ---------------------------- | ------------------------------------------------------- |
+| `duration.fast`  | 0.15 s                       | Hover, menus, popovers, tooltips                        |
+| `duration.base`  | 0.25 s                       | Page transitions, dialogs, notifications                |
+| `duration.slow`  | 0.4 s                        | Larger surfaces, layout changes, each word of a heading |
+| `duration.count` | 1.2 s                        | A number rolling up to its value                        |
+| `ease`           | `cubic-bezier(0.2, 0, 0, 1)` | Everything: a fast start and a soft landing             |
+
+- Only `transform` and `opacity` move. Nothing shifts the layout around it: a page that leaves is
+  taken out of the flow at once, and a rolling number keeps its final width from the start.
+- With "reduce motion" switched on in the system, nothing moves or fades: `MotionConfig` and
+  Mantine's `respectReducedMotion` stop the transitions, and each effect renders its final state.
+- Effects come from [React Bits](https://reactbits.dev) in `shared/vendor/react-bits/`, kept as
+  published (license in `THIRD_PARTY_NOTICES.md`). Features use only the wrappers in
+  `shared/ui/motion/`: `AnimatedHeading` (words come into focus), `ShimmerText` (a light sweeps
+  across a sale heading), `GlowCard` (a soft light follows the pointer), `AnimatedNumber` (digits
+  roll up to a price or a discount from `format.ts`) and `PageTransition`.
+
 ## Numbers and dates
 
 Every number and date goes through `apps/web/src/shared/lib/format.ts`, in Croatian and in Zagreb
