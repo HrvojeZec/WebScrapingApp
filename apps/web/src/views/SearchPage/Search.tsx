@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { constants } from "../../config/constants";
 import { Autocomplete, Button, Tooltip } from "@mantine/core";
 import { useKeywordsData } from "../../stores/keywords-context";
-import { keywordSchema, normalizeKeyword } from "@storeseeker/shared";
+import { searchTermSchema, normalizeSearchTerm } from "@storeseeker/shared";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
@@ -24,7 +24,7 @@ function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- legacy flow, replaced in v0.3 (#26)
   }, [scrapeId]);
   useEffect(() => {
-    const result = keywordSchema.safeParse(keyword);
+    const result = searchTermSchema.safeParse(keyword);
     // An empty field is not an error yet: the user has not typed anything
     const errorMessage =
       result.success || keyword.trim() === "" ? "" : (result.error.issues[0]?.message ?? "");
@@ -64,7 +64,7 @@ function Search() {
         clearInterval(intervalId);
         showLoadingDataNotification(false);
         if (scrapeId != null) {
-          navigate("/rezultati/" + encodeURIComponent(normalizeKeyword(keyword)));
+          navigate("/rezultati/" + encodeURIComponent(normalizeSearchTerm(keyword)));
         }
       }
     }, 5000);
@@ -87,7 +87,7 @@ function Search() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           // The API stores the scrape under the normalized keyword, so the result page must ask for that
-          keyword: normalizeKeyword(keyword),
+          keyword: normalizeSearchTerm(keyword),
         }),
       });
       if (!response.ok) {

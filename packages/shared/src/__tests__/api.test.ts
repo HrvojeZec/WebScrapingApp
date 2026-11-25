@@ -7,9 +7,9 @@ describe("productsQuerySchema", () => {
   });
 
   test("splits the store list and drops duplicates", () => {
-    expect(productsQuerySchema.parse({ store: "mall,bigbang,mall" }).store).toEqual([
-      "mall",
-      "bigbang",
+    expect(productsQuerySchema.parse({ store: "harveynorman,demo-a,harveynorman" }).store).toEqual([
+      "harveynorman",
+      "demo-a",
     ]);
   });
 
@@ -38,21 +38,42 @@ describe("objectIdSchema", () => {
 });
 
 describe("LIMITS", () => {
-  test("match the limits table of the design doc (5.2)", () => {
+  test("match the limits of the completion design", () => {
     expect(LIMITS).toMatchObject({
-      keywordCacheTtlMs: 6 * 60 * 60 * 1000,
-      dailyScrapesPerIp: 5,
-      dailyScrapesPerUser: 20,
-      dailyScrapesGlobal: 300,
-      concurrentJobsPerRequester: 1,
-      pagesPerStore: 2,
-      requestIntervalMs: 2000,
+      requestIntervalMs: 5000,
+      pagesPerCategory: 10,
+      categoryCrawlTimeoutMs: 5 * 60 * 1000,
+      refreshCooldownMs: 30 * 60 * 1000,
+      refreshesPerIpPerHour: 3,
+      historyDaysDefault: 90,
+      historyDaysMax: 365,
+      lowestPriceWindowDays: 30,
+      suggestionsMax: 8,
+      similarProductsMax: 4,
+      dealsMax: 24,
       wishlistMax: 20,
       priceChecksPerDay: 2,
       loginAttempts: { max: 10, windowMs: 15 * 60 * 1000 },
-      keywordMinLength: 2,
-      keywordMaxLength: 60,
+      searchTermMinLength: 2,
+      searchTermMaxLength: 60,
       limitTimeZone: "Europe/Zagreb",
     });
+  });
+
+  test("no longer hold the limits of scraping per search term", () => {
+    for (const key of [
+      "keywordCacheTtlMs",
+      "dailyScrapesPerIp",
+      "dailyScrapesPerUser",
+      "dailyScrapesGlobal",
+      "concurrentJobsPerRequester",
+      "pagesPerStore",
+      "jobTimeoutMs",
+      "jobQueueTimeoutMs",
+      "keywordMinLength",
+      "keywordMaxLength",
+    ]) {
+      expect(LIMITS).not.toHaveProperty(key);
+    }
   });
 });
