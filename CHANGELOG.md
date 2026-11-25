@@ -46,6 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and only a complete crawl marks unlisted products as unavailable. A heartbeat tells whether
   the worker is online, Ctrl+C puts the current job back in the queue, and the worker refuses
   the demo database (#23)
+- "Osvježi cijene" API: `POST /api/scrapes` queues a crawl of some or all categories and
+  `GET /api/scrapes/:id` reports its progress, place in the queue and whether the worker is
+  online. A click while a covering job is active returns that job, categories crawled in the last
+  30 minutes queue nothing, and each IP may start 3 new jobs an hour (then 429 `rate_limited`
+  with `resetAt`). `GET /api/health` now reports the worker too (#23)
 
 ### Changed
 

@@ -3,9 +3,15 @@ import { AppError } from "./errors";
 
 const BODY_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
-// req.is() is null for a request without a body, so a bodyless DELETE still passes
+// fetch() without a body sends Content-Length: 0 and no Content-Type; type-is counts that as a
+// body, so it is let through here. A form always sends a Content-Type, so it still gets 415.
+const isEmptyUntyped = (req: Parameters<RequestHandler>[0]) =>
+  req.headers["content-type"] === undefined &&
+  req.headers["transfer-encoding"] === undefined &&
+  (req.headers["content-length"] ?? "0") === "0";
+
 export const requireJson: RequestHandler = (req, _res, next) => {
-  if (BODY_METHODS.has(req.method) && req.is("application/json") === false) {
+  if (BODY_METHODS.has(req.method) && !isEmptyUntyped(req) && !req.is("application/json")) {
     return next(new AppError(415, "unsupported_media_type", "Pošalji podatke kao JSON."));
   }
   next();

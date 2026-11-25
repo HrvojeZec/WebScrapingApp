@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { LIMITS, objectIdSchema, productsQuerySchema } from "../index.js";
+import { createScrapeBodySchema, LIMITS, objectIdSchema, productsQuerySchema } from "../index.js";
 
 describe("productsQuerySchema", () => {
   test("fills in defaults for an empty query", () => {
@@ -34,6 +34,35 @@ describe("objectIdSchema", () => {
     const result = objectIdSchema.safeParse("abc");
     expect(result.success).toBe(false);
     expect(result.error?.issues[0]?.message).toBe("Neispravan ID.");
+  });
+});
+
+describe("createScrapeBodySchema", () => {
+  test("accepts no body and an empty object", () => {
+    expect(createScrapeBodySchema.parse(undefined)).toBeUndefined();
+    expect(createScrapeBodySchema.parse({})).toEqual({});
+  });
+
+  test("accepts one to every category", () => {
+    expect(createScrapeBodySchema.parse({ categories: ["laptopi"] })).toEqual({
+      categories: ["laptopi"],
+    });
+    const all = ["mobiteli", "laptopi", "televizori", "tableti", "slusalice"];
+    expect(createScrapeBodySchema.parse({ categories: all })).toEqual({ categories: all });
+  });
+
+  test.each([
+    ["an empty list", []],
+    ["an unknown category", ["auti"]],
+    ["a string", "mobiteli"],
+    ["a repeated category", ["mobiteli", "mobiteli"]],
+  ])("rejects %s", (_name, categories) => {
+    expect(createScrapeBodySchema.safeParse({ categories }).success).toBe(false);
+  });
+
+  test("tells the user that a category is repeated", () => {
+    const result = createScrapeBodySchema.safeParse({ categories: ["laptopi", "laptopi"] });
+    expect(result.error?.issues[0]?.message).toBe("Svaku kategoriju navedi samo jednom.");
   });
 });
 

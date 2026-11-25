@@ -118,6 +118,28 @@ describe("request guards", () => {
     expect(res.body.error.code).toBe("unsupported_media_type");
   });
 
+  test("a POST with an empty body and no content type passes", async () => {
+    // fetch() without a body sends Content-Length: 0 and no Content-Type
+    const res = await request(app).post("/api/unknown").set("Content-Length", "0");
+    expect(res.status).toBe(404);
+  });
+
+  test("an empty form post still returns 415", async () => {
+    const res = await request(app)
+      .post("/api/unknown")
+      .set("Content-Type", "application/x-www-form-urlencoded")
+      .set("Content-Length", "0");
+    expect(res.status).toBe(415);
+  });
+
+  test("a body without a content type returns 415", async () => {
+    const res = await request(app)
+      .post("/api/unknown")
+      .unset("Content-Type")
+      .send(Buffer.from("hello"));
+    expect(res.status).toBe(415);
+  });
+
   test("a JSON body over 10 kB returns 413", async () => {
     const res = await request(app)
       .post("/api/unknown")
@@ -151,7 +173,11 @@ describe("GET /api/health", () => {
   test("reports a degraded API without a database connection", async () => {
     const res = await request(app).get("/api/health");
     expect(res.status).toBe(503);
-    expect(res.body).toEqual({ status: "degraded", db: "down" });
+    expect(res.body).toEqual({
+      status: "degraded",
+      db: "down",
+      worker: { online: false, lastSeenAt: null },
+    });
   });
 });
 

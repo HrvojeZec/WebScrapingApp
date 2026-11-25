@@ -1,11 +1,61 @@
 import { z } from "zod";
+import { CATEGORY_SLUGS, categorySlugSchema, type CategorySlug } from "./categories.js";
 import { LIMITS } from "./limits.js";
-import { PRODUCT_SORTS } from "./statuses.js";
+import {
+  PRODUCT_SORTS,
+  type JobKind,
+  type JobSource,
+  type JobStatus,
+  type StoreJobStatus,
+} from "./statuses.js";
 import { searchTermSchema } from "./search.js";
 import { storeSlugSchema } from "./stores.js";
 import type { StoreSlug } from "./stores.js";
 
 export const objectIdSchema = z.string().regex(/^[a-f0-9]{24}$/i, "Neispravan ID.");
+
+/** Body of POST /api/scrapes. No body, or no categories, means every category. */
+export const createScrapeBodySchema = z
+  .object({
+    categories: z
+      .array(categorySlugSchema)
+      .min(1, "Odaberi barem jednu kategoriju.")
+      .max(CATEGORY_SLUGS.length)
+      .refine(
+        (categories) => new Set(categories).size === categories.length,
+        "Svaku kategoriju navedi samo jednom.",
+      )
+      .optional(),
+  })
+  .optional();
+export type CreateScrapeBody = z.infer<typeof createScrapeBodySchema>;
+
+export type StoreJobDto = {
+  storeSlug: StoreSlug;
+  status: StoreJobStatus;
+  pages: number;
+  products: number;
+  error: string | null;
+};
+
+/** queuePosition: jobs that run before this one, null once it is no longer queued. */
+export type ScrapeJobDto = {
+  id: string;
+  kind: JobKind;
+  source: JobSource;
+  status: JobStatus;
+  categories: CategorySlug[];
+  perStore: StoreJobDto[];
+  createdAt: string;
+  startedAt: string | null;
+  finishedAt: string | null;
+  queuePosition: number | null;
+  workerOnline: boolean;
+};
+
+/** fresh: every asked category was crawled recently, so no job was queued. */
+export type CreateScrapeResponse =
+  { fresh: true; lastCrawledAt: string } | { fresh: false; job: ScrapeJobDto };
 
 const storeListSchema = z
   .string()
@@ -80,5 +130,5 @@ export type MetaDto = { demo: boolean; seededAt: string | null };
 export type HealthDto = {
   status: "ok" | "degraded";
   db: "up" | "down";
-  worker?: { online: boolean; lastSeenAt: string | null };
+  worker: { online: boolean; lastSeenAt: string | null };
 };
