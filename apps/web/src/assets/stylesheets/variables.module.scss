@@ -10,9 +10,9 @@ $primary-logo-color: #ff7f50;
 ** FONT CONFIG (the @font-face rules live in fonts.css, imported once from main.tsx)
 \*------------------------------------*/
 
-$base-font-family: "Inter", sans-serif;
-$bold-font-family: "Inter", sans-serif;
-$extra-bold-font-family: "Inter", sans-serif;
+$base-font-family: "IBM Plex Sans", sans-serif;
+$bold-font-family: "IBM Plex Sans", sans-serif;
+$extra-bold-font-family: "IBM Plex Sans", sans-serif;
 
 /*------------------------------------*\
 ** FONT WEIGHTS
@@ -20,4 +20,4 @@ $extra-bold-font-family: "Inter", sans-serif;
 
 $font-weight-regular: 400;
 $font-weight-bold: 700;
-$font-weight-extra-bold: 800;
+$font-weight-extra-bold: 700;

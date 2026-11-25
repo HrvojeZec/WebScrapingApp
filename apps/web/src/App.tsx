@@ -1,28 +1,27 @@
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import { SearchPage } from "./views/SearchPage/SearchPage";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "@mantine/carousel/styles.css";
 import "@mantine/notifications/styles.css";
+import { createTheme, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import "aos/dist/aos.css";
-import Aos from "aos";
+import { SearchPage } from "./views/SearchPage/SearchPage";
 import { ResultPage } from "./views/ResultPage/ResultPage";
 
+// Temporary until the design system (#42) brings the real theme
+const theme = createTheme({
+  fontFamily: '"IBM Plex Sans", sans-serif',
+  headings: { fontFamily: '"IBM Plex Sans", sans-serif' },
+});
+
+const router = createBrowserRouter([
+  { path: "/", element: <SearchPage /> },
+  { path: "/rezultati/:keyword", element: <ResultPage /> },
+]);
+
 function App() {
-  useEffect(() => {
-    Aos.init({ duration: 500, once: true });
-  }, []);
   return (
-    <MantineProvider>
+    <MantineProvider theme={theme}>
       <Notifications position="top-right" zIndex={1000} />
-      <Routes>
-        <Route path="/" element={<SearchPage />} />
-        <Route path="/rezultati/:keyword" element={<ResultPage />} />
-      </Routes>
+      <RouterProvider router={router} />
     </MantineProvider>
   );
 }

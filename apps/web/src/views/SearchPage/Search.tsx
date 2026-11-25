@@ -3,7 +3,7 @@ import classes from "../../components/Search/Search.module.scss";
 import { showLoadingDataNotification } from "../../components/shared/Notification/Notification";
 import { SliderComponent } from "./Slider";
 import { SmartShopText } from "../../components/shared/BrandLogo/SmartShop";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { constants } from "../../config/constants";
 import { Autocomplete, Button, Tooltip } from "@mantine/core";
 import { useKeywordsData } from "../../stores/keywords-context";
@@ -119,7 +119,7 @@ function Search() {
     <>
       <div className={classes.scrape}>
         <div className={classes.scrapeWrapper}>
-          <div className={classes.scrapeContent} data-aos="fade-right">
+          <div className={classes.scrapeContent}>
             <div className={classes.contentUpper}>
               <SmartShopText />
               <p>

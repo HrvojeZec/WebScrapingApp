@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Slider from "react-slick";
+import { Image, SimpleGrid, Stack, Text } from "@mantine/core";
 import classes from "../../components/Search/Search.module.scss";
 import { useProductsData } from "../../stores/products-context";
 
@@ -24,36 +24,22 @@ export function SliderComponent() {
           keyword: product.title ?? "",
         })),
       );
-      setRandomImages(getRandomImages(images, 10));
+      setRandomImages(getRandomImages(images, 4));
     }
   }, [products]);
 
-  const settings = {
-    infinite: true,
-    fade: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 4000,
-    arrows: false,
-    cssEase: "linear",
-  };
-
   return (
-    <div className={classes.imageContent} data-aos="fade-left">
-      <div className={classes.sliderContainer}>
-        <Slider {...settings}>
-          {randomImages.map((image, index) => (
-            <div key={index}>
-              <img src={image.src} alt={`Slika ${index}`} />
-              <div className={classes.productTitle}>
-                <p>{image.keyword}</p>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
+    <div className={classes.imageContent}>
+      <SimpleGrid cols={2} spacing="md">
+        {randomImages.map((image, index) => (
+          <Stack key={index} gap="xs" align="center">
+            <Image src={image.src} alt={image.keyword} h={160} fit="contain" />
+            <Text size="sm" fw={600} ta="center" lineClamp={2}>
+              {image.keyword}
+            </Text>
+          </Stack>
+        ))}
+      </SimpleGrid>
     </div>
   );
 }

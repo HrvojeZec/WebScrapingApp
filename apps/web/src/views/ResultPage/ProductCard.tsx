@@ -1,7 +1,5 @@
 import { Image, Card, Text, Group, Button, Spoiler } from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
 import classes from "../../components/CarouselCard/CarouselCard.module.scss";
-import dayjs from "dayjs";
 import { Product } from "../../types/ProductTypes";
 
 export function ProductCard({
@@ -14,16 +12,9 @@ export function ProductCard({
   link,
   updatedAt,
 }: Product) {
-  dayjs().format();
-  dayjs(`${updatedAt}`).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]");
-  const formatData = dayjs(`${updatedAt}`).format("DD/MM/YYYY");
+  const formatData = updatedAt ? new Date(updatedAt).toLocaleDateString("hr-HR") : "";
 
   const imageArray = Array.isArray(images) ? images : [images];
-  const slides = imageArray.map((image) => (
-    <Carousel.Slide key={image}>
-      <Image src={image} />
-    </Carousel.Slide>
-  ));
 
   return (
     <>
@@ -47,17 +38,7 @@ export function ProductCard({
           </div>
         )}
         <Card.Section style={{ padding: "0.5rem" }}>
-          <Carousel
-            withIndicators
-            loop
-            classNames={{
-              root: classes.carousel,
-              controls: classes.carouselControls,
-              indicator: classes.carouselIndicator,
-            }}
-          >
-            {slides}
-          </Carousel>
+          <Image className={classes.carousel} src={imageArray[0]} alt={title} />
         </Card.Section>
 
         <Group justify="space-between" mt="lg">

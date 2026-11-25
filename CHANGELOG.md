@@ -74,6 +74,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   database. `npm run store:set` creates them and refuses to write to the demo database (#82)
 - A category crawl may read up to 30 pages instead of 10, because Harvey Norman shows 10 products
   per page and its biggest category has 20 pages (#83)
+- The web app runs on React 19, Mantine 9, react-router 8 in data mode and Vite 8. IBM Plex Sans
+  is self-hosted through `@fontsource` instead of the Inter files, and the PostCSS config moved
+  next to `vite.config.ts`, where Vite finds it (#25)
 
 ### Removed
 
@@ -84,6 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rebuilt on the new API (#18)
 - Mall and Big Bang, store logos, keyword results and the keyword cache, and the daily scrape
   limits per IP, user and in total (#81)
+- The scroll animations (AOS), the image slider (react-slick), the product image carousel,
+  dayjs and the duplicate `tabler-icons-react` package from the web app (#25)
 
 ### Fixed
 

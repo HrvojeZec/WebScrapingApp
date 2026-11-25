@@ -28,7 +28,7 @@ updates:
         patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
       npm-minor-and-patch:
         update-types: [minor, patch]
-    # Major upgrades of these are planned for v0.3 (see the roadmap), not merged from bot PRs
+    # Major upgrades of these need code changes, so they are done by hand, not merged from bot PRs
     ignore:
       - dependency-name: "@mantine/*"
         update-types: ["version-update:semver-major"]
@@ -36,15 +36,12 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "react-router-dom"
+      - dependency-name: "react-router"
         update-types: ["version-update:semver-major"]
       - dependency-name: "vite"
         update-types: ["version-update:semver-major"]
-      # Newer majors need a newer Vite than 5
+      # Must move together with vite
       - dependency-name: "@vitejs/plugin-react"
-        update-types: ["version-update:semver-major"]
-      # The carousel is replaced in v0.3; 2.0 moves to jQuery 4 and changes the CSS we use
-      - dependency-name: "slick-carousel"
         update-types: ["version-update:semver-major"]
       - dependency-name: "express"
         update-types: ["version-update:semver-major"]

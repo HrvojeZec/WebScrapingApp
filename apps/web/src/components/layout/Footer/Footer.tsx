@@ -1,9 +1,9 @@
 import classes from "./Footer.module.scss";
 import { SmartShop } from "../../shared/BrandLogo/SmartShop";
-import { BrandFacebook, BrandTwitter, BrandInstagram } from "tabler-icons-react";
+import { IconBrandFacebook, IconBrandX, IconBrandInstagram } from "@tabler/icons-react";
 function Footer() {
   return (
-    <div className={classes.footer} data-aos="fade-up">
+    <div className={classes.footer}>
       <div className={classes.footerWrapper}>
         <div className={classes.footerContent}>
           <SmartShop showLogo={true} />
@@ -21,15 +21,15 @@ function Footer() {
           <div className={classes.mediasLogo}>
             <a href="#">
               {" "}
-              <BrandFacebook size={48} strokeWidth={2} color={"#406fbf"} />
+              <IconBrandFacebook size={48} strokeWidth={2} color={"#406fbf"} />
             </a>
             <a href="#">
               {" "}
-              <BrandTwitter size={48} strokeWidth={2} color={"#406fbf"} />
+              <IconBrandX size={48} strokeWidth={2} color={"#406fbf"} />
             </a>
             <a href="#">
               {" "}
-              <BrandInstagram size={48} strokeWidth={2} color={"#E4405F"} />
+              <IconBrandInstagram size={48} strokeWidth={2} color={"#E4405F"} />
             </a>
           </div>
         </div>
