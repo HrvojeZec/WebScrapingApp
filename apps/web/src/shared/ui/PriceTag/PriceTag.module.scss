@@ -1,0 +1,60 @@
+.root {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--ss-space-step) / 2);
+}
+
+.main {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--mantine-spacing-xs);
+  max-width: 100%;
+  // The flat, dark left edge is what makes it read as a shelf label
+  border-left: var(--ss-space-step) solid var(--ss-color-ink);
+  border-radius: 0 var(--ss-radius-field) var(--ss-radius-field) 0;
+  padding: var(--ss-space-step) var(--mantine-spacing-xs) var(--ss-space-step)
+    calc(var(--ss-space-step) * 2.5);
+  color: var(--ss-color-ink);
+  font-family: var(--font-price);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.sale .main {
+  background-color: var(--ss-color-tag);
+}
+
+.discount {
+  font-size: var(--ss-font-size-sm);
+}
+
+.regular {
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  padding-left: calc(var(--ss-space-step) * 3.5);
+}
+
+.card .main {
+  font-size: var(--ss-font-size-xl);
+}
+
+.page {
+  .main {
+    font-size: var(--ss-font-size-xxxl);
+    border-left-width: calc(var(--ss-space-step) * 1.5);
+    padding-left: calc(var(--ss-space-step) * 3.5);
+  }
+
+  .discount {
+    font-size: var(--ss-font-size-lg);
+  }
+
+  .regular {
+    font-size: var(--ss-font-size-md);
+    padding-left: calc(var(--ss-space-step) * 5);
+  }
+}

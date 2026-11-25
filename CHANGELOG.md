@@ -59,6 +59,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   number of days. `GET /api/deals` lists real sales before inflated ones, `GET /api/suggestions`
   completes a search, and `GET /api/stores` tells when each store was last crawled. Products of
   a disabled store are never shown (#24)
+- Design system for the web app: color, type, radius and spacing tokens in a Mantine theme,
+  Croatian price and date formats in Zagreb time, a price tag styled as a shelf label, a store
+  badge and a product image with a placeholder. A test keeps every text color pair above WCAG AA,
+  and `docs/design-system.md` describes the system. The page language is Croatian (#42)
 
 ### Changed
 
