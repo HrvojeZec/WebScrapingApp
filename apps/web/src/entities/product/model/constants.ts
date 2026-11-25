@@ -3,6 +3,9 @@ import type { ProductSort } from "@storeseeker/shared";
 /** Prices change only when the worker crawls, so a minute old list is still right */
 export const PRODUCTS_STALE_MS = 60 * 1000;
 
+/** Suggestions come from product names, which change only when the worker crawls */
+export const SUGGESTIONS_STALE_MS = 5 * 60 * 1000;
+
 /** Two rows of four on a wide screen */
 export const DEALS_HOME_LIMIT = 8;
 
