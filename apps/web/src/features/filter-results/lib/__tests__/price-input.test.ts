@@ -3,10 +3,16 @@ import { LIMITS } from "@storeseeker/shared";
 import { eurosFromInput, followUrl, priceRangeError } from "../price-input";
 
 describe("eurosFromInput", () => {
-  it("reads whole euros with or without the thousands dot", () => {
-    expect(eurosFromInput("1.039")).toEqual({ value: 1039 });
+  it("reads whole euros", () => {
     expect(eurosFromInput("1039")).toEqual({ value: 1039 });
     expect(eurosFromInput(1039)).toEqual({ value: 1039 });
+  });
+
+  // NumberInput hands over its value unformatted, with "." as the decimal point; cents ending
+  // in 0 come as a string ("10,500" typed → "10.500"), others as a number
+  it("rejects cents that NumberInput hands over as a string", () => {
+    expect(eurosFromInput("10.500")).toHaveProperty("error");
+    expect(eurosFromInput("1.000")).toHaveProperty("error");
   });
 
   it("reads an empty field as no bound", () => {

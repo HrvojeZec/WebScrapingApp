@@ -4,8 +4,9 @@ import { PRICE_TEXT } from "../model/constants";
 /** A price field read as whole euros (the API's unit), no bound, or the sentence why not. */
 export type PriceInput = { value: number | undefined } | { error: string };
 
-// Croatian format: a dot groups thousands, a comma would start the cents the API does not take
-const WHOLE_EUROS = /^\d{1,3}(\.\d{3})*$|^\d+$/;
+// NumberInput hands over its value unformatted: no thousands dots, and "." is the decimal point
+// (cents ending in 0 come as a string), so only digits are whole euros
+const WHOLE_EUROS = /^\d+$/;
 
 export function eurosFromInput(input: string | number): PriceInput {
   let euros: number;
@@ -15,7 +16,7 @@ export function eurosFromInput(input: string | number): PriceInput {
     const text = input.trim();
     if (text === "") return { value: undefined };
     if (!WHOLE_EUROS.test(text)) return { error: PRICE_TEXT.wholeEuros };
-    euros = Number(text.replace(/\./g, ""));
+    euros = Number(text);
   }
   if (!Number.isInteger(euros) || euros < 0) return { error: PRICE_TEXT.wholeEuros };
   if (euros > LIMITS.priceFilterMaxEuros) return { error: PRICE_TEXT.tooHigh };
