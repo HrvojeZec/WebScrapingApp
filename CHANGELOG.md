@@ -88,6 +88,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   screens and opens as a bottom drawer from "Filteri (n)" on phones. Filters live in the URL with
   the sort and the page, and the cards rearrange smoothly when they change, without motion when
   reduced motion is on (#45)
+- Product page at `/proizvod/:id`: the image flies over from the product card and back, the price
+  label, the lowest price of the last 30 days (or "Povijest od <date>" while the history is
+  shorter), whether a sale is real or measured from an inflated price, a link to the store in a
+  new tab, a step chart of the price history of the last 90 days that draws itself (without motion
+  when reduced motion is on), and the same product in other stores apart from similar products,
+  with the cheapest one labelled "Najniža cijena". An unknown or malformed id shows "Ovaj
+  proizvod ne postoji ili je uklonjen" with a link to the search. The chart (`@mantine/charts`
+  with `recharts`) loads in a chunk of its own with the product page (#27)
 
 ### Changed
 

@@ -10,6 +10,8 @@ export const MOTION = {
     slow: 0.4,
     /** A number counting up, long enough to read the digits roll */
     count: 1.2,
+    /** The price history line drawing itself */
+    draw: 0.8,
   },
   /** Fast start, soft landing */
   ease: [0.2, 0, 0, 1] as const,

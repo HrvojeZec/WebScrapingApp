@@ -12,6 +12,7 @@ import { layerImportRules, readSlices } from "./apps/web/scripts/layer-rules.mjs
  */
 const ENTITY_DEPS = {
   meta: [],
+  "price-history": [],
   product: [],
   "scrape-job": ["store"],
   store: [],
