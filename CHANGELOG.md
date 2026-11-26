@@ -138,6 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dayjs and the duplicate `tabler-icons-react` package from the web app (#25)
 - The old home and results pages, their data contexts, the `/rezultati/:keyword` route and
   `@mantine/form` from the web app (#26)
+- `puppeteer-extra` and its stealth plugin: the browser says it is a bot, like the HTTP client
+  (#22)
 
 ### Fixed
 
