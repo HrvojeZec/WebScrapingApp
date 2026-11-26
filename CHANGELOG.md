@@ -81,6 +81,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   scroll to top, shows when each store was last crawled and has "Osvježi cijene", which queues a
   crawl of the result's categories and shows the queue position and status per store. Product
   cards have equal height, the price in the same place and open the store in a new tab (#26)
+- Search filters: several stores and categories at once, each with its product count (an option
+  with no products is shown but disabled), a price range in whole euros applied on Enter or when
+  leaving the fields (a range with the lower bound above the upper one shows a message and sends
+  no request), "Samo sniženo" and "Očisti filtere". The panel stands beside the results on wide
+  screens and opens as a bottom drawer from "Filteri (n)" on phones. Filters live in the URL with
+  the sort and the page, and the cards rearrange smoothly when they change, without motion when
+  reduced motion is on (#45)
 
 ### Changed
 

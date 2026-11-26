@@ -13,4 +13,5 @@ export const SEARCH_TEXT = {
   pastLastPageTitle: "Ova stranica rezultata ne postoji",
   pastLastPage: "Rezultata je manje nego prije. Vrati se na prvu stranicu.",
   firstPage: "Na prvu stranicu",
+  filters: "Filteri",
 } as const;

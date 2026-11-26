@@ -5,6 +5,8 @@ export const UI = {
   notificationAutoCloseMs: 4000,
   /** Product cards per row from each Mantine breakpoint up: two fit on a 360 px phone */
   productGridColumns: { base: 2, sm: 3, md: 4 },
+  /** The search results; from md up the filter panel takes a column's width */
+  resultGridColumns: { base: 2, sm: 3, md: 3, lg: 4 },
 } as const;
 
 /** The product name, in the header, the footer and every document title. */
