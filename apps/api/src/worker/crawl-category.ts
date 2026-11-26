@@ -30,13 +30,15 @@ async function crawlListing(
   collect: (items: ParsedProduct[]) => void,
 ): Promise<ListingCrawl> {
   const visited = new Set<string>();
+  const hints = adapter.fetchMethod === "browser" ? adapter.browser : undefined;
+  const pageLimit = Math.min(maxPages, adapter.maxPages ?? maxPages);
   let url = firstPageUrl;
   let pages = 0;
 
   for (;;) {
-    if (pages >= maxPages) return { status: "partial", pages, error: "page limit" };
+    if (pages >= pageLimit) return { status: "partial", pages, error: "page limit" };
     visited.add(url);
-    const outcome = await source.get(url, signal);
+    const outcome = await source.get(url, signal, hints);
     if (outcome.kind !== "ok") {
       const message =
         outcome.kind === "blocked"

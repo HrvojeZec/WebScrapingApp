@@ -4,11 +4,14 @@ import * as cheerio from "cheerio";
 import { categorySlugSchema, shopSlugSchema, type ShopSlug } from "@storeseeker/shared";
 import { fixtureName } from "../scraping/fixtures/fixture-name";
 import { trimHtml } from "../scraping/fixtures/trim";
-import { createPoliteFetch } from "../scraping/http/polite-fetch";
+import { createBrowserSource } from "../scraping/browser/browser-source";
+import { launchPuppeteer } from "../scraping/browser/puppeteer-port";
+import { createPoliteFetch, type FetchOutcome } from "../scraping/http/polite-fetch";
 import { botUserAgent } from "../scraping/http/user-agent";
 import { SHOP_ADAPTERS } from "../scraping/shops/registry";
 
-// One real request (plus robots.txt) to one listing page, run by hand, never from tests or CI
+// One real page load (plus robots.txt) of one listing, run by hand, never from tests or CI. A
+// browser shop opens headless Chrome, which is closed again before the script ends
 const USAGE =
   "Usage: npm run scrape:live-check -w @storeseeker/api -- <shop> <category> [--list=N] [--page=N] [--save[=name]]";
 
@@ -63,10 +66,21 @@ async function main() {
   }
 
   const adapter = SHOP_ADAPTERS[shop.data];
-  const url = new URL(firstPageUrl);
-  if (page > 1) url.searchParams.set("p", String(page));
-  const outcome = await createPoliteFetch({ userAgent: botUserAgent() }).get(url.href);
-  console.log(`GET ${url.href}`);
+  const url = page > 1 ? adapter.pageUrl(firstPageUrl, page) : firstPageUrl;
+  const userAgent = botUserAgent();
+  const polite = createPoliteFetch({ userAgent });
+  let outcome: FetchOutcome;
+  if (adapter.fetchMethod === "browser") {
+    const browser = createBrowserSource({ gate: polite, launch: launchPuppeteer, userAgent });
+    try {
+      outcome = await browser.get(url, undefined, adapter.browser);
+    } finally {
+      await browser.close();
+    }
+  } else {
+    outcome = await polite.get(url);
+  }
+  console.log(`GET ${url} (${adapter.fetchMethod})`);
   if (outcome.kind !== "ok") {
     console.log(JSON.stringify(outcome));
     process.exitCode = 1;

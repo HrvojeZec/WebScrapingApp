@@ -121,6 +121,47 @@ describe("crawlCategory", () => {
     });
   });
 
+  test("a browser adapter sends its hints with every page, an http adapter none", async () => {
+    const answers: Record<string, FakeAnswer> = {
+      [PHONES]: { items: [product("1")], next: pageUrl("phones", 2) },
+      [pageUrl("phones", 2)]: { items: [product("2")], next: null },
+    };
+    const browser = { waitForSelector: ".card", extraHosts: ["api.shop.example"] };
+    const signal = new AbortController().signal;
+
+    const viaBrowser = fakeSource(answers);
+    await crawlCategory(
+      { source: viaBrowser.source, maxPages: 10, signal },
+      fakeAdapter({ mobiteli: [PHONES] }, { fetchMethod: "browser", browser }),
+      "mobiteli",
+    );
+    expect(viaBrowser.hints).toEqual([browser, browser]);
+
+    const viaHttp = fakeSource(answers);
+    await crawlCategory(
+      { source: viaHttp.source, maxPages: 10, signal },
+      fakeAdapter({ mobiteli: [PHONES] }),
+      "mobiteli",
+    );
+    expect(viaHttp.hints).toEqual([undefined, undefined]);
+  });
+
+  test("the adapter's maxPages caps the crawl below the job's", async () => {
+    const { source, calls } = fakeSource({
+      [PHONES]: { items: [product("1")], next: pageUrl("phones", 2) },
+      [pageUrl("phones", 2)]: { items: [product("2")], next: null },
+    });
+
+    const result = await crawlCategory(
+      { source, maxPages: 10, signal: new AbortController().signal },
+      fakeAdapter({ mobiteli: [PHONES] }, { maxPages: 1 }),
+      "mobiteli",
+    );
+
+    expect(result).toMatchObject({ status: "partial", pages: 1, error: "page limit" });
+    expect(calls).toEqual([PHONES]);
+  });
+
   test("an aborted signal rejects", async () => {
     const { source } = fakeSource({ [PHONES]: "hang" });
     const controller = new AbortController();
