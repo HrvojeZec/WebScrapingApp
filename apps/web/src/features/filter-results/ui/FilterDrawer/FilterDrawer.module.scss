@@ -1,0 +1,17 @@
+// Tall enough for every option, but the results stay in sight above it
+.content {
+  max-height: 85dvh;
+  border-top-left-radius: var(--ss-radius-card);
+  border-top-right-radius: var(--ss-radius-card);
+}
+
+.body {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 6);
+  padding-bottom: calc(var(--ss-space-step) * 6);
+}
+
+.done {
+  position: sticky;
+  bottom: 0;
+}

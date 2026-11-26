@@ -1,0 +1,10 @@
+.root {
+  display: grid;
+  align-content: start;
+  gap: calc(var(--ss-space-step) * 6);
+}
+
+.clear {
+  justify-self: start;
+  padding-inline: 0;
+}

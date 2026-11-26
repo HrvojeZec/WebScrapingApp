@@ -3,7 +3,9 @@
   gap: calc(var(--ss-space-step) * 8);
 }
 
+// popLayout places a leaving card absolutely, against the grid
 .grid {
+  position: relative;
   align-items: stretch;
   transition: opacity var(--mantine-transition-duration, 150ms) ease;
 }

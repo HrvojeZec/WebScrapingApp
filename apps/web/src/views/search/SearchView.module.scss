@@ -2,3 +2,28 @@
   display: grid;
   gap: calc(var(--ss-space-step) * 8);
 }
+
+// The drawer button and the sort menu sit on one line, bottoms aligned with the sort label above
+.tools {
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--ss-space-step) * 3);
+}
+
+// From md up the panel stands beside the results; below it the drawer holds it
+.body {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 8);
+
+  @media (min-width: 62em) {
+    grid-template-columns: 15rem minmax(0, 1fr);
+  }
+}
+
+.aside {
+  align-self: start;
+}
+
+.results {
+  min-width: 0;
+}

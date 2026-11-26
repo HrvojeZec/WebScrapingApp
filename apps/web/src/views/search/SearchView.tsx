@@ -1,9 +1,12 @@
-import { Button, Container } from "@mantine/core";
+import { Box, Button, Container } from "@mantine/core";
 import { useSearchParams } from "react-router";
 import { LIMITS } from "@storeseeker/shared";
 import { useProducts } from "@/entities/product/hooks/useProducts";
 import { storeFreshness } from "@/entities/store/lib/freshness";
 import { useStores } from "@/entities/store/hooks/useStores";
+import { useFilters } from "@/features/filter-results/hooks/useFilters";
+import { FilterDrawer } from "@/features/filter-results/ui/FilterDrawer/FilterDrawer";
+import { FilterPanel } from "@/features/filter-results/ui/FilterPanel/FilterPanel";
 import { refreshCategories } from "@/features/refresh-prices/lib/refresh-categories";
 import { RefreshPrices } from "@/features/refresh-prices/ui/RefreshPrices/RefreshPrices";
 import { SortMenu } from "@/features/sort-results/ui/SortMenu/SortMenu";
@@ -28,6 +31,7 @@ export function SearchView() {
   const term = searchTermAsTyped(params);
   const products = useProducts(state);
   const stores = useStores();
+  const filters = useFilters();
   useDocumentTitle(term ?? SEARCH_TEXT.documentTitle);
 
   const data = products.data;
@@ -95,6 +99,16 @@ export function SearchView() {
     );
   }
 
+  const panel = (
+    <FilterPanel
+      state={state}
+      facets={data?.facets}
+      stores={stores.data ?? []}
+      issues={filters.issues}
+      actions={filters}
+    />
+  );
+
   return (
     <Container className={classes.page}>
       <SearchHeader
@@ -108,9 +122,26 @@ export function SearchView() {
             categories={refreshCategories(state.category, data?.facets.categories ?? [])}
           />
         }
-        sort={<SortMenu value={state.sort} onChange={(sort) => setState({ sort })} />}
+        sort={
+          <div className={classes.tools}>
+            <Box hiddenFrom="md">
+              <FilterDrawer activeCount={filters.activeCount}>{panel}</FilterDrawer>
+            </Box>
+            <SortMenu value={state.sort} onChange={(sort) => setState({ sort })} />
+          </div>
+        }
       />
-      {content}
+      <div className={classes.body}>
+        <Box
+          component="aside"
+          visibleFrom="md"
+          aria-label={SEARCH_TEXT.filters}
+          className={classes.aside}
+        >
+          {panel}
+        </Box>
+        <div className={classes.results}>{content}</div>
+      </div>
     </Container>
   );
 }
