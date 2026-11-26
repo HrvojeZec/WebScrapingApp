@@ -28,7 +28,14 @@ function pagePort(page: Page): PagePort {
 
 /** A headless Chrome without stealth: it says who it is, like the HTTP client. */
 export async function launchPuppeteer(): Promise<BrowserPort> {
-  const browser = await puppeteer.launch({ headless: true });
+  // Puppeteer's own Ctrl+C handler kills Chrome and calls process.exit(130), which would skip the
+  // worker's shutdown (job status, browser.close(), mongoose.disconnect())
+  const browser = await puppeteer.launch({
+    headless: true,
+    handleSIGINT: false,
+    handleSIGTERM: false,
+    handleSIGHUP: false,
+  });
   return {
     connected: () => browser.connected,
     async newPage({ userAgent, blockRequest }: PageSetup) {
@@ -39,7 +46,8 @@ export async function launchPuppeteer(): Promise<BrowserPort> {
       page.on("request", (request) => {
         if (request.isInterceptResolutionHandled()) return;
         const blocked = blockRequest({ url: request.url(), resourceType: request.resourceType() });
-        void (blocked ? request.abort() : request.continue());
+        // A page closed mid-request must not become an unhandled rejection in the worker
+        (blocked ? request.abort() : request.continue()).catch(() => {});
       });
       return pagePort(page);
     },

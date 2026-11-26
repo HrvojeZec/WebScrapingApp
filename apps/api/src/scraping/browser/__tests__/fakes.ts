@@ -9,6 +9,8 @@ export type FakePage = {
   selectorAppears?: boolean;
   /** Card counts in turn; the last one repeats */
   counts?: number[];
+  /** A stuck renderer: `count` and `content` never answer */
+  hangs?: boolean;
   html?: string;
 };
 
@@ -47,7 +49,7 @@ export function createFakeLauncher(
   clock: Clock,
   events: Event[],
   pages: FakePage[],
-  { crashOnNewPage }: { crashOnNewPage?: number } = {},
+  { crashOnNewPage, closeHangs }: { crashOnNewPage?: number; closeHangs?: boolean } = {},
 ) {
   const setups: PageSetup[] = [];
   const browsers: { connected: boolean; closed: boolean }[] = [];
@@ -71,6 +73,7 @@ export function createFakeLauncher(
       },
       count(selector) {
         events.push({ at: clock.now(), call: "count", arg: selector });
+        if (spec.hangs) return new Promise(() => {});
         const counts = spec.counts ?? [1];
         const value = counts[Math.min(countCall, counts.length - 1)];
         countCall += 1;
@@ -78,6 +81,7 @@ export function createFakeLauncher(
       },
       content() {
         events.push({ at: clock.now(), call: "content" });
+        if (spec.hangs) return new Promise(() => {});
         return Promise.resolve(spec.html ?? "<main>cards</main>");
       },
       close() {
@@ -111,7 +115,7 @@ export function createFakeLauncher(
         events.push({ at: clock.now(), call: "closeBrowser" });
         state.closed = true;
         state.connected = false;
-        return Promise.resolve();
+        return closeHangs ? new Promise(() => {}) : Promise.resolve();
       },
     };
   }

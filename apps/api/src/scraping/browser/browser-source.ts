@@ -10,8 +10,14 @@ import { shouldBlockRequest } from "./request-filter";
 export const STABLE_CHECK_MS = 500;
 const NAVIGATION_TIMEOUT_MS = 30_000;
 const CONTENT_TIMEOUT_MS = 15_000;
-// A page of a Chrome that hangs must not hold the worker forever
+// A page or a Chrome that hangs must not hold the worker forever
 const PAGE_CLOSE_TIMEOUT_MS = 5_000;
+export const BROWSER_CLOSE_TIMEOUT_MS = 5_000;
+
+/** A step of a page that did not answer in time: the renderer is stuck, not the shop slow. */
+class StepTimeoutError extends Error {
+  override name = "TimeoutError";
+}
 
 export type BrowserSource = PageSource & {
   /** Closes the browser, if one was launched. */
@@ -59,22 +65,41 @@ export function createBrowserSource({
     void old?.then((port) => port.close()).catch(() => {});
   }
 
-  async function closePage(page: PagePort) {
+  /** Waits for `work` at most `ms`; the timer is cleared either way. */
+  async function atMost(work: Promise<unknown>, ms: number) {
     const timer = new AbortController();
-    await Promise.race([
-      page.close().catch(() => {}),
-      clock.sleep(PAGE_CLOSE_TIMEOUT_MS, timer.signal).catch(() => {}),
-    ]);
+    await Promise.race([work.catch(() => {}), clock.sleep(ms, timer.signal).catch(() => {})]);
     timer.abort();
+  }
+
+  const closePage = (page: PagePort) => atMost(page.close(), PAGE_CLOSE_TIMEOUT_MS);
+
+  /**
+   * A call into the page that has no timeout of its own (`count`, `content`). One that does not
+   * answer within the content timeout means a stuck renderer, so the browser is replaced.
+   */
+  async function step<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
+    const timer = new AbortController();
+    const expired = clock.sleep(contentTimeoutMs, timer.signal).then(
+      () => {
+        throw new StepTimeoutError("the page stopped answering");
+      },
+      () => new Promise<never>(() => {}),
+    );
+    try {
+      return await Promise.race([untilAborted(work, signal), expired]);
+    } finally {
+      timer.abort();
+    }
   }
 
   /** Whether the number of cards stopped changing before the content timeout. */
   async function settled(page: PagePort, selector: string, signal?: AbortSignal) {
     const deadline = clock.now() + contentTimeoutMs;
-    let previous = await untilAborted(page.count(selector), signal);
+    let previous = await step(page.count(selector), signal);
     while (clock.now() < deadline) {
       await clock.sleep(STABLE_CHECK_MS, signal);
-      const current = await untilAborted(page.count(selector), signal);
+      const current = await step(page.count(selector), signal);
       if (current > 0 && current === previous) return true;
       previous = current;
     }
@@ -111,7 +136,7 @@ export function createBrowserSource({
       const challenge = response.headers["cf-mitigated"] === "challenge";
       return { kind: "blocked", status, reason: challenge ? "challenge" : "forbidden" };
     }
-    if (status === 503 && isChallengePage(await untilAborted(page.content(), signal))) {
+    if (status === 503 && isChallengePage(await step(page.content(), signal))) {
       return { kind: "blocked", status, reason: "challenge" };
     }
     if (status !== 200) return { kind: "error", status, message: `HTTP ${status}` };
@@ -119,14 +144,14 @@ export function createBrowserSource({
     const selector = hints.waitForSelector;
     if (!(await untilAborted(page.waitForSelector(selector, contentTimeoutMs), signal))) {
       // A challenge or a cookie wall can arrive with a 200 and stand where the list should be
-      const html = await untilAborted(page.content(), signal);
+      const html = await step(page.content(), signal);
       if (isChallengePage(html)) return { kind: "blocked", status, reason: "challenge" };
       return { kind: "error", status, message: "content did not appear" };
     }
     if (!(await settled(page, selector, signal))) {
       return { kind: "error", status, message: "content did not settle" };
     }
-    const html = await untilAborted(page.content(), signal);
+    const html = await step(page.content(), signal);
     return { kind: "ok", status, url: response.url, html };
   }
 
@@ -164,6 +189,8 @@ export function createBrowserSource({
       return await read(page, url, origin, hints, signal);
     } catch (error) {
       if (signal?.aborted) throw signal.reason;
+      // A stuck renderer still reports connected(), so it would be reused for every next page
+      if (error instanceof StepTimeoutError) dropBrowser();
       if (error instanceof Error && error.name === "TimeoutError") {
         return { kind: "error", message: "timeout" };
       }
@@ -177,7 +204,7 @@ export function createBrowserSource({
     const current = browser;
     browser = null;
     const port = await current?.catch(() => null);
-    await port?.close();
+    if (port) await atMost(port.close(), BROWSER_CLOSE_TIMEOUT_MS);
   }
 
   return { get, close };

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { createFakeClock } from "../../http/__tests__/fakes";
-import { STABLE_CHECK_MS, createBrowserSource } from "../browser-source";
+import { BROWSER_CLOSE_TIMEOUT_MS, STABLE_CHECK_MS, createBrowserSource } from "../browser-source";
 import { shouldBlockRequest } from "../request-filter";
 import {
   createFakeGate,
@@ -20,12 +20,16 @@ const CHALLENGE_BODY =
 
 function setup(
   pages: FakePage[],
-  { allowed, crashOnNewPage }: { allowed?: (url: string) => boolean; crashOnNewPage?: number } = {},
+  {
+    allowed,
+    crashOnNewPage,
+    closeHangs,
+  }: { allowed?: (url: string) => boolean; crashOnNewPage?: number; closeHangs?: boolean } = {},
 ) {
   const fake = createFakeClock();
   const events: Event[] = [];
   const { gate, pauses } = createFakeGate(fake.clock, events, allowed);
-  const launcher = createFakeLauncher(fake.clock, events, pages, { crashOnNewPage });
+  const launcher = createFakeLauncher(fake.clock, events, pages, { crashOnNewPage, closeHangs });
   const source = createBrowserSource({
     gate,
     launch: launcher.launch,
@@ -232,6 +236,28 @@ describe("createBrowserSource", () => {
     expect(await get()).toMatchObject({ kind: "ok" });
 
     expect(calls().filter((call) => call === "launch")).toHaveLength(2);
+  });
+
+  test("a renderer that stops answering is a timeout, and the next get relaunches", async () => {
+    const { get, calls, pagesClosed, clock } = setup([{ hangs: true }, {}]);
+    const start = clock.now();
+
+    expect(await get()).toEqual({ kind: "error", message: "timeout" });
+    expect(clock.now() - start).toBe(CONTENT_TIMEOUT_MS);
+    expect(pagesClosed[0]).toBe(true);
+
+    expect(await get()).toMatchObject({ kind: "ok" });
+    expect(calls().filter((call) => call === "launch")).toHaveLength(2);
+  });
+
+  test("close() gives up on a browser that does not close", async () => {
+    const { get, source, run, clock } = setup([{}], { closeHangs: true });
+    await get();
+    const start = clock.now();
+
+    await run(source.close());
+
+    expect(clock.now() - start).toBe(BROWSER_CLOSE_TIMEOUT_MS);
   });
 
   test("abort during navigation rejects with the reason and closes the page", async () => {
