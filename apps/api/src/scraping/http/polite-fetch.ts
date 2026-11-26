@@ -1,6 +1,7 @@
 import { LIMITS } from "@storeseeker/shared";
 import { systemClock, type Clock } from "./clock";
 import { createHostQueue } from "./host-queue";
+import { isChallengePage, parseRetryAfter } from "./response-rules";
 import { createRobotsCache, robotsFromResponse } from "./robots";
 
 export type FetchOutcome =
@@ -17,8 +18,12 @@ export type FetchOutcome =
 export type PoliteFetch = {
   /** Rejects only when `signal` aborts; every other failure is a FetchOutcome. */
   get(url: string, signal?: AbortSignal): Promise<FetchOutcome>;
-  /** For the browser fallback, so it waits in the same queue as plain requests. */
+  /** For the browser, so it waits in the same queue as plain requests. */
   waitTurn(origin: string, signal?: AbortSignal): Promise<void>;
+  /** Whether robots.txt allows the URL, from the same cache as `get`. */
+  isAllowed(url: string, signal?: AbortSignal): Promise<boolean>;
+  /** Holds every request to the origin until `untilMs`, as a 429 does. */
+  pause(origin: string, untilMs: number): void;
 };
 
 export type PoliteFetchOptions = {
@@ -31,9 +36,6 @@ export type PoliteFetchOptions = {
   backoffBaseMs?: number;
   maxBodyBytes?: number;
 };
-
-const DEFAULT_RETRY_AFTER_MS = 60_000;
-const MAX_RETRY_AFTER_MS = 3_600_000;
 
 type Attempt =
   | { kind: "response"; status: number; headers: Headers; url: string; body: string | null }
@@ -189,22 +191,15 @@ export function createPoliteFetch({
     }
   }
 
-  return { get, waitTurn: (origin, signal) => queue.waitTurn(origin, signal) };
-}
-
-function isChallengePage(body: string): boolean {
-  return body.includes("Just a moment") && body.includes("cf-chl");
-}
-
-function parseRetryAfter(header: string | null, nowMs: number): number {
-  let ms = DEFAULT_RETRY_AFTER_MS;
-  if (header && /^\d+$/.test(header.trim())) {
-    ms = Number(header.trim()) * 1000;
-  } else if (header && /[a-z]/i.test(header) && !Number.isNaN(Date.parse(header))) {
-    // An HTTP date always names the weekday and month; Date.parse would also take "-5" as 2001
-    ms = Date.parse(header) - nowMs;
-  }
-  return Math.min(Math.max(ms, 0), MAX_RETRY_AFTER_MS);
+  return {
+    get,
+    waitTurn: (origin, signal) => queue.waitTurn(origin, signal),
+    async isAllowed(url, signal) {
+      const rules = await robots.rulesFor(new URL(url).origin, signal);
+      return rules.isAllowed(url);
+    },
+    pause: (origin, untilMs) => queue.pauseUntil(origin, untilMs),
+  };
 }
 
 function networkMessage(error: unknown): string {

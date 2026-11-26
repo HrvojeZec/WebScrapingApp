@@ -16,6 +16,19 @@ What every adapter follows:
 - Crawls run from one home machine, twice a day on a schedule or when a user asks for fresh prices
   (at most once per category every 30 minutes).
 
+A shop whose prices only appear after its JavaScript runs is read in headless Chrome
+(Puppeteer), under the same rules:
+
+- The browser is chosen per shop, never as an answer to a 403, 429 or challenge page.
+- It sends the same User-Agent, asks `robots.txt` before each page (and again after a redirect),
+  waits for the shop's turn in the same queue as plain requests and pauses on 429 the same way.
+- It loads only the shop's own host, plus a host an adapter names because the prices come from
+  there. Images, fonts, video, the favicon and every other host (analytics, ads, chat) are
+  blocked, so a visit
+  costs the shop less and never counts in anyone's statistics.
+- It waits for the product cards to appear and stop changing, not for the network to go quiet.
+- Each page load is one request: a failed or slow page is not repeated.
+
 ## Harvey Norman (harveynorman.hr)
 
 Checked on 25 November 2026.

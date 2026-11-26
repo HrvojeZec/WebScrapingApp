@@ -20,4 +20,9 @@ export const harveyNormanAdapter: ShopAdapter = {
     slusalice: [`${ORIGIN}/mobiteli/slusalice`],
   },
   parseListing,
+  pageUrl(listingUrl, page) {
+    const url = new URL(listingUrl);
+    url.searchParams.set("p", String(page));
+    return url.href;
+  },
 };

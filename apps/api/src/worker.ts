@@ -5,6 +5,8 @@ import { Meta } from "./db/models/meta";
 import { ensureStores } from "./db/stores";
 import { createLogger } from "./http/logger";
 import { systemClock } from "./scraping/http/clock";
+import { createBrowserSource } from "./scraping/browser/browser-source";
+import { launchPuppeteer } from "./scraping/browser/puppeteer-port";
 import { createPoliteFetch } from "./scraping/http/polite-fetch";
 import { botUserAgent } from "./scraping/http/user-agent";
 import { SHOP_ADAPTERS } from "./scraping/shops/registry";
@@ -29,8 +31,12 @@ async function main() {
   const requeued = await requeueRunningJobs();
   if (requeued > 0) logger.info({ requeued }, "jobs left running were put back in the queue");
 
+  // One polite client: the browser waits in its queue and asks its robots.txt cache
+  const userAgent = botUserAgent();
+  const polite = createPoliteFetch({ userAgent });
+  const browser = createBrowserSource({ gate: polite, launch: launchPuppeteer, userAgent });
   const worker = startWorker({
-    sources: { http: createPoliteFetch({ userAgent: botUserAgent() }) },
+    sources: { http: polite, browser },
     adapters: SHOP_ADAPTERS,
     clock: systemClock,
     logger,
@@ -41,6 +47,12 @@ async function main() {
     logger.info({ signal }, "stopping the worker");
     worker
       .stop()
+      // A Chrome that will not close must not keep the database connection open
+      .then(() =>
+        browser.close().catch((error: unknown) => {
+          logger.warn({ err: error }, "browser did not close cleanly");
+        }),
+      )
       .then(() => mongoose.disconnect())
       .catch((error: unknown) => {
         logger.error({ err: error }, "worker did not stop cleanly");

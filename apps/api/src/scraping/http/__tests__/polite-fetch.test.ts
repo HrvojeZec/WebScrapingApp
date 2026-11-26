@@ -96,6 +96,45 @@ describe("createPoliteFetch", () => {
     });
   });
 
+  describe("the gate for the browser", () => {
+    test("isAllowed reads robots.txt once, shared with get", async () => {
+      const fake = createFakeClock();
+      const http = createFakeFetch(
+        fake.clock,
+        withRobots(
+          () => html("ok"),
+          () => html("User-agent: *\nDisallow: /trazenje"),
+        ),
+      );
+      const polite = createPoliteFetch({
+        userAgent: botUserAgent("0.3.0"),
+        fetch: http.fetch,
+        clock: fake.clock,
+      });
+
+      expect(await fake.run(polite.isAllowed(SHOP))).toBe(false);
+      expect(await fake.run(polite.isAllowed("https://www.shop.example/mobiteli"))).toBe(true);
+      expect(await fake.run(polite.get(SHOP))).toEqual({
+        kind: "blocked",
+        status: 0,
+        reason: "robots",
+      });
+      expect(http.robotsCalls()).toHaveLength(1);
+      expect(http.pageCalls()).toHaveLength(0);
+    });
+
+    test("pause holds the next get to that origin until the given time", async () => {
+      const { polite, get, http, clock } = setup(() => html("ok"));
+      await get(SHOP);
+      const until = clock.now() + 90_000;
+
+      polite.pause("https://www.shop.example", until);
+      await get(SHOP_PAGE_2);
+
+      expect(http.pageCalls()[1].at).toBe(until);
+    });
+  });
+
   describe("retries", () => {
     test("retries 5xx with waits of 1 s and 2 s", async () => {
       const { get, http } = setup(

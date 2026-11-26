@@ -96,6 +96,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with the cheapest one in stock labelled "Najniža cijena". An unknown or malformed id shows "Ovaj
   proizvod ne postoji ili je uklonjen" with a link to the search. The chart (`@mantine/charts`
   with `recharts`) loads in a chunk of its own with the product page (#27)
+- Headless Chrome (Puppeteer) as a second page source, for shops whose prices JavaScript fills
+  in. It follows the HTTP client's rules: the bot User-Agent, robots.txt before every page and
+  after a redirect, the same queue per shop and the same pause on 429. It loads only the shop's
+  own host and blocks images, fonts, the favicon and other hosts. It reads the page once the
+  product cards stop changing, never repeats a page, relaunches after a crash and closes with the
+  worker. `scrape:live-check` opens a browser shop in it (#22)
 
 ### Changed
 
@@ -132,6 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dayjs and the duplicate `tabler-icons-react` package from the web app (#25)
 - The old home and results pages, their data contexts, the `/rezultati/:keyword` route and
   `@mantine/form` from the web app (#26)
+- `puppeteer-extra` and its stealth plugin: the browser says it is a bot, like the HTTP client
+  (#22)
 
 ### Fixed
 
