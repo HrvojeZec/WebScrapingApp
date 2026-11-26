@@ -3,15 +3,21 @@ import { WEB_LIMITS } from "@/shared/constants/limits";
 import { ApiError } from "./base-api";
 import { HTTP_STATUS } from "./http-status";
 
-/** A 4xx is the API's answer and stays the same on a repeat; anything else may be passing. */
+/**
+ * A 4xx is the API's answer and stays the same on a repeat. No response, or one that is not the
+ * API's JSON (the dev proxy's 502), means the API is not running, which a repeat cannot fix. Only
+ * the API's own server error may be passing.
+ */
 export function shouldRetry(failureCount: number, error: unknown): boolean {
-  if (
-    error instanceof ApiError &&
-    error.status !== null &&
-    error.status >= HTTP_STATUS.badRequest &&
-    error.status < HTTP_STATUS.internalServerError
-  ) {
-    return false;
+  if (error instanceof ApiError) {
+    if (error.code === "network" || error.code === "unavailable") return false;
+    if (
+      error.status !== null &&
+      error.status >= HTTP_STATUS.badRequest &&
+      error.status < HTTP_STATUS.internalServerError
+    ) {
+      return false;
+    }
   }
   return failureCount < WEB_LIMITS.queryRetries;
 }

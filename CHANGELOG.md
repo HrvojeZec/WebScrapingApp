@@ -139,6 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   error handler had three parameters instead of four (#76)
 - `npm start` failed since v0.1.0, because the build did not copy the store logos the API read
   at startup (#18)
+- The web app repeated every request three times while the API was not running, which filled
+  the console with 502 errors. It now repeats only the API's own server errors
 
 ## [0.2.0] - 2026-11-24
 
