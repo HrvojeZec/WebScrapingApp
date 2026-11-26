@@ -1,0 +1,32 @@
+.page {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 10);
+  padding-block: calc(var(--ss-space-step) * 8) calc(var(--ss-space-step) * 12);
+}
+
+.history {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 4);
+  border: 1px solid var(--ss-color-line);
+  border-radius: var(--ss-radius-card);
+  background-color: var(--ss-color-paper);
+  padding: calc(var(--ss-space-step) * 5);
+}
+
+.heading {
+  font-size: var(--ss-font-size-xl);
+}
+
+.window {
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-sm);
+}
+
+// As tall as the chart, so the page does not jump when it arrives
+.chartSkeleton {
+  height: calc(var(--ss-space-step) * 65);
+}
+
+.headerSkeleton {
+  height: calc(var(--ss-space-step) * 80);
+}

@@ -1,0 +1,92 @@
+// The image beside the details from sm, above them on a phone
+.root {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 6);
+
+  @media (min-width: 48em) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: calc(var(--ss-space-step) * 10);
+  }
+}
+
+.media {
+  border: 1px solid var(--ss-color-line);
+  border-radius: var(--ss-radius-card);
+  background-color: var(--ss-color-paper);
+  padding: calc(var(--ss-space-step) * 4);
+}
+
+.body {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--ss-space-step) * 4);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--ss-font-size-xxl);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: calc(var(--ss-space-step) * 3);
+}
+
+.cheapest {
+  border-radius: var(--ss-radius-field);
+  background-color: var(--ss-color-tag);
+  padding: var(--ss-space-step) calc(var(--ss-space-step) * 2);
+  color: var(--ss-color-ink);
+  font-size: var(--ss-font-size-sm);
+  font-weight: 600;
+}
+
+.notes {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 1.5);
+}
+
+.note {
+  color: var(--ss-color-ink);
+  font-weight: 600;
+}
+
+.realSale,
+.inflated {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 1.5);
+  font-weight: 600;
+}
+
+.realSale {
+  color: var(--ss-color-drop-text);
+}
+
+.inflated {
+  color: var(--ss-color-rise);
+}
+
+.unavailable {
+  color: var(--ss-color-muted);
+}
+
+.icon {
+  flex-shrink: 0;
+  width: calc(var(--ss-space-step) * 4.5);
+  height: calc(var(--ss-space-step) * 4.5);
+}
+
+.toStore {
+  margin-top: calc(var(--ss-space-step) * 2);
+}
+
+.noteSkeleton {
+  width: 60%;
+  height: calc(var(--ss-space-step) * 5);
+}

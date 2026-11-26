@@ -2,6 +2,7 @@ import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import type { SearchState } from "@/shared/lib/search-params";
 import { PRODUCTS_STALE_MS, SUGGESTIONS_STALE_MS } from "../model/constants";
 import { getDeals } from "./deals.api";
+import { getProductDetail } from "./product-detail.api";
 import { getProducts } from "./products.api";
 import { productKeys } from "./query-keys";
 import { getSuggestions } from "./suggestions.api";
@@ -19,6 +20,13 @@ export const dealsQuery = (limit: number) =>
   queryOptions({
     queryKey: productKeys.deals(limit),
     queryFn: () => getDeals(limit),
+    staleTime: PRODUCTS_STALE_MS,
+  });
+
+export const productDetailQuery = (id: string) =>
+  queryOptions({
+    queryKey: productKeys.detail(id),
+    queryFn: () => getProductDetail(id),
     staleTime: PRODUCTS_STALE_MS,
   });
 

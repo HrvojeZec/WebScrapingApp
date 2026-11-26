@@ -1,0 +1,7 @@
+.chart {
+  --chart-text-color: var(--ss-color-muted);
+  --chart-grid-color: var(--ss-color-line);
+
+  font-family: var(--font-price);
+  font-variant-numeric: tabular-nums;
+}

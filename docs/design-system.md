@@ -107,15 +107,19 @@ Tokens live in `shared/theme/motion.ts` (`MOTION`), in seconds:
 | `duration.base`  | 0.25 s                       | Page transitions, dialogs, notifications                |
 | `duration.slow`  | 0.4 s                        | Larger surfaces, layout changes, each word of a heading |
 | `duration.count` | 1.2 s                        | A number rolling up to its value                        |
+| `duration.draw`  | 0.8 s                        | The price history line drawing itself from the left     |
 | `ease`           | `cubic-bezier(0.2, 0, 0, 1)` | Everything: a fast start and a soft landing             |
 | `pageOffset`     | 8 px                         | How far a page rises while it fades in                  |
 | `cardScale`      | 0.96                         | A result card grows from it and shrinks to it           |
 
+- A product card's image flies to the product page and back (a shared `layoutId`), and the price
+  history line draws itself once when the page opens.
 - Search results rearrange when a filter or the sort changes: cards that stay glide to their new
   place, cards that leave fade and shrink out of the grid at once, and new cards fade and grow in.
 
 - Our own transitions move only `transform` and `opacity`. The React Bits effects also animate
-  `filter`, a background gradient or the width of a digit, but only inside their own box. Nothing
+  `filter`, a background gradient or the width of a digit, and the price chart draws its line
+  with a stroke dash, but only inside their own box. Nothing
   shifts the layout around an effect: a page that leaves is taken out of the flow at once, and a
   rolling number keeps its final width from the start.
 - With "reduce motion" switched on in the system, nothing moves or fades: `MotionConfig` and

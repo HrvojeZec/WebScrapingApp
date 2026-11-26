@@ -1,0 +1,82 @@
+.section {
+  display: grid;
+  gap: calc(var(--ss-space-step) * 4);
+}
+
+.heading {
+  font-size: var(--ss-font-size-xl);
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--ss-color-line);
+  border-radius: var(--ss-radius-card);
+  background-color: var(--ss-color-paper);
+}
+
+// Store, name and price in one row on a wide screen; stacked on a phone
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--ss-space-step) * 2);
+  padding: calc(var(--ss-space-step) * 4);
+
+  & + & {
+    border-top: 1px solid var(--ss-color-line);
+  }
+
+  @media (min-width: 48em) {
+    grid-template-columns: calc(var(--ss-space-step) * 44) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(var(--ss-space-step) * 4);
+  }
+}
+
+.store {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--ss-space-step) * 2);
+  min-width: 0;
+}
+
+.cheapest {
+  border-radius: var(--ss-radius-field);
+  background-color: var(--ss-color-tag);
+  padding: calc(var(--ss-space-step) / 2) var(--mantine-spacing-xs);
+  color: var(--ss-color-ink);
+  font-size: var(--ss-font-size-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.title {
+  color: var(--ss-color-ink);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.price {
+  display: grid;
+  justify-items: start;
+  gap: var(--ss-space-step);
+
+  @media (min-width: 48em) {
+    justify-items: end;
+  }
+}
+
+.unavailable {
+  color: var(--ss-color-muted);
+  font-size: var(--ss-font-size-sm);
+}
