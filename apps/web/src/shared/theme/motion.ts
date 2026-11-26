@@ -15,6 +15,8 @@ export const MOTION = {
   ease: [0.2, 0, 0, 1] as const,
   /** How far a page moves while it fades in, in px */
   pageOffset: 8,
+  /** The size a result card grows from when it appears and shrinks to when it leaves */
+  cardScale: 0.96,
 } as const;
 
 export type MotionEase = typeof MOTION.ease;

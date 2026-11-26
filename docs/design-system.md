@@ -108,6 +108,11 @@ Tokens live in `shared/theme/motion.ts` (`MOTION`), in seconds:
 | `duration.slow`  | 0.4 s                        | Larger surfaces, layout changes, each word of a heading |
 | `duration.count` | 1.2 s                        | A number rolling up to its value                        |
 | `ease`           | `cubic-bezier(0.2, 0, 0, 1)` | Everything: a fast start and a soft landing             |
+| `pageOffset`     | 8 px                         | How far a page rises while it fades in                  |
+| `cardScale`      | 0.96                         | A result card grows from it and shrinks to it           |
+
+- Search results rearrange when a filter or the sort changes: cards that stay glide to their new
+  place, cards that leave fade and shrink out of the grid at once, and new cards fade and grow in.
 
 - Our own transitions move only `transform` and `opacity`. The React Bits effects also animate
   `filter`, a background gradient or the width of a digit, but only inside their own box. Nothing
