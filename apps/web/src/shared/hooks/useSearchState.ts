@@ -22,7 +22,8 @@ export function useSearchState(): [SearchState, SearchIssue[], SetSearchState] {
     const nextParams = toSearchParams(merged);
     // The heading shows the term as typed; the parsed one is lowercased
     const typed = params.get("q");
-    if (!("q" in next) && typed !== null && merged.q !== undefined) nextParams.set("q", typed);
+    if (merged.q === state.q && typed !== null && merged.q !== undefined)
+      nextParams.set("q", typed);
     // ScrollRestoration scrolls to the top on a new page of results only (finding L6)
     setParams(nextParams, { preventScrollReset: merged.page === state.page });
   };
