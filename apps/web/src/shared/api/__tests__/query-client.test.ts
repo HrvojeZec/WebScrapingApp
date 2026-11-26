@@ -9,11 +9,16 @@ describe("shouldRetry", () => {
     expect(shouldRetry(0, new ApiError("rate_limited", "Previše zahtjeva.", 429))).toBe(false);
   });
 
-  it("repeats a network failure and a 5xx up to the limit", () => {
-    const down = new ApiError("unavailable", "Bad Gateway", 502);
+  it("repeats the API's own server error up to the limit", () => {
+    const failed = new ApiError("internal_error", "Nešto je pošlo po zlu.", 500);
 
-    expect(shouldRetry(0, new ApiError("network", "Failed to fetch", null))).toBe(true);
-    expect(shouldRetry(WEB_LIMITS.queryRetries - 1, down)).toBe(true);
-    expect(shouldRetry(WEB_LIMITS.queryRetries, down)).toBe(false);
+    expect(shouldRetry(WEB_LIMITS.queryRetries - 1, failed)).toBe(true);
+    expect(shouldRetry(WEB_LIMITS.queryRetries, failed)).toBe(false);
+  });
+
+  it("does not repeat a request while the API is not running", () => {
+    // The dev proxy answers 502 for a stopped API; a repeat a second later only adds console errors
+    expect(shouldRetry(0, new ApiError("unavailable", "Bad Gateway", 502))).toBe(false);
+    expect(shouldRetry(0, new ApiError("network", "Failed to fetch", null))).toBe(false);
   });
 });
